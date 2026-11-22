@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.34.0 - 2026-11-22
+
+Raw USB/WinUSB.
+
+### Platform
+
+* USB-Enumeration.
+* Pipe-I/O.
+* 243 Tests.
+
 ## 3.33.0 - 2026-11-22
 
 LIN.

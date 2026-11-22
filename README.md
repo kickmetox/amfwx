@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.33.0  
+**Version:** 3.34.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 241 passing
+**Tests:** 243 passing
 
 ## Features
 
@@ -143,6 +143,7 @@ Build instructions:
 - [Bluetooth](docs/bluetooth.md)
 - [WLAN](docs/wlan.md)
 - [USB HID](docs/usb.md)
+- [Raw USB/WinUSB](docs/usb_raw.md)
 - [mDNS/Bonjour](docs/mdns.md)
 - [EtherNet/IP](docs/enip.md)
 - [CAN bus](docs/can.md)
