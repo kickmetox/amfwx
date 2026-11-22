@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.3.0 - 2026-11-22
+
+Designer.
+
+### UI
+
+* `DesignerDocument`.
+* `DesignerCanvas`.
+* `DesignerWindow`.
+* JSON und Codegen.
+* 174 Tests.
+
 ## 3.2.0 - 2026-11-22
 
 PDF/Bridge-Tests.

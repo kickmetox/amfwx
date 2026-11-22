@@ -33,7 +33,6 @@ Stand: 167 Tests, Windows-only. Öffentliche Signatur ist bewusst **kein Ziel**.
 |---|---|---|
 | AMFW-Bridge-Integrationstests | P0 | ❌ |
 | echter Ollama-Test in CI | P0 | ⚠️ optional, nicht in CI |
-| Designer | P1 | ❌ |
 | Studio/Projektstarter | P1 | ❌ |
 | vollständiges Quick/State | P1 | ❌ |
 | Compat-Adapter | P2 | ❌ |
