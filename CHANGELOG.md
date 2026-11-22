@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.21.0 - 2026-11-22
+
+Picker-Widgets.
+
+### UI
+
+* `ColorPicker`.
+* `FilePicker`.
+* 213 Tests.
+
 ## 3.20.0 - 2026-11-22
 
 Formular-Validierung.

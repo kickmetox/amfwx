@@ -863,6 +863,79 @@ class ContextMenu(MenuPopup):
         window.set_overlay(self)
 
 
+class ColorPicker(Widget):
+    focusable = True
+
+    def __init__(self, color=None, on_change=None):
+        super().__init__()
+        from .canvas import Color
+        self.color = color or Color(0, 0, 0)
+        self.on_change = on_change
+
+    def size_hint(self):
+        return (120, 30)
+
+    def set_color(self, color):
+        self.color = color
+        if self.on_change:
+            self.on_change(color)
+        return self
+
+    def mouse_up(self, x, y, button="left"):
+        from .dialog import ColorDialog
+        picked = ColorDialog.pick(None, self.color)
+        if picked is not None:
+            self.set_color(picked)
+
+    def paint(self, canvas):
+        theme = self.theme()
+        canvas.rounded_rect(self.rect, theme.radius, self.color)
+        canvas.draw_rect(self.rect, theme.border, 1)
+        text = f"#{self.color.r:02X}{self.color.g:02X}{self.color.b:02X}"
+        draw_text(canvas, text, self.rect.x + 8, self.rect.y + 9,
+                  theme.text, 2)
+
+
+class FilePicker(Widget):
+    focusable = True
+
+    def __init__(self, path="", mode="open", filters=None, on_change=None):
+        super().__init__()
+        self.path = str(path)
+        self.mode = mode
+        self.filters = filters
+        self.on_change = on_change
+
+    def size_hint(self):
+        return (280, 30)
+
+    def set_path(self, path):
+        self.path = str(path)
+        if self.on_change:
+            self.on_change(self.path)
+        return self
+
+    def mouse_up(self, x, y, button="left"):
+        from .filedialog import open_file, save_file
+        if self.mode == "save":
+            chosen = save_file(filters=self.filters)
+        else:
+            chosen = open_file(filters=self.filters)
+        if chosen:
+            self.set_path(chosen)
+
+    def paint(self, canvas):
+        theme = self.theme()
+        canvas.rounded_rect(self.rect, theme.radius, theme.surface)
+        canvas.draw_rect(self.rect, theme.border, 1)
+        draw_text(canvas, self.path or "Datei waehlen", self.rect.x + 8,
+                  self.rect.y + 9, theme.text if self.path else theme.muted, 2)
+        canvas.fill_rect(Rect(self.rect.right - 30, self.rect.y + 1, 29,
+                              self.rect.h - 2), theme.surface_alt)
+        draw_text(canvas, "...", self.rect.right - 20, self.rect.y + 9,
+                  theme.text, 2)
+
+
 class MenuBar(Widget):
     def __init__(self, menus=None):
         super().__init__()
