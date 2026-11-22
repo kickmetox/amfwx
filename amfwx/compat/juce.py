@@ -149,10 +149,10 @@ class ComboBox(Component):
         self.widget.items.append(str(text))
 
     def setSelectedItemIndex(self, index):
-        self.widget.current = int(index)
+        self.widget.set_current_index(int(index))
 
     def getSelectedItemIndex(self):
-        return int(getattr(self.widget, "current", 0))
+        return int(self.widget.current_index)
 
 
 class ToggleButton(Component):

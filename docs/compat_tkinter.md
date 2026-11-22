@@ -23,6 +23,10 @@ root.mainloop()
 - `Entry`
 - `Checkbutton`
 - `Canvas`
+- `ttk.Notebook`
+- `ttk.Treeview`
+- `ttk.Progressbar`
+- `ttk.Combobox`
 - `Menu`
 - `StringVar`, `IntVar`, `DoubleVar`, `BooleanVar`
 - `pack`, `grid`, `place`
@@ -42,6 +46,5 @@ This is an AMFWX-native interpretation:
 
 - pack layouts are simple vertical/horizontal
 - grid uses fixed cell sizes
-- no `ttk.Notebook`/`Treeview`
 - no real menu bar
 - no image support yet

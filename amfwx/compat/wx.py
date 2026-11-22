@@ -187,10 +187,10 @@ class Choice(_Widget):
         return self
 
     def GetSelection(self):
-        return int(getattr(self.widget, "current", 0))
+        return int(self.widget.current_index)
 
     def SetSelection(self, index):
-        self.widget.current = int(index)
+        self.widget.set_current_index(int(index))
 
 
 class Menu:

@@ -6,8 +6,10 @@ This is not Tcl/Tk. It maps a small Tkinter API surface onto AMFWX widgets.
 from __future__ import annotations
 
 from ..canvas import Rect
+from ..advanced import TabView
 from ..quick import Stack
-from ..widgets import BoxLayout, Button, CheckBox, Label, LineEdit, Panel
+from ..widgets import (BoxLayout, Button, CheckBox, ComboBox, Label, LineEdit,
+                       Panel, ProgressBar, TreeItem, TreeView)
 from ..window import Window
 
 
@@ -260,3 +262,115 @@ class _MessageBox:
 
 
 messagebox = _MessageBox()
+
+
+class Notebook(_Base):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master)
+        self.widget = TabView()
+
+    def add(self, child, text="Tab"):
+        self.widget.add_tab(str(text), child.widget)
+        return self
+
+    def select(self, index):
+        self.widget.active = int(index)
+        self.widget.arrange(self.widget.rect)
+        return self
+
+    def index(self, child):
+        for index, (_title, page) in enumerate(self.widget.tabs):
+            if page is child.widget:
+                return index
+        return -1
+
+
+class Treeview(_Base):
+    def __init__(self, master=None, columns=(), **kwargs):
+        super().__init__(master)
+        self.widget = TreeView([])
+        self.columns = tuple(columns)
+
+    def insert(self, parent="", index="end", text="", values=()):
+        item = TreeItem(str(text))
+        if parent:
+            target = self._find(parent)
+            if target is not None:
+                target.children.append(item)
+        else:
+            self.widget.items.append(item)
+        return item
+
+    def _find(self, wanted):
+        stack = list(self.widget.items)
+        while stack:
+            item = stack.pop()
+            if item is wanted or item.label == wanted:
+                return item
+            stack.extend(item.children)
+        return None
+
+    def delete(self, item):
+        for collection in [self.widget.items] + [i.children for i in
+                                                 self._all()]:
+            if item in collection:
+                collection.remove(item)
+                return True
+        return False
+
+    def _all(self):
+        result = []
+        stack = list(self.widget.items)
+        while stack:
+            item = stack.pop()
+            result.append(item)
+            stack.extend(item.children)
+        return result
+
+    def selection(self):
+        return [self.widget.selected] if self.widget.selected else []
+
+
+class Progressbar(_Base):
+    def __init__(self, master=None, value=0, maximum=100, **kwargs):
+        super().__init__(master)
+        self.widget = ProgressBar(int(value), int(maximum))
+
+    def configure(self, **kwargs):
+        if "value" in kwargs:
+            self.widget.set_value(kwargs["value"])
+        return self
+
+    config = configure
+
+
+class Combobox(_Base):
+    def __init__(self, master=None, values=(), **kwargs):
+        super().__init__(master)
+        self.widget = ComboBox(list(values or []))
+
+    def get(self):
+        return self.widget.current_text()
+
+    def set(self, value):
+        value = str(value)
+        if value not in self.widget.items:
+            self.widget.items.append(value)
+        self.widget.set_current_index(self.widget.items.index(value))
+        return self
+
+    def current(self, index=None):
+        if index is None:
+            return int(self.widget.current_index)
+        self.widget.set_current_index(int(index))
+        return self
+
+
+class _TTK:
+    Notebook = Notebook
+    Treeview = Treeview
+    Progressbar = Progressbar
+    Combobox = Combobox
+
+
+ttk = _TTK()

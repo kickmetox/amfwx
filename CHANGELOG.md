@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.16.0 - 2026-11-22
+
+ttk-Widgets.
+
+### Compat
+
+* `ttk.Notebook`.
+* `ttk.Treeview`.
+* `ttk.Progressbar`.
+* `ttk.Combobox`.
+* 203 Tests.
+
 ## 3.15.0 - 2026-11-22
 
 MCP.

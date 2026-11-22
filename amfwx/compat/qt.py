@@ -187,10 +187,10 @@ class QComboBox:
         self.widget.items.append(str(text))
 
     def setCurrentIndex(self, index):
-        self.widget.current = int(index)
+        self.widget.set_current_index(int(index))
 
     def currentIndex(self):
-        return int(getattr(self.widget, "current", 0))
+        return int(self.widget.current_index)
 
 
 class QProgressBar:
