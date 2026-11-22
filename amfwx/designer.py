@@ -42,8 +42,37 @@ class DesignerDocument:
         self.title = str(title)
         self.items = list(items or [])
         self.selected = -1
+        self._undo = []
+        self._redo = []
+
+    def _snapshot(self):
+        return [DesignerItem(item.kind, item.text, item.x, item.y,
+                             item.width, item.height) for item in self.items]
+
+    def _record(self):
+        self._undo.append(self._snapshot())
+        if len(self._undo) > 60:
+            self._undo.pop(0)
+        self._redo.clear()
+
+    def undo(self):
+        if not self._undo:
+            return False
+        self._redo.append(self._snapshot())
+        self.items = self._undo.pop()
+        self.selected = min(self.selected, len(self.items) - 1)
+        return True
+
+    def redo(self):
+        if not self._redo:
+            return False
+        self._undo.append(self._snapshot())
+        self.items = self._redo.pop()
+        self.selected = min(self.selected, len(self.items) - 1)
+        return True
 
     def add(self, kind, text="", x=20, y=20, width=160, height=32):
+        self._record()
         item = DesignerItem(kind, text, x, y, width, height)
         self.items.append(item)
         self.selected = len(self.items) - 1
@@ -52,6 +81,7 @@ class DesignerDocument:
     def remove(self, index=None):
         index = self.selected if index is None else int(index)
         if 0 <= index < len(self.items):
+            self._record()
             del self.items[index]
             self.selected = min(index, len(self.items) - 1)
             return True
@@ -63,6 +93,7 @@ class DesignerDocument:
 
     def move(self, index, x, y):
         if 0 <= index < len(self.items):
+            self._record()
             self.items[index].x = int(x)
             self.items[index].y = int(y)
             return True
@@ -70,6 +101,7 @@ class DesignerDocument:
 
     def resize(self, index, width, height):
         if 0 <= index < len(self.items):
+            self._record()
             self.items[index].width = max(8, int(width))
             self.items[index].height = max(8, int(height))
             return True
@@ -84,6 +116,15 @@ class DesignerDocument:
         return cls(data.get("title", "Formular"),
                    [DesignerItem.from_dict(item)
                     for item in data.get("items", [])])
+
+    def key_down(self, key, modifiers=0):
+        if key == 90 and modifiers & 2:
+            self.document.undo()
+        elif key == 89 and modifiers & 2:
+            self.document.redo()
+        elif key == 46:
+            self.document.remove()
+        return super().key_down(key, modifiers)
 
     def save(self, path):
         Path(path).write_text(json.dumps(self.to_dict(), indent=2,
@@ -136,6 +177,7 @@ class DesignerCanvas(Widget):
         super().__init__()
         self.document = document
         self._drag = None
+        self._resize = None
 
     def paint(self, canvas):
         theme = self.theme()
@@ -171,12 +213,23 @@ class DesignerCanvas(Widget):
             if (item.x <= local_x < item.x + item.width and
                     item.y <= local_y < item.y + item.height):
                 self.document.select(index)
-                self._drag = (index, local_x - item.x, local_y - item.y)
+                if (local_x >= item.x + item.width - 10 and
+                        local_y >= item.y + item.height - 10):
+                    self._resize = (index, item.width, item.height,
+                                    local_x, local_y)
+                else:
+                    self._drag = (index, local_x - item.x, local_y - item.y)
                 return
         self.document.select(-1)
         self._drag = None
 
     def mouse_move(self, x, y):
+        if self._resize is not None:
+            index, width, height, start_x, start_y = self._resize
+            self.document.resize(index, width + (x - self.rect.x - start_x),
+                                 height + (y - self.rect.y - start_y))
+            self._resize = (index, width, height, start_x, start_y)
+            return
         if self._drag is None:
             return
         index, offset_x, offset_y = self._drag
@@ -185,6 +238,7 @@ class DesignerCanvas(Widget):
 
     def mouse_up(self, x, y, button="left"):
         self._drag = None
+        self._resize = None
 
 
 class DesignerWindow(Window):
@@ -206,6 +260,15 @@ class DesignerWindow(Window):
             button.arrange(Rect(8, 8 + index * 36, 144, 30))
             button.on_click = (lambda k=kind: self.document.add(k, k))
             self.palette.children.append(button)
+
+    def key_down(self, key, modifiers=0):
+        if key == 90 and modifiers & 2:
+            self.document.undo()
+        elif key == 89 and modifiers & 2:
+            self.document.redo()
+        elif key == 46:
+            self.document.remove()
+        return super().key_down(key, modifiers)
 
     def save(self, path):
         return self.document.save(path)

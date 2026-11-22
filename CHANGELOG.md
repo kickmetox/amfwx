@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.8.0 - 2026-11-22
+
+Designer-Resize/Undo.
+
+### UI
+
+* Resize-Handle.
+* Undo/Redo.
+* 186 Tests.
+
 ## 3.7.0 - 2026-11-22
 
 RichText.

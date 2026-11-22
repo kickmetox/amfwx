@@ -31,8 +31,8 @@ code = document.generate_code()
 ## Limits
 
 - absolute positions only
-- no resize handles yet
-- no undo/redo
+- resize via the bottom-right handle
+- undo/redo with Ctrl+Z / Ctrl+Y
 - no property editor for every attribute
 - no resource/icon picker
 - code generation uses `Rect` and absolute layout

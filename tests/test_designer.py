@@ -50,6 +50,27 @@ class DesignerTests(unittest.TestCase):
             window.close()
             window.process_events(40)
 
+    def test_undo_redo(self):
+        document = DesignerDocument()
+        document.add("label", "A", 10, 10, 80, 24)
+        document.move(0, 40, 50)
+        self.assertEqual((document.items[0].x, document.items[0].y), (40, 50))
+        self.assertTrue(document.undo())
+        self.assertEqual((document.items[0].x, document.items[0].y), (10, 10))
+        self.assertTrue(document.redo())
+        self.assertEqual((document.items[0].x, document.items[0].y), (40, 50))
+
+    def test_resize_handle(self):
+        document = DesignerDocument()
+        item = document.add("label", "A", 20, 20, 80, 24)
+        view = DesignerCanvas(document)
+        view.arrange(Rect(0, 0, 400, 300))
+        view.mouse_down(20 + 80 - 2, 20 + 24 - 2)
+        view.mouse_move(140, 90)
+        view.mouse_up(140, 90)
+        self.assertGreater(item.width, 80)
+        self.assertGreater(item.height, 24)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
