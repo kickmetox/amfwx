@@ -24,6 +24,7 @@ ROLE_TABLE = "table"
 ROLE_PANEL = "panel"
 ROLE_TAB = "tab"
 ROLE_IMAGE = "image"
+ROLE_PROGRESS = "progress"
 ROLE_UNKNOWN = "unknown"
 
 
@@ -146,6 +147,10 @@ def role_for(widget):
     return {
         "Button": ROLE_BUTTON,
         "CheckBox": ROLE_CHECKBOX,
+        "RadioButton": ROLE_CHECKBOX,
+        "SpinBox": ROLE_EDIT,
+        "ListBox": ROLE_LIST,
+        "ProgressBar": ROLE_PROGRESS,
         "LineEdit": ROLE_EDIT,
         "TextEdit": ROLE_EDIT,
         "Label": ROLE_TEXT,
@@ -179,12 +184,15 @@ def accessible_name(widget, labels=None):
 def accessible_value(widget, role=None):
     role = role or role_for(widget)
     if role == ROLE_EDIT:
+        if type(widget).__name__ == "SpinBox":
+            return str(widget.value())
         getter = getattr(widget, "text", "")
         return getter() if callable(getter) else str(getter or "")
-    if role == ROLE_CHECKBOX:
+    if role in (ROLE_CHECKBOX, "radio"):
         return "checked" if getattr(widget, "checked", False) else "unchecked"
     if role == ROLE_SLIDER:
-        return str(getattr(widget, "value", ""))
+        getter = getattr(widget, "value", "")
+        return str(getter() if callable(getter) else getter)
     if role == ROLE_COMBO:
         getter = getattr(widget, "current_text", None)
         if getter is not None:

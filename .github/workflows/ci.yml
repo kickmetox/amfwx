@@ -35,6 +35,7 @@ jobs:
           python tools/verify_native.py
           python tools/hardening_check.py --no-tests
           python tools/sbom.py --output dist/sbom.json
+          python tools/a11y_audit.py --output dist/a11y.json
 
       - name: Build artifacts
         shell: pwsh

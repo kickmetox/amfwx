@@ -376,6 +376,8 @@ class SpinBox(Widget):
         self.step = max(1, int(step))
         self._value = max(self.minimum, min(self.maximum, int(value)))
         self.on_change = on_change
+        if not self.accessible_name:
+            self.accessible_name = "SpinBox"
 
     def size_hint(self):
         return (120, 30)
@@ -426,6 +428,8 @@ class ListBox(Widget):
         self.items = list(items or [])
         self.selected = -1
         self.on_select = on_select
+        if not self.accessible_name:
+            self.accessible_name = "ListBox"
 
     def size_hint(self):
         return (220, 160)

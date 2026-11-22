@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.18.0 - 2026-11-22
+
+Accessibility-Audit.
+
+### Accessibility
+
+* Rollen fuer neue Widgets.
+* `tools/a11y_audit.py`.
+* Screenreader-Checkliste.
+* 208 Tests.
+
 ## 3.17.0 - 2026-11-22
 
 Weitere Widgets.
