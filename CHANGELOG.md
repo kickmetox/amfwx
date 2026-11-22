@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.7.0 - 2026-11-22
+
+RichText.
+
+### UI
+
+* `RichDocument`.
+* `RichText`.
+* HTML-Subset.
+* 184 Tests.
+
 ## 3.6.0 - 2026-11-22
 
 Studio/Projektstarter.
