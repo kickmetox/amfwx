@@ -114,17 +114,6 @@ Build instructions:
 - Media Foundation remains a system codec
 - no VST3 host
 
-## Signing
-
-The project is prepared for **SignPath Foundation**:
-
-- [application and integration](docs/signpath.md)
-- [GitHub workflow](.github/workflows/signpath.yml)
-- [artifact configuration](signpath/artifact-configuration.xml)
-
-SignPath Foundation publishes the binary under its own name. An own
-public certificate would require a commercial CA.
-
 ## Documentation
 
 - [Accessibility](docs/accessibility.md)
