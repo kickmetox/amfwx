@@ -121,6 +121,7 @@ Build instructions:
 - [Feature matrix](docs/feature_matrix.md)
 - [Distribution and signing](docs/distribution.md)
 - [AMFW interop](docs/amfw_interop.md)
+- [AMFW merge strategy](docs/amfw_merge.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
