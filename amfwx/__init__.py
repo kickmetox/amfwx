@@ -77,13 +77,12 @@ from .theme import DARK, HIGH_CONTRAST, LIGHT, Theme, get_theme
 from .widgets import (
     BoxLayout, Button, CheckBox, ComboBox, FormLayout, GridLayout, Label,
     LineEdit, ListBox, MenuBar, Panel, ProgressBar, RadioButton, ScrollArea,
-    ScrollBar, Slider, SpinBox,
-    TableView,
+    ScrollBar, Slider, SpinBox, TableView,
     TreeItem, TreeView, Widget,
 )
 from .window import Window
 
-__version__ = "3.18.0"
+__version__ = "3.19.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",

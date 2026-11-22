@@ -43,7 +43,7 @@ class DesignerTests(unittest.TestCase):
     def test_window(self):
         window = DesignerWindow()
         try:
-            self.assertEqual(len(window.palette.children), 8)
+            self.assertEqual(len(window.palette.children), 11)
             window.document.add("button", "OK", 20, 20, 100, 32)
             self.assertIn("Button", window.generate_code())
         finally:

@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.19.0 - 2026-11-22
+
+Widget-Integration.
+
+### UI
+
+* RadioButton/SpinBox/ListBox im Designer.
+* Dieselben Typen als LLM-Tools.
+* 208 Tests.
+
 ## 3.18.0 - 2026-11-22
 
 Accessibility-Audit.

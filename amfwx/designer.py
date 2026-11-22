@@ -14,7 +14,7 @@ from .text import draw_text
 
 
 KINDS = ("label", "button", "line_edit", "text_edit", "checkbox",
-         "slider", "combo", "progress")
+         "slider", "combo", "progress", "radio", "spin", "list")
 
 
 class DesignerItem:
@@ -139,8 +139,8 @@ class DesignerDocument:
 
     def generate_code(self):
         lines = ["from amfwx import (Button, CheckBox, ComboBox, Label,",
-                 "                     LineEdit, ProgressBar, Slider, TextEdit,",
-                 "                     Rect, Window)", "",
+                 "                     LineEdit, ListBox, ProgressBar, RadioButton,",
+                 "                     Rect, Slider, SpinBox, TextEdit, Window)", "",
                  f"window = Window({self.title!r}, 900, 600)"]
         for item in self.items:
             kind = item.kind
@@ -161,6 +161,12 @@ class DesignerDocument:
                 statement = "ComboBox(['A', 'B'])"
             elif kind == "progress":
                 statement = "ProgressBar(0)"
+            elif kind == "radio":
+                statement = f"RadioButton({text})"
+            elif kind == "spin":
+                statement = "SpinBox(0)"
+            elif kind == "list":
+                statement = "ListBox([])"
             else:
                 statement = "Label('')"
             name = f"widget_{len(lines)}"

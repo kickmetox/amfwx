@@ -8,8 +8,8 @@ import os
 import tempfile
 
 from .canvas import Rect
-from .widgets import (Button, CheckBox, ComboBox, Label, LineEdit,
-                      ProgressBar, Slider, Widget)
+from .widgets import (Button, CheckBox, ComboBox, Label, LineEdit, ListBox,
+                      ProgressBar, RadioButton, Slider, SpinBox, Widget)
 from .textedit import TextEdit
 from .window import Window
 
@@ -23,6 +23,9 @@ KIND_MAP = {
     "slider": Slider,
     "combo": ComboBox,
     "progress": ProgressBar,
+    "radio": RadioButton,
+    "spin": SpinBox,
+    "list": ListBox,
 }
 
 
@@ -71,6 +74,10 @@ class UiSession:
             widget = Slider(0, 100, int(text or 0))
         elif key == "progress":
             widget = ProgressBar(int(text or 0))
+        elif key == "spin":
+            widget = SpinBox(int(text or 0))
+        elif key == "list":
+            widget = ListBox([item.strip() for item in str(text).split(",") if item.strip()])
         target = self.widgets.get(parent) if parent else None
         container = target if isinstance(target, Widget) else window.root
         container.add(widget)
