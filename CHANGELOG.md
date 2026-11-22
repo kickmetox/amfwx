@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.44.1 - 2026-11-23
+
+TWAIN-Konstante korrigiert.
+
+### Fix
+
+* `DAT_IDENTITY` = 3.
+* TWAIN-Enumeration nutzt die korrekte Data Group.
+* 261 Tests.
+
 ## 3.44.0 - 2026-11-23
 
 WIA-ADF/Optionen.

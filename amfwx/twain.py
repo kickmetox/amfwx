@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 DG_CONTROL = 1
-DAT_IDENTITY = 1
+DAT_IDENTITY = 3
 MSG_GETFIRST = 1
 MSG_GETNEXT = 2
 
