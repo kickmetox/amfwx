@@ -1,0 +1,140 @@
+# AMFWX
+
+**AMFWX** is a Windows-only desktop UI framework written in pure Python
+using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
+browser engine.
+
+**Version:** 2.5.0  
+**License:** MIT  
+**Platform:** Windows 10/11, x86-64  
+**Tests:** 152 passing
+
+## Features
+
+### UI
+
+- own BGRA software rasterizer
+- widget tree, box/grid/form layouts
+- own Win32 event loop
+- buttons, labels, edits, lists, trees, tables
+- tabs, tooltips, charts, property grid
+- docking, splitters, status bar, toolbar
+- editor with undo/redo, find/replace
+- themes: dark, light, high contrast
+- animation/timeline
+- declarative `QuickView` with `State`
+
+### Text and images
+
+- TrueType parser/rasterizer
+- GSUB ligatures, GPOS pair/mark/class
+- Arabic shaping and bidi
+- PNG, baseline JPEG
+- WebP via own `libwebp` build
+- scaled PNG snapshots
+
+### Accessibility
+
+- native UIA provider DLL (`uia_provider.dll`)
+- `IRawElementProviderSimple`
+- `IRawElementProviderFragment`
+- Invoke / Value / Toggle patterns
+- bounding rectangles
+- focus, structure and name events
+- MSAA fallback
+- verified with NVDA
+
+### Media
+
+- H.264/MP4 via Media Foundation
+- MP4 metadata parser
+- MP4 audio, audio queue and seek
+- AVI/MJPEG
+- WAV playback
+- MIDI parser/player
+- DSP: gain, mixer, biquad, graph
+- mixer UI and JSON presets
+
+### Graphics
+
+- SDL3 D3D11 backend
+- D3D12 compute
+- HLSL to DXBC/DXIL
+- software 3D renderer with textures, mipmaps and normal maps
+
+### Platform
+
+- settings
+- resource packs
+- crash logger
+- plugin registry
+- own installer/uninstaller
+- reproducible native DLL builds
+
+## Install
+
+```powershell
+python -m pip install dist\amfwx-2.5.0-py3-none-any.whl
+```
+
+Or run the portable build:
+
+```text
+dist\AMFWX-Portable-2.5.0.zip
+```
+
+## Test
+
+```powershell
+python -m unittest discover -s tests
+python tools\hardening_check.py
+```
+
+## Native dependencies
+
+The repository ships self-built Windows DLLs:
+
+- `SDL3.dll` — built from SDL3 source
+- `libwebp.dll` / `libsharpyuv.dll` — built from libwebp source
+- `mfdecode.dll` — Media Foundation helper, built with MSVC
+- `uia_provider.dll` — UIA provider, built with MinGW GCC
+
+Build instructions:
+
+- [SDL3 build](docs/sdl3_build.md)
+- [WebP build](docs/webp_build.md)
+- [UIA provider build](docs/uia_provider_build.md)
+- [Media Foundation](docs/mfvideo.md)
+
+## Limitations
+
+- Windows-only
+- no public code-signing certificate yet
+- no complete screenreader certification
+- Media Foundation remains a system codec
+- no VST3 host
+
+## Signing
+
+The project is prepared for **SignPath Foundation**:
+
+- [application and integration](docs/signpath.md)
+- [GitHub workflow](.github/workflows/signpath.yml)
+- [artifact configuration](signpath/artifact-configuration.xml)
+
+SignPath Foundation publishes the binary under its own name. An own
+public certificate would require a commercial CA.
+
+## Documentation
+
+- [Accessibility](docs/accessibility.md)
+- [Framework review](docs/framework_review.md)
+- [Feature matrix](docs/feature_matrix.md)
+- [Release notes](docs/release_2.4.2.md)
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+Third-party components keep their own licenses; see the license files in
+`amfwx/bin/`.

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Build output
+build/
+dist/
+*.spec
+
+# Signing material
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt
+*.pvk
+
+# Logs and local test output
+*.log
+native_uia_wm.txt
+nvda_*.txt
+test_install_*/
+uia_clicked.txt
+uia_handles.txt
+uia_patterns_*.txt
+
+# Native test binaries (sources stay)
+native/*.exe
+
+# Vendored build trees
+vendor/
