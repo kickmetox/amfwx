@@ -38,3 +38,5 @@ native/*.exp
 
 # Vendored build trees
 vendor/
+temp_twain/
+twain_check.py
