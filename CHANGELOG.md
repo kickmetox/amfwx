@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.22.0 - 2026-11-22
+
+Tray.
+
+### Platform
+
+* `TrayIcon`.
+* Menue.
+* 214 Tests.
+
 ## 3.21.0 - 2026-11-22
 
 Picker-Widgets.
