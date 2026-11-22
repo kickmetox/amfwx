@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.41.0 - 2026-11-23
+
+Scanner-Enumeration.
+
+### Hardware
+
+* WIA-Enumeration.
+* TWAIN-Enumeration.
+* 32/64-Bit-Doku.
+* 257 Tests.
+
 ## 3.40.0 - 2026-11-23
 
 Medizin-Datenstandards.

@@ -8,6 +8,8 @@ from .io.serial import list_ports
 from .usb import list_hid_devices
 from .usb_raw import list_usb_devices
 from .wlan import list_interfaces as list_wlan_interfaces
+from .twain import list_sources as list_twain_sources
+from .wia import list_wia_devices
 
 
 def _safe(collector):
@@ -29,6 +31,8 @@ class DeviceManager:
             "bluetooth": _safe(lambda: list_bluetooth_devices(issue_inquiry=False)),
             "wlan": _safe(list_wlan_interfaces),
             "displays": _safe(list_monitors),
+            "scanners": (_safe(list_wia_devices) +
+                         _safe(list_twain_sources)),
         }
         return self
 

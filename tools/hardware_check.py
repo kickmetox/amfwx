@@ -39,6 +39,7 @@ def build_report():
             "bluetooth": summary.get("bluetooth", 0) > 0,
             "wlan": summary.get("wlan", 0) > 0,
             "displays": summary.get("displays", 0) > 0,
+            "scanners": summary.get("scanners", 0) > 0,
             "pcan": pcan_available(),
             "opcua": asyncua_available(),
         },
