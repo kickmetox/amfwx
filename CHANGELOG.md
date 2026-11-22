@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.15.0 - 2026-11-22
+
+MCP.
+
+### AI
+
+* `MCPClient`.
+* `MCPServer`.
+* stdio JSON-RPC.
+* 201 Tests.
+
 ## 3.14.0 - 2026-11-22
 
 Vision.

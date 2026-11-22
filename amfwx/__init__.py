@@ -48,6 +48,7 @@ from .designer import DesignerCanvas, DesignerDocument, DesignerItem, DesignerWi
 from .studio import Project, ProjectError, Studio, StudioWindow
 from .richtext import RichDocument, RichText
 from .vision import image_base64, image_data_url, openai_vision_content, vision_message
+from .mcp import MCPClient, MCPError, MCPServer
 from .keystore import KeyStore, KeyStoreError
 from .dsp import AudioBuffer, Biquad, DspGraph, Gain, Mixer
 from .plugins import Plugin, PluginError, PluginRegistry
@@ -81,7 +82,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.14.0"
+__version__ = "3.15.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -97,7 +98,8 @@ __all__ = [
     "TOOL_SPECS", "UiSession", "call_tool", "LLMAgent", "SDK", "create_sdk", "Conversation", "canvas_to_pdf", "Database", "HttpClient", "NetworkError", "DesignerItem", "DesignerDocument",
     "DesignerCanvas", "DesignerWindow", "Project", "ProjectError", "Studio",
     "StudioWindow", "RichDocument", "RichText", "image_base64", "image_data_url",
-    "openai_vision_content", "vision_message",
+    "openai_vision_content", "vision_message", "MCPClient", "MCPError",
+    "MCPServer",
     "KeyStore", "KeyStoreError", "verify_native_dlls",
     "safe_resource_name", "AudioBuffer", "Gain", "Mixer", "Biquad", "DspGraph",
     "Plugin", "PluginError", "PluginRegistry", "MixerPanel", "MixerStrip", "MediaVideo", "MediaStream", "MediaAudio", "MediaAudioStream", "MediaPlayer", "probe_media_foundation", "Mp4Info", "Mp4Track", "GPUCompute", "compile_dxil", "compile_hlsl", "ShaderError", "AviVideo", "VideoPlayer", "Shader", "ShaderRenderer", "AudioPlayer", "AudioQueuePlayer", "Wav", "decode_wav", "Sdl3Renderer", "Sdl3Error", "Sdl3Loop", "Accessible", "AccessibilityNode", "AccessibilityTree", "AccessibilityBridge", "attach_uia_provider", "read_accessible", "do_default_action", "set_accessible_value", "set_accessible_name", "select_accessible", "read_focus", "read_selection", "read_location", "decode_webp", "encode_webp", "probe_webp", "Theme", "DARK", "LIGHT",

@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.14.0  
+**Version:** 3.15.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 199 passing
+**Tests:** 201 passing
 
 ## Features
 
@@ -135,6 +135,7 @@ Build instructions:
 - [GTK compat](docs/compat_gtk.md)
 - [JUCE compat](docs/compat_juce.md)
 - [Qt compat](docs/compat_qt.md)
+- [MCP](docs/mcp.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
