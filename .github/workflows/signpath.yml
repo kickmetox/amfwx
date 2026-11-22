@@ -41,6 +41,7 @@ jobs:
 
   sign:
     needs: build
+    if: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' }}
     runs-on: windows-latest
     permissions:
       actions: read
