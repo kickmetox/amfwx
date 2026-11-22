@@ -120,6 +120,7 @@ Build instructions:
 - [Framework review](docs/framework_review.md)
 - [Feature matrix](docs/feature_matrix.md)
 - [Distribution and signing](docs/distribution.md)
+- [AMFW interop](docs/amfw_interop.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
