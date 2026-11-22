@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.26.0 - 2026-11-22
+
+Bluetooth.
+
+### Platform
+
+* Radio-Enumeration.
+* Device-Enumeration.
+* 225 Tests.
+
 ## 3.25.0 - 2026-11-22
 
 Display-Schnittstellen.

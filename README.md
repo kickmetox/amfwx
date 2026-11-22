@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.25.0  
+**Version:** 3.26.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 223 passing
+**Tests:** 225 passing
 
 ## Features
 
@@ -140,6 +140,7 @@ Build instructions:
 - [Form validation](docs/validation.md)
 - [Hardware interfaces](docs/hardware.md)
 - [Displays](docs/display.md)
+- [Bluetooth](docs/bluetooth.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
