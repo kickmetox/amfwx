@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.12.0 - 2026-11-22
+
+JUCE-Compat.
+
+### Compat
+
+* `amfwx.compat.juce`.
+* Window/Controls.
+* 195 Tests.
+
 ## 3.11.0 - 2026-11-22
 
 GTK-Compat.
