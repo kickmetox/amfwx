@@ -474,6 +474,31 @@ class ListPopup(Widget):
             window.close_overlay()
 
 
+class ProgressBar(Widget):
+    def __init__(self, value=0, maximum=100):
+        super().__init__()
+        self.maximum = max(1, int(maximum))
+        self._value = max(0, min(self.maximum, int(value)))
+
+    def size_hint(self):
+        return (200, 10)
+
+    def value(self):
+        return self._value
+
+    def set_value(self, value):
+        self._value = max(0, min(self.maximum, int(value)))
+        return self
+
+    def paint(self, canvas):
+        theme = self.theme()
+        canvas.fill_rect(self.rect, theme.surface_alt)
+        width = int(self.rect.w * self._value / self.maximum)
+        if width > 0:
+            canvas.fill_rect(Rect(self.rect.x, self.rect.y, width,
+                                  self.rect.h), theme.accent)
+
+
 class ScrollBar(Widget):
     def __init__(self, orientation="vertical", maximum=100, page=100, value=0,
                  on_change=None):

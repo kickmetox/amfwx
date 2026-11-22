@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller
+          python -m pip install .
+
+      - name: Tests
+        shell: pwsh
+        run: python -m unittest discover -s tests
+
+      - name: Hardening
+        shell: pwsh
+        run: |
+          python tools/verify_native.py
+          python tools/hardening_check.py --no-tests
+          python tools/sbom.py --output dist/sbom.json
+
+      - name: Build artifacts
+        shell: pwsh
+        run: |
+          python tools/build_portable.py
+          powershell -ExecutionPolicy Bypass -File tools/build_app.ps1
+          python tools/build_own_installer.py
+
+      - name: Silent install test
+        shell: pwsh
+        run: |
+          $target = Join-Path $env:GITHUB_WORKSPACE "install-test"
+          $installer = Get-ChildItem dist/AMFWX-Own-Setup-*.exe | Select-Object -First 1
+          $process = Start-Process $installer.FullName -ArgumentList "/S", "/D=$target" -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Installer exit $($process.ExitCode)" }
+          if (-not (Test-Path (Join-Path $target "AMFWX.exe"))) { throw "AMFWX.exe fehlt" }
+          & cmd /c "$target\uninstall.cmd" 2>$null
+          Start-Sleep -Milliseconds 500
+          if (Test-Path $target) { throw "Uninstaller hat Ziel nicht entfernt" }
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: amfwx-ci
+          path: |
+            dist/amfwx-*.whl
+            dist/AMFWX-Portable-*.zip
+            dist/AMFWX-Own-Setup-*.exe
+            dist/sbom.json
+          if-no-files-found: error

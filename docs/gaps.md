@@ -1,6 +1,6 @@
-# AMFWX 3.0.0 – Gap-Analyse
+# AMFWX 3.1.0 – Gap-Analyse
 
-Stand: 162 Tests, Release 3.0.0, Windows-only.
+Stand: 167 Tests, Windows-only. Öffentliche Signatur ist bewusst **kein Ziel**.
 
 ## Enthalten
 
@@ -12,77 +12,48 @@ Stand: 162 Tests, Release 3.0.0, Windows-only.
 - Animation, MIDI, DSP, Mixer
 - Video/Audio/Seek
 - GPU/Compute
-- Fuzzing, Snapshots
-- Crash-Logging, Plugin-Registry, Resources
+- Fuzzing, Snapshots, Crash-Logging, Plugins, Resources
 - SDK: `create_sdk`, `UiSession`, LLM-Tools
-- Ollama-/OpenAI-kompatible Provider
-- AMFWX-in-AMFW- und AMFW-in-AMFWX-Bridge
+- Ollama/OpenAI-kompatible Provider
+- Streaming, Retry, Conversation-Persistenz, DPAPI-KeyStore
+- Ollama-Modellverwaltung
+- CI-Workflow, SBOM, Installer-Test
+- AMFW-Bridges
 
-## Fehlt für einen belastbaren Release
+## Bewusst nicht enthalten
+
+- öffentliche Signatur / EV-Zertifikat
+- SmartScreen-Reputation
+- Cross-Platform
+- VST3-Host
+
+## Noch offen
 
 | Punkt | Priorität | Status |
 |---|---|---|
-| CI-Workflow (Tests + Build) | P0 | ❌ entfernt |
-| Installer-3.0.0-Silent-Test | P0 | ⚠️ nicht erneut geprüft |
 | AMFW-Bridge-Integrationstests | P0 | ❌ |
-| Echter Ollama-End-to-End-Test | P0 | ❌ nur HTTP-Mock |
-| SBOM/Lizenzübersicht | P1 | ❌ |
-| Release-Doku 3.0.0 vollständig | P1 | ⚠️ Basis vorhanden |
-| öffentliche Signatur | Distributor | ❌ optional |
-
-## AMFW-Funktionen, die in AMFWX fehlen
-
-| Funktion | Aufwand |
-|---|---|
-| Designer | mittel–groß |
-| Studio/Projektstarter | mittel |
-| vollständiges `amfw.quick` | groß |
-| Compat-Adapter (Tkinter/GTK/wx/FLTK/JUCE/Flutter/MAUI/SwiftUI/ImGui/Electron) | sehr groß |
-| PDF/Drucken | mittel |
-| Datenbank/Netzwerk | mittel |
-| RichText/HTML-Subset | groß |
-| ~80 AMFW-Widgets | groß |
-| GDI+-Painter-Äquivalent | nicht 1:1 |
-
-## SDK/LLM-Lücken
-
-- kein Streaming
-- keine Vision-/Bild-Eingabe
-- keine Gesprächspersistenz
-- kein Retry/Backoff
-- kein Modell-Management (Pull/Delete)
-- kein Tool-Fallback für Modelle ohne Tool-Calling
-- keine MCP-Anbindung
-- kein sicherer Key-Store (nur Env/Parameter)
-- keine Token-/Kostenanzeige
-- keine automatischen UI-Tests durch das Modell
-- Tool-Set deckt nur 7 Widget-Typen ab
-
-## Plattform
-
-- Windows-only
-- H.264/MP4 über Media Foundation
-- kein VST3-Host
-- kein MSI/Auto-Update
-- keine öffentliche Signatur
+| echter Ollama-Test in CI | P0 | ⚠️ optional, nicht in CI |
+| Designer | P1 | ❌ |
+| Studio/Projektstarter | P1 | ❌ |
+| vollständiges Quick/State | P1 | ❌ |
+| Compat-Adapter | P2 | ❌ |
+| PDF/Drucken | P1 | ❌ |
+| Datenbank/Netzwerk | P2 | ❌ |
+| RichText/HTML-Subset | P2 | ❌ |
+| weitere AMFW-Widgets | P2 | ❌ |
+| Vision-/Bild-Eingabe | P2 | ❌ |
+| MCP-Anbindung | P2 | ❌ |
 
 ## Nächste Schritte
 
-### P0
+1. Bridge-Integrationstests
+2. Designer
+3. PDF/Drucken
+4. Quick/State vollständig
+5. weitere Widgets
 
-1. CI-Workflow ohne SignPath
-2. Installer 3.0.0 testen
-3. Bridge-Tests
-4. echter Ollama-Test
+## Nicht mehr geplant
 
-### P1
-
-5. SBOM
-6. AI-Streaming
-7. Designer/Quick/PDF portieren
-8. Release-Doku
-
-### P2
-
-9. VST3/DSP
-10. Cross-Platform
+- öffentliche Signatur
+- Cross-Platform
+- VST3

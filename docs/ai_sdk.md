@@ -100,9 +100,30 @@ sdk.amfw_host(amfw_window)       # AMFW inside AMFWX
 
 AMFW must be importable for these calls. AMFW is not a hard dependency.
 
+## Streaming
+
+```python
+for chunk in provider.stream_chat(messages):
+    print(chunk["content"], end="", flush=True)
+```
+
+## Persistence and keys
+
+```python
+from amfwx import Conversation, KeyStore
+conversation = Conversation()
+conversation.save("chat.json")
+conversation = Conversation.load("chat.json")
+
+keys = KeyStore()
+keys.save("openai", "...")
+keys.load("openai")
+```
+
+`KeyStore` uses Windows DPAPI and stores only encrypted files.
+
 ## Limits
 
-- non-streaming chat only
 - no vision/image input yet
 - tool calling depends on the model
 - no automatic retry/backoff

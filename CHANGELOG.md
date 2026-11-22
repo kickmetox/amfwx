@@ -1,5 +1,19 @@
 ﻿# Changelog
 
+## 3.1.0 - 2026-11-22
+
+AI-/SDK-Haertung.
+
+### AI/SDK
+
+* Streaming fuer Ollama/OpenAI-kompatibel.
+* Retry/Backoff.
+* Conversation-Persistenz.
+* DPAPI-KeyStore.
+* Ollama pull/delete.
+* ProgressBar-Tool.
+* 167 Tests.
+
 ## 3.0.0 - 2026-11-22
 
 SDK + LLM-Integration.
