@@ -36,7 +36,8 @@ class CrashTests(unittest.TestCase):
                 raise ValueError("boom")
             except ValueError as error:
                 logger.log(error, "test")
-            text = open(path, encoding="utf-8").read()
+            with open(path, encoding="utf-8") as handle:
+                text = handle.read()
             self.assertIn("ValueError: boom", text)
             self.assertIn("context: test", text)
 
