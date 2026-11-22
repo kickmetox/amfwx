@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.31.0 - 2026-11-22
+
+EtherNet/IP ListIdentity.
+
+### Network
+
+* Geräte-Discovery.
+* 237 Tests.
+
 ## 3.30.0 - 2026-11-22
 
 Modbus RTU.
