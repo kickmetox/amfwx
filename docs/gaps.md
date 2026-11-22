@@ -37,7 +37,6 @@ Stand: 167 Tests, Windows-only. Öffentliche Signatur ist bewusst **kein Ziel**.
 | Studio/Projektstarter | P1 | ❌ |
 | vollständiges Quick/State | P1 | ❌ |
 | Compat-Adapter | P2 | ❌ |
-| PDF/Drucken | P1 | ❌ |
 | Datenbank/Netzwerk | P2 | ❌ |
 | RichText/HTML-Subset | P2 | ❌ |
 | weitere AMFW-Widgets | P2 | ❌ |

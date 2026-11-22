@@ -324,6 +324,10 @@ class Canvas:
         canvas.data[:] = pixels
         return canvas
 
+    def save_pdf(self, path):
+        from .pdf import canvas_to_pdf
+        return canvas_to_pdf(self, path)
+
     def save_bmp(self, path):
         row_size = (self.width * 3 + 3) & ~3
         pixel_size = row_size * self.height

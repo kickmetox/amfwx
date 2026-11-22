@@ -1000,6 +1000,14 @@ class Window:
                                         int(self.canvas.height * scale))
         return target.save_png(path)
 
+    def render_to_pdf(self, path):
+        self._layout_root()
+        self.canvas.clear(self.theme.background)
+        self.root.paint(self.canvas)
+        if self.overlay is not None:
+            self.overlay.paint(self.canvas)
+        return self.canvas.save_pdf(path)
+
     def render_to_bmp(self, path):
         self._layout_root()
         self.canvas.clear(self.theme.background)

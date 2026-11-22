@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.2.0 - 2026-11-22
+
+PDF/Bridge-Tests.
+
+### UI/PDF
+
+* `Canvas.save_pdf`.
+* `Window.render_to_pdf`.
+* AMFW-Bridge-Tests.
+* 171 Tests.
+
 ## 3.1.0 - 2026-11-22
 
 AI-/SDK-Haertung.
