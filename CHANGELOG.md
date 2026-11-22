@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.32.0 - 2026-11-22
+
+CAN.
+
+### IO
+
+* `CanFrame`.
+* PCAN-Backend.
+* 239 Tests.
+
 ## 3.31.0 - 2026-11-22
 
 EtherNet/IP ListIdentity.
