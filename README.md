@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.5.0  
+**Version:** 3.6.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 179 passing
+**Tests:** 182 passing
 
 ## Features
 
@@ -128,6 +128,7 @@ Build instructions:
 - [Designer](docs/designer.md)
 - [Declarative Quick](docs/quick.md)
 - [Database and network](docs/db_net.md)
+- [Studio / project starter](docs/studio.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License

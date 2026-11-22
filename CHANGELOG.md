@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.6.0 - 2026-11-22
+
+Studio/Projektstarter.
+
+### Platform
+
+* `Studio`.
+* Templates.
+* Scaffolding.
+* 182 Tests.
+
 ## 3.5.0 - 2026-11-22
 
 DB/Netzwerk.
