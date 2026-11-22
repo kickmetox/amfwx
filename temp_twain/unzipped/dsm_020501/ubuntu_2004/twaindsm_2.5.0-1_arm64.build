@@ -1,0 +1,136 @@
+ dpkg-buildpackage -d -us -uc -ui
+dpkg-buildpackage: info: source package twaindsm
+dpkg-buildpackage: info: source version 2.5.0-1
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by TWAIN Working Group <twaindsm@twain.org>
+ dpkg-source --before-build .
+dpkg-buildpackage: info: host architecture arm64
+ debian/rules clean
+dh_testdir
+dh_testroot
+rm -f build-stamp configure-stamp
+# Add here commands to clean up after the build process.
+rm -rf libtwaindsm* CMakeFiles cmake_install.cmake install_manifest.txt progress.make Makefile
+dh_clean 
+dh_clean: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+ dpkg-source -b .
+dpkg-source: warning: no source format specified in debian/source/format, see dpkg-source(1)
+dpkg-source: warning: source directory 'TWAIN_DSM' is not <sourcepackage>-<upstreamversion> 'twaindsm-2.5.0'
+dpkg-source: info: using source format '1.0'
+dpkg-source: info: building twaindsm in twaindsm_2.5.0-1.tar.gz
+dpkg-source: info: building twaindsm in twaindsm_2.5.0-1.dsc
+ debian/rules build
+dh_testdir
+# Add here commands to configure the package.
+cmake -D CMAKE_INSTALL_PREFIX=/home/host/dsm25/twain-dsm/TWAIN_DSM/debian/twaindsm/usr/local src
+-- Detected processor: aarch64
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/host/dsm25/twain-dsm/TWAIN_DSM/src
+touch configure-stamp
+dh_testdir
+# Add here commands to compile the package.
+/usr/bin/make -C src
+make[1]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[2]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[3]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+Scanning dependencies of target twaindsm
+make[3]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[3]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+[ 25%] Building CXX object CMakeFiles/twaindsm.dir/dsm.o
+[ 50%] Building CXX object CMakeFiles/twaindsm.dir/apps.o
+[ 75%] Building CXX object CMakeFiles/twaindsm.dir/log.o
+[100%] Linking CXX shared library libtwaindsm.so
+make[3]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+[100%] Built target twaindsm
+make[2]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[1]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+touch build-stamp
+ debian/rules binary
+dh_testdir
+dh_testroot
+dh_clean -k 
+dh_clean: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_clean: warning: dh_clean -k is deprecated; use dh_prep instead
+dh_clean: warning: This feature will be removed in compat 12.
+dh_installdirs
+dh_installdirs: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+# Add here commands to install the package into debian/tmp
+/usr/bin/make -C src install
+make[1]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[2]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[3]: Entering directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+make[3]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+[100%] Built target twaindsm
+make[2]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+Install the project...
+-- Install configuration: "Release"
+-- Installing: /home/host/dsm25/twain-dsm/TWAIN_DSM/debian/twaindsm/usr/local/include/twain.h
+-- Installing: /home/host/dsm25/twain-dsm/TWAIN_DSM/debian/twaindsm/usr/local/lib/libtwaindsm.so.2.5.0
+-- Installing: /home/host/dsm25/twain-dsm/TWAIN_DSM/debian/twaindsm/usr/local/lib/libtwaindsm.so.2
+-- Installing: /home/host/dsm25/twain-dsm/TWAIN_DSM/debian/twaindsm/usr/local/lib/libtwaindsm.so
+make[1]: Leaving directory '/home/host/dsm25/twain-dsm/TWAIN_DSM/src'
+dh_testdir
+dh_testroot
+dh_installdocs
+dh_installdocs: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_installchangelogs ChangeLog.txt
+dh_strip
+dh_strip: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_compress
+dh_compress: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_fixperms
+dh_installdeb
+dh_installdeb: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_shlibdeps
+dh_shlibdeps: warning: Compatibility levels before 9 are deprecated (level 5 in use)
+dh_gencontrol
+dh_md5sums
+dh_builddeb
+dpkg-deb: building package 'twaindsm' in '../twaindsm_2.5.0-1_arm64.deb'.
+dpkg-deb: building package 'twaindsm-dbgsym' in 'debian/.debhelper/scratch-space/build-twaindsm/twaindsm-dbgsym_2.5.0-1_arm64.deb'.
+	Renaming twaindsm-dbgsym_2.5.0-1_arm64.deb to twaindsm-dbgsym_2.5.0-1_arm64.ddeb
+ dpkg-genbuildinfo
+ dpkg-genchanges  >../twaindsm_2.5.0-1_arm64.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-buildpackage: info: full upload; Debian-native package (full source is included)
+Now running lintian twaindsm_2.5.0-1_arm64.changes ...
+warning: the authors of lintian do not recommend running it with root privileges!
+E: twaindsm changes: bad-distribution-in-changes-file unstable
+E: twaindsm: dir-in-usr-local usr/local/include/
+E: twaindsm: dir-in-usr-local usr/local/lib/
+E: twaindsm: file-in-usr-local usr/local/include/twain.h
+E: twaindsm: file-in-usr-local usr/local/lib/libtwaindsm.so
+E: twaindsm: file-in-usr-local usr/local/lib/libtwaindsm.so.2
+E: twaindsm: file-in-usr-local usr/local/lib/libtwaindsm.so.2.5.0
+E: twaindsm source: malformed-debian-changelog-version 2.5.0-1 (for native)
+E: twaindsm: no-shlibs-control-file usr/local/lib/libtwaindsm.so.2.5.0
+E: twaindsm: package-must-activate-ldconfig-trigger usr/local/lib/libtwaindsm.so.2.5.0
+E: twaindsm source: source-is-missing src/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_C.bin
+E: twaindsm source: source-is-missing src/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_CXX.bin
+E: twaindsm source: source-is-missing src/CMakeFiles/3.16.3/CompilerIdC/a.out
+E: twaindsm source: source-is-missing src/CMakeFiles/3.16.3/CompilerIdCXX/a.out
+W: twaindsm source: ancient-standards-version 3.6.2 (released 2005-06-17) (current is 4.5.0)
+W: twaindsm: command-with-path-in-maintainer-script postinst:2 /sbin/ldconfig
+W: twaindsm source: debhelper-but-no-misc-depends twaindsm
+W: twaindsm source: debian-rules-missing-recommended-target build-arch
+W: twaindsm source: debian-rules-missing-recommended-target build-indep
+W: twaindsm source: debian-rules-should-not-set-CFLAGS-from-noopt
+W: twaindsm-dbgsym: debug-file-with-no-debug-symbols usr/lib/debug/.build-id/17/565fc73d23ed1818db299afa130d4d17974f8f.debug
+W: twaindsm source: dh-clean-k-is-deprecated
+W: twaindsm: file-in-unusual-dir usr/local/include/twain.h
+W: twaindsm: file-in-unusual-dir usr/local/lib/libtwaindsm.so
+W: twaindsm: file-in-unusual-dir usr/local/lib/libtwaindsm.so.2
+W: twaindsm: file-in-unusual-dir usr/local/lib/libtwaindsm.so.2.5.0
+W: twaindsm: maintainer-script-ignores-errors postinst
+W: twaindsm: maintscript-calls-ldconfig postinst
+W: twaindsm source: missing-debian-source-format
+W: twaindsm: non-dev-pkg-with-shlib-symlink usr/local/lib/libtwaindsm.so.2.5.0 usr/local/lib/libtwaindsm.so
+W: twaindsm source: odd-historical-debian-changelog-version 2.4.3-1 (for native)
+W: twaindsm source: package-file-is-executable debian/changelog
+W: twaindsm source: package-file-is-executable debian/control
+W: twaindsm source: package-file-is-executable debian/copyright
+W: twaindsm source: package-file-is-executable debian/twaindsm.dirs
+W: twaindsm source: package-uses-deprecated-debhelper-compat-version 5
+Finished running lintian.

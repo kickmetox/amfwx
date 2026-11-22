@@ -9,6 +9,8 @@
 - `libsharpyuv.dll`
 - `mfdecode.dll`
 - `uia_provider.dll`
+- `TWAINDSM.dll`
+- `TWAINDSM32.dll`
 
 Verify:
 
@@ -19,7 +21,7 @@ python tools/verify_native.py
 Expected:
 
 ```text
-OK: 5 DLLs verifiziert
+OK: 7 DLLs verifiziert
 ```
 
 The manifest is not a signature. It detects accidental corruption or

@@ -1,0 +1,7 @@
+TWAIN Data Source Manager (DSM) 2.5.1
+Copyright (c) TWAIN Working Group
+License: LGPL v2 or later
+Source: https://github.com/twain/twain-dsm
+Release: https://github.com/twain/twain-dsm/releases/tag/v2.5.1
+Official Windows binaries, signed by TWAIN Working Group.
+This file is distributed with AMFWX for TWAIN scanner support.

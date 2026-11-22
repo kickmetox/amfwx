@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.42.0 - 2026-11-23
+
+TWAIN DSM gebundelt.
+
+### Scanners
+
+* Offizielle TWAINDSM 2.5.1 (32/64).
+* LGPL-Hinweis.
+* `dsm_available`/`dsm_path`.
+* 258 Tests.
+
 ## 3.41.0 - 2026-11-23
 
 Scanner-Enumeration.

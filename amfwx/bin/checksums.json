@@ -1,5 +1,5 @@
 {
-  "version": "3.41.0",
+  "version": "3.42.0",
   "algorithms": [
     "sha256"
   ],
@@ -8,6 +8,8 @@
     "libwebp.dll": "7b70471e7327c7028fbd8471e9bbcb8870bc083961726cdebae753214eb904b7",
     "mfdecode.dll": "b3df838cc802357733e53d22613c7bd9409910f52f61b40c8ea6d7b133ee9186",
     "SDL3.dll": "f00422d94ec12d68a65cffd6ffe5ab47d7ccba8984439a24703ebf9a67701132",
+    "TWAINDSM.dll": "25869f88a2bc76ded62a13aaea9f2084f0165bfdbbb7f46b9c3a43298938d467",
+    "TWAINDSM32.dll": "cee9a6ff8026dde09eda9f892c57cc928d42e4a4d22bb740fe38ee6e91797a28",
     "uia_provider.dll": "a6bf13f65ffa65780f03d5dc68e4b2d81177eddd9f37f0afbe5c3bfbdd181b74"
   }
 }

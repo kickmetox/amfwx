@@ -31,11 +31,18 @@ for source in list_twain_sources():
 
 The loader tries:
 
-1. `twaindsm.dll` (TWAIN DSM 2.x, 64-bit capable)
-2. `twain_32.dll` (legacy; only loadable by 32-bit Python)
+1. bundled `amfwx/bin/TWAINDSM.dll` / `TWAINDSM32.dll`
+2. system `twaindsm.dll`
+3. legacy `twain_32.dll` (only 32-bit Python)
 
-A 32-bit Python process can enumerate legacy TWAIN sources; a 64-bit
-Python process needs a 64-bit DSM.
+The official TWAIN DSM 2.5.1 binaries are bundled:
+
+- `TWAINDSM.dll` (64-bit)
+- `TWAINDSM32.dll` (32-bit)
+- `LICENSE-TWAINDSM.txt` (LGPL v2+)
+
+Both were signed by the TWAIN Working Group. Source:
+<https://github.com/twain/twain-dsm>
 
 ## 32/64-bit
 

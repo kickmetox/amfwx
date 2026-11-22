@@ -8,10 +8,12 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import list_twain_sources, list_wia_devices
+from amfwx import dsm_available, list_twain_sources, list_wia_devices
 
 
 class ScannerTests(unittest.TestCase):
+    def test_dsm(self):
+        self.assertTrue(dsm_available())
     def test_twain(self):
         sources = list_twain_sources()
         self.assertIsInstance(sources, list)

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ctypes
 from ctypes import wintypes
+from pathlib import Path
 
 
 DG_CONTROL = 1
@@ -44,8 +45,30 @@ class TwainSource:
         return f"TwainSource({self.product_name!r}, {self.manufacturer!r})"
 
 
-def _load_dsm():
+def dsm_path():
+    local = Path(__file__).resolve().parent / "bin" / (
+        "TWAINDSM32.dll" if ctypes.sizeof(ctypes.c_void_p) == 4
+        else "TWAINDSM.dll")
+    if local.exists():
+        return str(local)
     for name in ("twaindsm.dll", "twain_32.dll"):
+        try:
+            ctypes.WinDLL(name)
+            return name
+        except OSError:
+            continue
+    return ""
+
+
+def dsm_available():
+    return bool(dsm_path())
+
+
+def _load_dsm():
+    local = Path(__file__).resolve().parent / "bin" / (
+        "TWAINDSM32.dll" if ctypes.sizeof(ctypes.c_void_p) == 4
+        else "TWAINDSM.dll")
+    for name in (str(local), "twaindsm.dll", "twain_32.dll"):
         try:
             library = ctypes.WinDLL(name)
         except OSError:
