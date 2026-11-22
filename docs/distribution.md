@@ -36,6 +36,25 @@ is only valid on machines that trust that CA. It is not a release signature.
 - `tools/verify_native.py`
 - no hidden signing service, no external certificate dependency
 
+## Legal situation
+
+Code signing is not a general legal requirement for distributing a normal
+Windows desktop application. It becomes relevant for:
+
+- kernel drivers
+- some enterprise/managed environments
+- some stores or procurement rules
+- regulated industries
+
+For a normal downloaded EXE, Windows shows SmartScreen warnings for unsigned
+or unknown binaries. That is a reputation/UX issue, not a general legal ban.
+
+## Automation
+
+A coding agent or CI system can run `signtool` or a cloud signing API, but it
+cannot create a publicly trusted certificate by itself. The certificate and
+private key (or a signing service account) must be provided by the publisher.
+
 ## Why this separation
 
 A framework cannot know:
