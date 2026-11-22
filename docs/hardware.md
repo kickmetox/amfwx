@@ -58,7 +58,7 @@ Functions:
 | Interface | Status | Reason |
 |---|---|---|
 | USB raw | not included | needs WinUSB/libusb driver and device-specific protocol |
-| USB HID | not included | needs HID report descriptors per device |
+| USB HID | implemented | enumeration + raw reports; no descriptor parser |
 | USB serial | works via COM | driver exposes a COM port |
 | FireWire / IEEE 1394 | not supported | legacy stack, removed from modern Windows |
 | AppleTalk | not supported | obsolete protocol |

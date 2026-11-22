@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.28.0 - 2026-11-22
+
+USB HID.
+
+### Platform
+
+* HID-Enumeration.
+* Raw Reports.
+* 229 Tests.
+
 ## 3.27.0 - 2026-11-22
 
 WLAN.
