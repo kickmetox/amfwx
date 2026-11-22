@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.11.0 - 2026-11-22
+
+GTK-Compat.
+
+### Compat
+
+* `amfwx.compat.gtk`.
+* Box/Grid/Controls.
+* 193 Tests.
+
 ## 3.10.0 - 2026-11-22
 
 wxWidgets-Compat.
