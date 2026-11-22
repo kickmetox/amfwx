@@ -8,18 +8,24 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import list_wlan_interfaces, scan_wlan
+from amfwx import WlanError, list_wlan_interfaces, scan_wlan
 
 
 class WlanTests(unittest.TestCase):
     def test_interfaces(self):
-        interfaces = list_wlan_interfaces()
+        try:
+            interfaces = list_wlan_interfaces()
+        except WlanError as error:
+            self.skipTest(f"WLAN-Dienst nicht verfuegbar: {error}")
         self.assertIsInstance(interfaces, list)
         for interface in interfaces:
             self.assertTrue(interface.description)
 
     def test_scan(self):
-        networks = scan_wlan()
+        try:
+            networks = scan_wlan()
+        except WlanError as error:
+            self.skipTest(f"WLAN-Dienst nicht verfuegbar: {error}")
         self.assertIsInstance(networks, list)
         for network in networks:
             self.assertIsInstance(network.ssid, str)
