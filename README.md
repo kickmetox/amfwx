@@ -1,13 +1,13 @@
-# AMFWX
+﻿# AMFWX
 
 **AMFWX** is a Windows-only desktop UI framework written in pure Python
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.34.0  
+**Version:** 3.35.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 243 passing
+**Tests:** 246 passing
 
 ## Features
 
@@ -94,10 +94,10 @@ python tools\hardening_check.py
 
 The repository ships self-built Windows DLLs:
 
-- `SDL3.dll` — built from SDL3 source
-- `libwebp.dll` / `libsharpyuv.dll` — built from libwebp source
-- `mfdecode.dll` — Media Foundation helper, built with MSVC
-- `uia_provider.dll` — UIA provider, built with MinGW GCC
+- `SDL3.dll` â€” built from SDL3 source
+- `libwebp.dll` / `libsharpyuv.dll` â€” built from libwebp source
+- `mfdecode.dll` â€” Media Foundation helper, built with MSVC
+- `uia_provider.dll` â€” UIA provider, built with MinGW GCC
 
 Build instructions:
 
@@ -147,12 +147,14 @@ Build instructions:
 - [mDNS/Bonjour](docs/mdns.md)
 - [EtherNet/IP](docs/enip.md)
 - [CAN bus](docs/can.md)
+- [S7comm](docs/s7.md)
 - [LIN bus](docs/lin.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT â€” see [LICENSE](LICENSE).
 
 Third-party components keep their own licenses; see the license files in
 `amfwx/bin/`.
+

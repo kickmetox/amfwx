@@ -54,6 +54,7 @@ from .enip import (EnipDevice, EnipError, discover as discover_enip,
                    list_identity as list_enip_identity,
                    parse_response as parse_enip_response)
 from .can import CanError, CanFrame, PcanBus
+from .s7 import S7Client, S7Error
 from .lin import LinError, LinFrame, PcanLin
 from .mdns import (DnsError, Service, build_query, decode_name, discover as discover_mdns,
                    encode_name, parse_packet)
@@ -101,7 +102,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.34.0"
+__version__ = "3.35.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -120,7 +121,7 @@ __all__ = [
     "openai_vision_content", "vision_message", "MCPClient", "MCPError",
     "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "HidDevice", "UsbDeviceInfo", "UsbRawError", "WinUsbDevice",
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
-    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "EnipDevice", "EnipError", "discover_enip",
+    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "EnipDevice", "EnipError", "discover_enip",
     "list_enip_identity", "parse_enip_response", "decode_name", "encode_name",
     "WlanError", "WlanInterface",
     "WlanNetwork", "list_wlan_interfaces", "scan_wlan", "Monitor", "list_monitors", "primary_monitor",

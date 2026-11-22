@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.35.0 - 2026-11-22
+
+S7comm (experimentell).
+
+### IO
+
+* COTP/S7 Setup.
+* DB lesen/schreiben.
+* 245 Tests.
+
 ## 3.34.0 - 2026-11-22
 
 Raw USB/WinUSB.
