@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.40.0 - 2026-11-23
+
+Medizin-Datenstandards.
+
+### Data
+
+* HL7 v2 Parser.
+* FHIR JSON.
+* DICOM-Header.
+* 255 Tests.
+
 ## 3.39.0 - 2026-11-22
 
 Loopback-Serial.
