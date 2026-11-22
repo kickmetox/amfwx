@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.20.0 - 2026-11-22
+
+Formular-Validierung.
+
+### App
+
+* `Form`/`Field`.
+* Validatoren.
+* 211 Tests.
+
 ## 3.19.0 - 2026-11-22
 
 Widget-Integration.

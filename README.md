@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.19.0  
+**Version:** 3.20.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 208 passing
+**Tests:** 211 passing
 
 ## Features
 
@@ -137,6 +137,7 @@ Build instructions:
 - [Qt compat](docs/compat_qt.md)
 - [MCP](docs/mcp.md)
 - [Screenreader checklist](docs/screenreader_checklist.md)
+- [Form validation](docs/validation.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
