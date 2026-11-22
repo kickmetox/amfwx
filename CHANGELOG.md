@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.38.0 - 2026-11-22
+
+Hardware-Diagnose.
+
+### Tools
+
+* `tools/hardware_check.py`.
+* CI-Hardwarebericht.
+* 250 Tests.
+
 ## 3.37.1 - 2026-11-22
 
 Device-Inventory robust.

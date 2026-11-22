@@ -36,6 +36,7 @@ jobs:
           python tools/hardening_check.py --no-tests
           python tools/sbom.py --output dist/sbom.json
           python tools/a11y_audit.py --output dist/a11y.json
+          python tools/hardware_check.py --output dist/hardware.json
 
       - name: Build artifacts
         shell: pwsh
