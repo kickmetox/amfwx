@@ -50,6 +50,8 @@ from .richtext import RichDocument, RichText
 from .vision import image_base64, image_data_url, openai_vision_content, vision_message
 from .mcp import MCPClient, MCPError, MCPServer
 from .tray import TrayIcon
+from .display import (Monitor, list_monitors, primary_monitor, fullscreen,
+                      exit_fullscreen, move_to_monitor, monitor_work_area)
 from .validation import (Field, Form, ValidationError, email, integer,
                          max_length, min_length, number_range, pattern,
                          required)
@@ -87,7 +89,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.23.0"
+__version__ = "3.25.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -104,7 +106,8 @@ __all__ = [
     "DesignerCanvas", "DesignerWindow", "Project", "ProjectError", "Studio",
     "StudioWindow", "RichDocument", "RichText", "image_base64", "image_data_url",
     "openai_vision_content", "vision_message", "MCPClient", "MCPError",
-    "MCPServer", "Field", "Form", "TrayIcon", "ValidationError", "email",
+    "MCPServer", "Field", "Form", "TrayIcon", "Monitor", "list_monitors", "primary_monitor",
+    "fullscreen", "exit_fullscreen", "move_to_monitor", "monitor_work_area", "ValidationError", "email",
     "integer", "max_length", "min_length", "number_range", "pattern",
     "required",
     "KeyStore", "KeyStoreError", "verify_native_dlls",

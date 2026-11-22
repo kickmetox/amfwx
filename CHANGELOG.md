@@ -1,5 +1,28 @@
 ﻿# Changelog
 
+## 3.25.0 - 2026-11-22
+
+Display-Schnittstellen.
+
+### Platform
+
+* Monitor-Enumeration.
+* Fullscreen/Window-Placement.
+* Work-Area.
+* 223 Tests.
+
+## 3.24.0 - 2026-11-22
+
+Hardware-Schnittstellen.
+
+### IO
+
+* Serial/UART.
+* COBS/Length/Delimiter-Framing.
+* TCP/UDP.
+* Modbus TCP.
+* 221 Tests.
+
 ## 3.23.0 - 2026-11-22
 
 Layout-/Accessibility-Fix.
