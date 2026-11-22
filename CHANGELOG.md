@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.13.0 - 2026-11-22
+
+Qt-Compat.
+
+### Compat
+
+* `amfwx.compat.qt`.
+* QApplication/QMainWindow/Layouts/Controls.
+* 197 Tests.
+
 ## 3.12.0 - 2026-11-22
 
 JUCE-Compat.
