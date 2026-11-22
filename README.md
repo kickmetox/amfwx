@@ -122,6 +122,7 @@ Build instructions:
 - [Distribution and signing](docs/distribution.md)
 - [AMFW interop](docs/amfw_interop.md)
 - [AMFW merge strategy](docs/amfw_merge.md)
+- [AI/SDK integration](docs/ai_sdk.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License

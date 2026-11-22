@@ -1,5 +1,19 @@
 ﻿# Changelog
 
+## 3.0.0 - 2026-11-22
+
+SDK + LLM-Integration.
+
+### SDK
+
+* `create_sdk`/`SDK`.
+* `UiSession` mit LLM-Tools.
+* Ollama-Provider.
+* OpenAI-kompatible Provider.
+* `LLMAgent` Tool-Loop.
+* Bridges im SDK.
+* 162 Tests.
+
 ## 2.5.2 - 2026-11-22
 
 Security-Helfer.
