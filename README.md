@@ -123,6 +123,7 @@ Build instructions:
 - [AMFW interop](docs/amfw_interop.md)
 - [AMFW merge strategy](docs/amfw_merge.md)
 - [AI/SDK integration](docs/ai_sdk.md)
+- [Gap analysis](docs/gaps.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License
