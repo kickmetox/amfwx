@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.10.0 - 2026-11-22
+
+wxWidgets-Compat.
+
+### Compat
+
+* `amfwx.compat.wx`.
+* Frame/Panel/Sizer/Controls.
+* 191 Tests.
+
 ## 3.9.0 - 2026-11-22
 
 Tkinter-Compat.
