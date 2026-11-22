@@ -50,6 +50,7 @@ from .richtext import RichDocument, RichText
 from .vision import image_base64, image_data_url, openai_vision_content, vision_message
 from .mcp import MCPClient, MCPError, MCPServer
 from .tray import TrayIcon
+from .wlan import WlanError, WlanInterface, WlanNetwork, list_interfaces as list_wlan_interfaces, scan as scan_wlan
 from .bluetooth import BluetoothRadio, list_devices as list_bluetooth_devices, list_radios
 from .display import (Monitor, list_monitors, primary_monitor, fullscreen,
                       exit_fullscreen, move_to_monitor, monitor_work_area)
@@ -90,7 +91,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.26.0"
+__version__ = "3.27.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -107,7 +108,8 @@ __all__ = [
     "DesignerCanvas", "DesignerWindow", "Project", "ProjectError", "Studio",
     "StudioWindow", "RichDocument", "RichText", "image_base64", "image_data_url",
     "openai_vision_content", "vision_message", "MCPClient", "MCPError",
-    "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "Monitor", "list_monitors", "primary_monitor",
+    "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "WlanError", "WlanInterface",
+    "WlanNetwork", "list_wlan_interfaces", "scan_wlan", "Monitor", "list_monitors", "primary_monitor",
     "fullscreen", "exit_fullscreen", "move_to_monitor", "monitor_work_area", "ValidationError", "email",
     "integer", "max_length", "min_length", "number_range", "pattern",
     "required",

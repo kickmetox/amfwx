@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.27.0 - 2026-11-22
+
+WLAN.
+
+### Platform
+
+* Interface-Enumeration.
+* Netzwerk-Scan.
+* 227 Tests.
+
 ## 3.26.0 - 2026-11-22
 
 Bluetooth.
