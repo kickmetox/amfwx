@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.39.0 - 2026-11-22
+
+Loopback-Serial.
+
+### IO
+
+* `LoopbackSerial`.
+* Hardwarefreie Protokolltests.
+* 252 Tests.
+
 ## 3.38.0 - 2026-11-22
 
 Hardware-Diagnose.
