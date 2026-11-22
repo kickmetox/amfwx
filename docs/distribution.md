@@ -1,66 +1,48 @@
-# AMFWX Installer und Authenticode
+# Distribution and code signing
 
-## Portable
+AMFWX is a framework, not a distributor.
 
-```bat
-python tools\build_portable.py
-```
+## Responsibility
 
-Ergebnis:
+Code signing, store submission, SmartScreen reputation and public
+certificates are the responsibility of the **publisher, marketer or
+distributor** of the final application.
 
-```text
-dist\AMFWX-Portable-<version>.zip
-```
+The framework itself ships:
 
-Getestet: `install.ps1` und `uninstall.ps1`.
+- unsigned development wheels
+- test-signed local installers for development
+- no public certificate
+- no store account
 
-## PyInstaller
+## What a distributor must do
 
-```bat
-tools\build_app.ps1
-```
+1. Build the final application with AMFWX.
+2. Obtain a public code-signing certificate (OV/EV) or use a signing service.
+3. Sign the final `.exe`/installer with a timestamp.
+4. Publish and maintain the certificate.
+5. Handle SmartScreen/reputation and store requirements.
 
-Ergebnis:
+## Local test signature
 
-```text
-dist\AMFWX\AMFWX.exe
-```
+The development installer can be signed with a local test CA. That signature
+is only valid on machines that trust that CA. It is not a release signature.
 
-## Inno Setup
+## What AMFWX provides
 
-```bat
-tools\build_installer.ps1
-```
+- installer/uninstaller tooling
+- reproducible build scripts
+- SHA-256 manifest for native DLLs
+- `tools/verify_native.py`
+- no hidden signing service, no external certificate dependency
 
-Ergebnis:
+## Why this separation
 
-```text
-dist\installer\AMFWX-Setup-<version>.exe
-```
+A framework cannot know:
 
-Voraussetzungen:
+- who publishes the final app
+- which legal entity is responsible
+- which certificate/store account is used
+- how long the certificate is valid
 
-- PyInstaller
-- Inno Setup 6
-
-## Authenticode
-
-```bat
-set AMFWX_CERT=C:\certs\codesign.pfx
-set AMFWX_CERT_PASSWORD=...
-tools\sign.ps1 -File dist\installer\AMFWX-Setup-0.12.0.exe
-tools\verify_installer.ps1
-```
-
-Nicht ausgeführt:
-
-- kein Zertifikat
-- kein signtool in dieser Umgebung
-- kein signierter Installer
-
-## Grenzen
-
-- keine eingebettete Python-Runtime
-- kein MSIX
-- keine Update-Signatur
-- keine SmartScreen-Reputation
+Those are distribution decisions.

@@ -109,7 +109,7 @@ Build instructions:
 ## Limitations
 
 - Windows-only
-- no public code-signing certificate yet
+- code signing is the responsibility of the publisher/distributor
 - no complete screenreader certification
 - Media Foundation remains a system codec
 - no VST3 host
@@ -119,6 +119,7 @@ Build instructions:
 - [Accessibility](docs/accessibility.md)
 - [Framework review](docs/framework_review.md)
 - [Feature matrix](docs/feature_matrix.md)
+- [Distribution and signing](docs/distribution.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License

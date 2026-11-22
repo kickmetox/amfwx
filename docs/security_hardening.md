@@ -68,6 +68,6 @@ Deterministic fuzz tests cover:
 
 ## Limits
 
-- no public code-signing certificate
+- no public certificate; signing is a distributor responsibility
 - no security certification
 - Media Foundation remains a system codec
