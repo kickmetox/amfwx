@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.36.0  
+**Version:** 3.37.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 247 passing
+**Tests:** 249 passing
 
 ## Features
 
@@ -149,6 +149,7 @@ Build instructions:
 - [CAN bus](docs/can.md)
 - [S7comm](docs/s7.md)
 - [OPC UA](docs/opcua.md)
+- [Device inventory](docs/devices.md)
 - [LIN bus](docs/lin.md)
 - [Release notes](docs/release_2.4.2.md)
 

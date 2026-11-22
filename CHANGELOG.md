@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.37.0 - 2026-11-22
+
+Geraeteuebersicht.
+
+### Platform
+
+* `DeviceManager`.
+* `list_devices`.
+* 249 Tests.
+
 ## 3.36.0 - 2026-11-22
 
 Optionales OPC UA.
