@@ -198,8 +198,27 @@ class OpenAICompatibleProvider(AIProvider):
         data = self._request("/models", method="GET")
         return [item.get("id", "") for item in data.get("data", [])]
 
+    def _vision_messages(self, messages):
+        result = []
+        for message in messages:
+            images = message.get("images") or []
+            if images:
+                content = message.get("content", "")
+                blocks = [{"type": "text", "text": str(content)}]
+                for image in images:
+                    if not str(image).startswith("data:"):
+                        image = "data:image/png;base64," + str(image)
+                    blocks.append({"type": "image_url",
+                                   "image_url": {"url": str(image)}})
+                result.append({"role": message.get("role", "user"),
+                               "content": blocks})
+            else:
+                result.append(message)
+        return result
+
     def chat(self, messages, tools=None, stream=False):
-        payload = {"model": self.model, "messages": messages,
+        payload = {"model": self.model,
+                   "messages": self._vision_messages(messages),
                    "stream": False}
         if tools:
             payload["tools"] = tools

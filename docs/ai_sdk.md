@@ -122,9 +122,18 @@ keys.load("openai")
 
 `KeyStore` uses Windows DPAPI and stores only encrypted files.
 
+## Vision
+
+```python
+agent.run("Beschreibe das Bild", image="shot.png")
+```
+
+`amfwx.vision` provides `image_base64`, `image_data_url` and
+`vision_message`.
+
 ## Limits
 
-- no vision/image input yet
+- vision via Ollama `images` and OpenAI `image_url` blocks
 - tool calling depends on the model
 - no automatic retry/backoff
 - no conversation persistence

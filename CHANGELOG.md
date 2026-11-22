@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.14.0 - 2026-11-22
+
+Vision.
+
+### AI
+
+* Bild-Helfer.
+* Ollama `images`.
+* OpenAI `image_url`.
+* Agent `image`.
+* 199 Tests.
+
 ## 3.13.0 - 2026-11-22
 
 Qt-Compat.

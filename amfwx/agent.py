@@ -24,8 +24,12 @@ class LLMAgent:
         self.messages = [{"role": "system", "content": self.system_prompt}]
         self.last_tool_results = []
 
-    def run(self, text):
-        self.messages.append({"role": "user", "content": str(text)})
+    def run(self, text, image=None):
+        message = {"role": "user", "content": str(text)}
+        if image is not None:
+            from .vision import image_base64
+            message["images"] = [image_base64(image)]
+        self.messages.append(message)
         for _ in range(self.max_steps):
             response = self.provider.chat(self.messages, tools=TOOL_SPECS)
             calls = response.get("tool_calls") or []
