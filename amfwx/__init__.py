@@ -29,7 +29,8 @@ from .arabic import arabic_shape
 from .audio import AudioPlayer, AudioQueuePlayer, Wav, decode_wav
 from .settings import Settings, default_path
 from .models import ListModel, Model, SortFilterModel, TableModel
-from .quick import QuickView, State, Text, TextField
+from .quick import (ForEach, HStack, ListState, QuickView, Stack, State,
+                    Text, TextField, VStack)
 from .midi import MidiFile, MidiNote, MidiPlayer
 from .resources import ResourcePack
 from .crash import CrashLogger
@@ -75,7 +76,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.3.0"
+__version__ = "3.4.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -83,7 +84,8 @@ __all__ = [
     "ScrollBar", "MenuBar", "TableView", "TreeView", "TreeItem",
     "BoxLayout", "GridLayout",
     "FormLayout", "Dialog", "MessageBox", "FindReplaceDialog", "ColorDialog", "ColorSwatch", "FontDialog", "Settings", "default_path", "Model", "ListModel", "TableModel",
-    "SortFilterModel", "QuickView", "State", "Text", "TextField", "Animation", "Timeline",
+    "SortFilterModel", "QuickView", "State", "ListState", "Stack", "VStack", "HStack",
+    "ForEach", "Text", "TextField", "Animation", "Timeline",
     "AnimatedValue", "linear", "ease_in", "ease_out", "ease_in_out",
     "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "SecurityError", "AIError", "AIProvider", "EchoProvider",
     "OllamaProvider", "OpenAICompatibleProvider", "provider_from_name",

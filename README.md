@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.3.0  
+**Version:** 3.4.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 174 passing
+**Tests:** 176 passing
 
 ## Features
 
@@ -126,6 +126,7 @@ Build instructions:
 - [Gap analysis](docs/gaps.md)
 - [PDF export](docs/pdf.md)
 - [Designer](docs/designer.md)
+- [Declarative Quick](docs/quick.md)
 - [Release notes](docs/release_2.4.2.md)
 
 ## License

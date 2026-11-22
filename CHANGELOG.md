@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.4.0 - 2026-11-22
+
+Quick/State vollstaendig.
+
+### UI
+
+* `Stack`/`VStack`/`HStack`.
+* `ForEach`.
+* `ListState`.
+* 176 Tests.
+
 ## 3.3.0 - 2026-11-22
 
 Designer.

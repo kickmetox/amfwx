@@ -6,7 +6,7 @@ rebuilds its widget tree when state changes.
 
 from __future__ import annotations
 
-from .widgets import BoxLayout, Button, Label, LineEdit
+from .widgets import BoxLayout, Button, Label, LineEdit, Widget
 from .window import Window
 
 
@@ -39,6 +39,61 @@ class State:
     def _notify(self):
         for callback in list(self._listeners):
             callback(self._value)
+
+
+class Stack(Widget):
+    def __init__(self, orientation="vertical", spacing=8, padding=12,
+                 children=None):
+        super().__init__()
+        self.orientation = orientation
+        self.layout = BoxLayout(orientation, spacing=spacing, padding=padding)
+        self.children = []
+        for child in children or []:
+            self.add(child)
+
+    def add(self, widget):
+        widget.parent = self
+        self.children.append(widget)
+        self.layout.add(widget)
+        return widget
+
+    def size_hint(self):
+        hints = [child.size_hint() for child in self.children]
+        if not hints:
+            return (40, 40)
+        if self.orientation == "vertical":
+            return (max(w for w, _ in hints), sum(h for _, h in hints) +
+                    self.layout.spacing * max(0, len(hints) - 1) +
+                    2 * self.layout.padding)
+        return (sum(w for w, _ in hints) +
+                self.layout.spacing * max(0, len(hints) - 1) +
+                2 * self.layout.padding, max(h for _, h in hints))
+
+    def arrange(self, rect):
+        self.rect = rect
+        self.layout.arrange(self, rect)
+
+    def paint(self, canvas):
+        for child in self.children:
+            child.paint(canvas)
+
+
+def VStack(*children, spacing=8, padding=12):
+    return Stack("vertical", spacing, padding, children)
+
+
+def HStack(*children, spacing=8, padding=12):
+    return Stack("horizontal", spacing, padding, children)
+
+
+def ForEach(items, builder):
+    children = []
+    for index, item in enumerate(items):
+        try:
+            children.append(builder(item, index))
+        except TypeError:
+            children.append(builder(item))
+    return VStack(*children)
 
 
 def Text(value):
@@ -93,3 +148,20 @@ class QuickView(Window):
             self.state.unsubscribe(self._listener)
             self._listener = None
         self.close()
+
+
+class ListState(State):
+    def __init__(self, items=None):
+        super().__init__(list(items or []))
+
+    def append(self, item):
+        self._value.append(item)
+        self._notify()
+
+    def remove(self, index):
+        del self._value[index]
+        self._notify()
+
+    def update(self, index, item):
+        self._value[index] = item
+        self._notify()
