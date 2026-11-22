@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.29.0 - 2026-11-22
+
+mDNS/Bonjour.
+
+### Network
+
+* DNS packet parsing.
+* Service Discovery.
+* 232 Tests.
+
 ## 3.28.0 - 2026-11-22
 
 USB HID.
