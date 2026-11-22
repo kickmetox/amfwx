@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.44.2 - 2026-11-23
+
+TWAIN-ABI korrigiert.
+
+### Fix
+
+* `DSM_Entry` DAT/MSG als 16-Bit.
+* TWAIN-Strukturen `pack(2)`.
+* DSM wird fuer Enumeration geoeffnet.
+* 261 Tests.
+
 ## 3.44.1 - 2026-11-23
 
 TWAIN-Konstante korrigiert.

@@ -8,12 +8,16 @@ from pathlib import Path
 
 
 DG_CONTROL = 1
+DAT_PARENT = 4
 DAT_IDENTITY = 3
-MSG_GETFIRST = 1
-MSG_GETNEXT = 2
+MSG_OPENDSM = 0x0301
+MSG_CLOSEDSM = 0x0302
+MSG_GETFIRST = 0x0004
+MSG_GETNEXT = 0x0005
 
 
 class TW_VERSION(ctypes.Structure):
+    _pack_ = 2
     _fields_ = [("MajorNum", wintypes.WORD),
                 ("MinorNum", wintypes.WORD),
                 ("Language", wintypes.WORD),
@@ -22,6 +26,7 @@ class TW_VERSION(ctypes.Structure):
 
 
 class TW_IDENTITY(ctypes.Structure):
+    _pack_ = 2
     _fields_ = [("Id", wintypes.ULONG),
                 ("Version", TW_VERSION),
                 ("ProtocolMajor", wintypes.WORD),
@@ -75,7 +80,7 @@ def _load_dsm():
             continue
         entry = library.DSM_Entry
         entry.argtypes = [ctypes.c_void_p, ctypes.c_void_p,
-                          wintypes.DWORD, wintypes.DWORD, wintypes.DWORD,
+                          wintypes.DWORD, wintypes.WORD, wintypes.WORD,
                           ctypes.c_void_p]
         entry.restype = wintypes.WORD
         return library
@@ -85,6 +90,12 @@ def _load_dsm():
 def list_sources():
     library = _load_dsm()
     if library is None:
+        return []
+    user32 = ctypes.WinDLL("user32")
+    user32.GetDesktopWindow.restype = ctypes.c_void_p
+    parent = ctypes.c_void_p(user32.GetDesktopWindow())
+    if library.DSM_Entry(None, None, DG_CONTROL, DAT_PARENT, MSG_OPENDSM,
+                         ctypes.byref(parent)) != 0:
         return []
     sources = []
     identity = TW_IDENTITY()
@@ -99,4 +110,5 @@ def list_sources():
                                    MSG_GETNEXT, ctypes.byref(identity))
         if result != 0:
             break
+    library.DSM_Entry(None, None, DG_CONTROL, DAT_PARENT, MSG_CLOSEDSM, None)
     return sources
