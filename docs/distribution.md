@@ -49,6 +49,16 @@ Windows desktop application. It becomes relevant for:
 For a normal downloaded EXE, Windows shows SmartScreen warnings for unsigned
 or unknown binaries. That is a reputation/UX issue, not a general legal ban.
 
+## Warum lokale Programme oft keine Warnung zeigen
+
+Windows SmartScreen warnt vor allem bei Dateien, die aus dem Internet
+stammen und ein Mark-of-the-Web (MOTW) tragen. Lokal gebaute, per USB
+kopierte oder aus einem ZIP ohne MOTW entpackte EXEs starten meist ohne
+Warnung, auch wenn sie unsigniert sind.
+
+Das bedeutet nicht, dass die Datei signiert ist. Es bedeutet nur, dass
+SmartScreen in diesem Kontext nicht ausgeloest wurde.
+
 ## Automation
 
 A coding agent or CI system can run `signtool` or a cloud signing API, but it
