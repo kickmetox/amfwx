@@ -36,6 +36,16 @@ udp = UdpSocket(broadcast=True)
 udp.send(b"discover", "255.255.255.255", 5001)
 ```
 
+### Modbus RTU
+
+```python
+from amfwx.io import ModbusRTU
+
+with ModbusRTU("COM5", 19200, unit=1) as rtu:
+    print(rtu.read_holding_registers(0, 4))
+    rtu.write_register(10, 1234)
+```
+
 ### Modbus TCP
 
 ```python

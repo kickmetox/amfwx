@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.30.0 - 2026-11-22
+
+Modbus RTU.
+
+### IO
+
+* RTU-Client.
+* CRC16.
+* 235 Tests.
+
 ## 3.29.0 - 2026-11-22
 
 mDNS/Bonjour.
