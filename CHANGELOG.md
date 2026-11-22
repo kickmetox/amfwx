@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.9.0 - 2026-11-22
+
+Tkinter-Compat.
+
+### Compat
+
+* `amfwx.compat.tkinter`.
+* Tk/Frame/Label/Button/Entry/Checkbutton.
+* Variablen.
+* pack/grid/place.
+* 189 Tests.
+
 ## 3.8.0 - 2026-11-22
 
 Designer-Resize/Undo.
