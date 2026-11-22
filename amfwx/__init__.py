@@ -56,7 +56,7 @@ from .enip import (EnipDevice, EnipError, discover as discover_enip,
 from .can import CanError, CanFrame, PcanBus
 from .twain import (TwainSource, dsm_available, dsm_path,
                     list_sources as list_twain_sources)
-from .wia import WiaDevice, list_wia_devices
+from .wia import WiaDevice, WiaError, WiaScanner, list_wia_devices
 from .medical import DicomFile, MedicalError, parse_dicom, parse_fhir, parse_hl7
 from .devices import DeviceManager, list_devices
 from .opcua import OpcUaClient, OpcUaError
@@ -108,7 +108,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.42.0"
+__version__ = "3.43.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -129,7 +129,7 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "DicomFile", "MedicalError",
     "parse_dicom", "parse_fhir", "parse_hl7", "TwainSource",
-    "list_twain_sources", "dsm_available", "dsm_path", "WiaDevice", "list_wia_devices", "EnipDevice", "EnipError", "discover_enip",
+    "list_twain_sources", "dsm_available", "dsm_path", "WiaDevice", "WiaError", "WiaScanner", "list_wia_devices", "EnipDevice", "EnipError", "discover_enip",
     "list_enip_identity", "parse_enip_response", "decode_name", "encode_name",
     "WlanError", "WlanInterface",
     "WlanNetwork", "list_wlan_interfaces", "scan_wlan", "Monitor", "list_monitors", "primary_monitor",

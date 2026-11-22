@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.43.0 - 2026-11-23
+
+WIA-Bildaufnahme.
+
+### Scanners
+
+* `WiaScanner`.
+* PNG/JPEG/BMP/TIFF.
+* DPI.
+* 259 Tests.
+
 ## 3.42.0 - 2026-11-23
 
 TWAIN DSM gebundelt.

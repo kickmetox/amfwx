@@ -8,7 +8,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import dsm_available, list_twain_sources, list_wia_devices
+from amfwx import WiaError, WiaScanner, dsm_available, list_twain_sources, list_wia_devices
 
 
 class ScannerTests(unittest.TestCase):
@@ -19,6 +19,10 @@ class ScannerTests(unittest.TestCase):
         self.assertIsInstance(sources, list)
         for source in sources:
             self.assertTrue(source.product_name)
+
+    def test_wia_missing_device(self):
+        with self.assertRaises(WiaError):
+            WiaScanner(device_id="missing").acquire("x.png")
 
     def test_wia(self):
         devices = list_wia_devices()
