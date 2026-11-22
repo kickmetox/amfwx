@@ -1,0 +1,13 @@
+{
+  "version": "2.5.1",
+  "algorithms": [
+    "sha256"
+  ],
+  "files": {
+    "libsharpyuv.dll": "e74b7522f25057be55397d05fa1dafc614699f0df7d781d3c309136424150f36",
+    "libwebp.dll": "7b70471e7327c7028fbd8471e9bbcb8870bc083961726cdebae753214eb904b7",
+    "mfdecode.dll": "b3df838cc802357733e53d22613c7bd9409910f52f61b40c8ea6d7b133ee9186",
+    "SDL3.dll": "f00422d94ec12d68a65cffd6ffe5ab47d7ccba8984439a24703ebf9a67701132",
+    "uia_provider.dll": "a6bf13f65ffa65780f03d5dc68e4b2d81177eddd9f37f0afbe5c3bfbdd181b74"
+  }
+}

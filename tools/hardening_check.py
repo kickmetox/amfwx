@@ -22,6 +22,7 @@ REQUIRED_BINARIES = [
     "amfwx/bin/SDL3.dll",
     "amfwx/bin/libwebp.dll",
     "amfwx/bin/libsharpyuv.dll",
+    "amfwx/bin/checksums.json",
 ]
 
 REQUIRED_FILES = [

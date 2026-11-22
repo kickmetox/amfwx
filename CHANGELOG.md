@@ -2,6 +2,17 @@
 
 ## 2.5.1 - 2026-11-22
 
+Security-Haertung.
+
+### Security
+
+* SHA-256-Manifest fuer native DLLs.
+* `tools/verify_native.py`.
+* Audit-Doku.
+* 153 Tests.
+
+## 2.5.1 - 2026-11-22
+
 SignPath-Foundation-Integration.
 
 ### Distribution
