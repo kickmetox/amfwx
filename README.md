@@ -4,7 +4,7 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.37.0  
+**Version:** 3.37.1  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
 **Tests:** 249 passing

@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.37.1 - 2026-11-22
+
+Device-Inventory robust.
+
+### Fix
+
+* Fehlende Dienste liefern leere Listen.
+* 249 Tests.
+
 ## 3.37.0 - 2026-11-22
 
 Geraeteuebersicht.

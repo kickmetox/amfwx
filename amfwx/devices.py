@@ -10,18 +10,25 @@ from .usb_raw import list_usb_devices
 from .wlan import list_interfaces as list_wlan_interfaces
 
 
+def _safe(collector):
+    try:
+        return collector()
+    except Exception:
+        return []
+
+
 class DeviceManager:
     def __init__(self):
         self.snapshot = {}
 
     def refresh(self):
         self.snapshot = {
-            "serial": list_ports(),
-            "hid": list_hid_devices(),
-            "usb": list_usb_devices(),
-            "bluetooth": list_bluetooth_devices(issue_inquiry=False),
-            "wlan": list_wlan_interfaces(),
-            "displays": list_monitors(),
+            "serial": _safe(list_ports),
+            "hid": _safe(list_hid_devices),
+            "usb": _safe(list_usb_devices),
+            "bluetooth": _safe(lambda: list_bluetooth_devices(issue_inquiry=False)),
+            "wlan": _safe(list_wlan_interfaces),
+            "displays": _safe(list_monitors),
         }
         return self
 
