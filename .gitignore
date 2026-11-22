@@ -31,6 +31,10 @@ uia_patterns_*.txt
 
 # Native test binaries (sources stay)
 native/*.exe
+native/*.dll
+native/*.lib
+native/*.obj
+native/*.exp
 
 # Vendored build trees
 vendor/

@@ -1,2 +1,0 @@
-dialog 7606596
-btn 6095898 visible 1
