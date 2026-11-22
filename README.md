@@ -4,10 +4,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.45.0  
+**Version:** 3.47.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 261 passing
+**Tests:** 266 passing
 
 ## Features
 
@@ -146,6 +146,7 @@ Build instructions:
 - [USB/Thunderbolt](docs/usb_thunderbolt.md)
 - [Medical data](docs/medical.md)
 - [Scanners: WIA/TWAIN](docs/scanners.md)
+- [Network printers/scanners](docs/network_scan.md)
 - [Raw USB/WinUSB](docs/usb_raw.md)
 - [mDNS/Bonjour](docs/mdns.md)
 - [EtherNet/IP](docs/enip.md)

@@ -1,5 +1,27 @@
 ﻿# Changelog
 
+## 3.47.0 - 2026-11-23
+
+Netzwerk-Scanner/Drucker.
+
+### Network
+
+* mDNS-Discovery.
+* eSCL-Probe.
+* `zeroconf` optional.
+* 266 Tests.
+
+## 3.46.0 - 2026-11-23
+
+32-Bit-TWAIN-Bruecke.
+
+### Scanners
+
+* `list_twain32_sources`.
+* `scan_twain32`.
+* Canon CISDS.DS getestet.
+* 263 Tests.
+
 ## 3.45.0 - 2026-11-23
 
 TWAIN-Enumeration funktionsfaehig.

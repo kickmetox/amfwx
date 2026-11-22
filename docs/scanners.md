@@ -44,6 +44,23 @@ The official TWAIN DSM 2.5.1 binaries are bundled:
 Both were signed by the TWAIN Working Group. Source:
 <https://github.com/twain/twain-dsm>
 
+## 32-bit bridge
+
+32-bit-only drivers (for example Canon `CISDS.DS`) are used through a
+32-bit helper process:
+
+```python
+from amfwx import list_twain32_sources, scan_twain32
+
+for source in list_twain32_sources():
+    print(source.name, source.manufacturer)
+
+scan_twain32("CanoScan LiDE 210", "scan.bmp")
+```
+
+The helper needs a 32-bit Python. Set `AMFWX_PYTHON32` or place it at
+`vendor/python32/python.exe`.
+
 ## 32/64-bit
 
 | Python | WIA | TWAIN |

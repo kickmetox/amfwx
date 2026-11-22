@@ -54,10 +54,13 @@ from .enip import (EnipDevice, EnipError, discover as discover_enip,
                    list_identity as list_enip_identity,
                    parse_response as parse_enip_response)
 from .can import CanError, CanFrame, PcanBus
+from .twain32 import Twain32Error, Twain32Source, scan as scan_twain32, list_sources as list_twain32_sources
 from .twain import (TwainSource, dsm_available, dsm_path,
                     list_sources as list_twain_sources)
 from .wia import WiaDevice, WiaError, WiaScanner, list_wia_devices
 from .medical import DicomFile, MedicalError, parse_dicom, parse_fhir, parse_hl7
+from .network_scan import (NetworkDevice, discover_network_devices,
+                           probe_escl)
 from .devices import DeviceManager, list_devices
 from .opcua import OpcUaClient, OpcUaError
 from .s7 import S7Client, S7Error
@@ -108,7 +111,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.45.0"
+__version__ = "3.47.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -127,9 +130,11 @@ __all__ = [
     "openai_vision_content", "vision_message", "MCPClient", "MCPError",
     "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "HidDevice", "UsbDeviceInfo", "UsbRawError", "WinUsbDevice",
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
-    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "DicomFile", "MedicalError",
+    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice",
+    "discover_network_devices", "probe_escl", "DicomFile", "MedicalError",
     "parse_dicom", "parse_fhir", "parse_hl7", "TwainSource",
-    "list_twain_sources", "dsm_available", "dsm_path", "WiaDevice", "WiaError", "WiaScanner", "list_wia_devices", "EnipDevice", "EnipError", "discover_enip",
+    "list_twain_sources", "dsm_available", "dsm_path", "Twain32Source", "Twain32Error",
+    "list_twain32_sources", "scan_twain32", "WiaDevice", "WiaError", "WiaScanner", "list_wia_devices", "EnipDevice", "EnipError", "discover_enip",
     "list_enip_identity", "parse_enip_response", "decode_name", "encode_name",
     "WlanError", "WlanInterface",
     "WlanNetwork", "list_wlan_interfaces", "scan_wlan", "Monitor", "list_monitors", "primary_monitor",

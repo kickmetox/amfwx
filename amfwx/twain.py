@@ -98,6 +98,7 @@ def application_identity():
     app.ProductName = b"AMFWX"
     app.Manufacturer = b"AMFWX"
     app.ProductFamily = b"AMFWX"
+    app.SupportedGroups = 0x0003
     app.ProtocolMajor = 2
     app.ProtocolMinor = 5
     app.Version.MajorNum = 1
