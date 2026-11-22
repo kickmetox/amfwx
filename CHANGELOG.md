@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 2.5.2 - 2026-11-22
+
+Security-Helfer.
+
+### Security
+
+* `verify_native_dlls`.
+* `safe_resource_name`.
+* ZIP-Path-Traversal-Schutz.
+* 156 Tests.
+
 ## 2.5.1 - 2026-11-22
 
 Security-Haertung.

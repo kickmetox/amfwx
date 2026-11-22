@@ -33,6 +33,7 @@ from .quick import QuickView, State, Text, TextField
 from .midi import MidiFile, MidiNote, MidiPlayer
 from .resources import ResourcePack
 from .crash import CrashLogger
+from .security import SecurityError, safe_resource_name, verify_native_dlls
 from .dsp import AudioBuffer, Biquad, DspGraph, Gain, Mixer
 from .plugins import Plugin, PluginError, PluginRegistry
 from .mixer import MixerPanel, MixerStrip
@@ -64,7 +65,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "2.5.1"
+__version__ = "2.5.2"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -73,7 +74,8 @@ __all__ = [
     "FormLayout", "Dialog", "MessageBox", "FindReplaceDialog", "ColorDialog", "ColorSwatch", "FontDialog", "Settings", "default_path", "Model", "ListModel", "TableModel",
     "SortFilterModel", "QuickView", "State", "Text", "TextField", "Animation", "Timeline",
     "AnimatedValue", "linear", "ease_in", "ease_out", "ease_in_out",
-    "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "AudioBuffer", "Gain", "Mixer", "Biquad", "DspGraph",
+    "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "SecurityError", "verify_native_dlls",
+    "safe_resource_name", "AudioBuffer", "Gain", "Mixer", "Biquad", "DspGraph",
     "Plugin", "PluginError", "PluginRegistry", "MixerPanel", "MixerStrip", "MediaVideo", "MediaStream", "MediaAudio", "MediaAudioStream", "MediaPlayer", "probe_media_foundation", "Mp4Info", "Mp4Track", "GPUCompute", "compile_dxil", "compile_hlsl", "ShaderError", "AviVideo", "VideoPlayer", "Shader", "ShaderRenderer", "AudioPlayer", "AudioQueuePlayer", "Wav", "decode_wav", "Sdl3Renderer", "Sdl3Error", "Sdl3Loop", "Accessible", "AccessibilityNode", "AccessibilityTree", "AccessibilityBridge", "attach_uia_provider", "read_accessible", "do_default_action", "set_accessible_value", "set_accessible_name", "select_accessible", "read_focus", "read_selection", "read_location", "decode_webp", "encode_webp", "probe_webp", "Theme", "DARK", "LIGHT",
     "HIGH_CONTRAST", "get_theme", "draw_text", "measure_text",
     "DragEvent", "DragManager", "TouchEvent", "GestureEvent", "decode_jpeg",

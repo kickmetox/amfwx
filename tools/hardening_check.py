@@ -37,6 +37,7 @@ REQUIRED_FILES = [
     "amfwx/midi.py",
     "amfwx/resources.py",
     "amfwx/crash.py",
+    "amfwx/security.py",
     "amfwx/dsp.py",
     "amfwx/mixer.py",
     "native/uia_provider.cpp",

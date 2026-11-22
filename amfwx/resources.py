@@ -17,7 +17,8 @@ class ResourcePack:
         return sorted(self._names)
 
     def read(self, name):
-        return self.archive.read(str(name))
+        from .security import safe_resource_name
+        return self.archive.read(safe_resource_name(name))
 
     def text(self, name, encoding="utf-8"):
         return self.read(name).decode(encoding)
@@ -26,7 +27,8 @@ class ResourcePack:
         return json.loads(self.text(name))
 
     def exists(self, name):
-        return str(name) in self._names
+        from .security import safe_resource_name
+        return safe_resource_name(name) in self._names
 
     def png(self, name):
         from .canvas import Canvas
