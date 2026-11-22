@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.45.0 - 2026-11-23
+
+TWAIN-Enumeration funktionsfaehig.
+
+### Scanners
+
+* ANSI-Strings korrigiert.
+* Application Identity.
+* OPENDSM/GETFIRST korrekt.
+* 261 Tests.
+
 ## 3.44.2 - 2026-11-23
 
 TWAIN-ABI korrigiert.

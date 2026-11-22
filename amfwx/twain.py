@@ -22,7 +22,7 @@ class TW_VERSION(ctypes.Structure):
                 ("MinorNum", wintypes.WORD),
                 ("Language", wintypes.WORD),
                 ("Country", wintypes.WORD),
-                ("Info", wintypes.WCHAR * 34)]
+                ("Info", ctypes.c_char * 34)]
 
 
 class TW_IDENTITY(ctypes.Structure):
@@ -32,17 +32,23 @@ class TW_IDENTITY(ctypes.Structure):
                 ("ProtocolMajor", wintypes.WORD),
                 ("ProtocolMinor", wintypes.WORD),
                 ("SupportedGroups", wintypes.ULONG),
-                ("Manufacturer", wintypes.WCHAR * 34),
-                ("ProductFamily", wintypes.WCHAR * 34),
-                ("ProductName", wintypes.WCHAR * 34)]
+                ("Manufacturer", ctypes.c_char * 34),
+                ("ProductFamily", ctypes.c_char * 34),
+                ("ProductName", ctypes.c_char * 34)]
+
+
+def _text(value):
+    if isinstance(value, bytes):
+        return value.decode("mbcs", "replace").rstrip("\x00")
+    return str(value).rstrip("\x00")
 
 
 class TwainSource:
     def __init__(self, identity):
         self.id = int(identity.Id)
-        self.manufacturer = identity.Manufacturer
-        self.product_family = identity.ProductFamily
-        self.product_name = identity.ProductName
+        self.manufacturer = _text(identity.Manufacturer)
+        self.product_family = _text(identity.ProductFamily)
+        self.product_name = _text(identity.ProductName)
         self.protocol = (int(identity.ProtocolMajor),
                          int(identity.ProtocolMinor))
 
@@ -87,6 +93,17 @@ def _load_dsm():
     return None
 
 
+def application_identity():
+    app = TW_IDENTITY()
+    app.ProductName = b"AMFWX"
+    app.Manufacturer = b"AMFWX"
+    app.ProductFamily = b"AMFWX"
+    app.ProtocolMajor = 2
+    app.ProtocolMinor = 5
+    app.Version.MajorNum = 1
+    return app
+
+
 def list_sources():
     library = _load_dsm()
     if library is None:
@@ -94,21 +111,25 @@ def list_sources():
     user32 = ctypes.WinDLL("user32")
     user32.GetDesktopWindow.restype = ctypes.c_void_p
     parent = ctypes.c_void_p(user32.GetDesktopWindow())
-    if library.DSM_Entry(None, None, DG_CONTROL, DAT_PARENT, MSG_OPENDSM,
-                         ctypes.byref(parent)) != 0:
+    app = application_identity()
+    if library.DSM_Entry(ctypes.byref(app), None, DG_CONTROL, DAT_PARENT,
+                         MSG_OPENDSM, ctypes.byref(parent)) != 0:
         return []
     sources = []
     identity = TW_IDENTITY()
-    result = library.DSM_Entry(None, None, DG_CONTROL, DAT_IDENTITY,
-                               MSG_GETFIRST, ctypes.byref(identity))
+    result = library.DSM_Entry(ctypes.byref(app), None, DG_CONTROL,
+                               DAT_IDENTITY, MSG_GETFIRST,
+                               ctypes.byref(identity))
     if result != 0:
         return sources
     while True:
         sources.append(TwainSource(identity))
         identity = TW_IDENTITY()
-        result = library.DSM_Entry(None, None, DG_CONTROL, DAT_IDENTITY,
-                                   MSG_GETNEXT, ctypes.byref(identity))
+        result = library.DSM_Entry(ctypes.byref(app), None, DG_CONTROL,
+                                   DAT_IDENTITY, MSG_GETNEXT,
+                                   ctypes.byref(identity))
         if result != 0:
             break
-    library.DSM_Entry(None, None, DG_CONTROL, DAT_PARENT, MSG_CLOSEDSM, None)
+    library.DSM_Entry(ctypes.byref(app), None, DG_CONTROL, DAT_PARENT,
+                      MSG_CLOSEDSM, None)
     return sources
