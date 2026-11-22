@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.23.0 - 2026-11-22
+
+Layout-/Accessibility-Fix.
+
+### Fix
+
+* `window.layout.add` synchronisiert Root-Baum.
+* Widgets werden gezeichnet und sind in der Accessibility-Struktur.
+* 216 Tests.
+
 ## 3.22.0 - 2026-11-22
 
 Tray.

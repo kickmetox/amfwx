@@ -556,6 +556,10 @@ class Window:
         return widget
 
     def _layout_root(self):
+        for widget, _stretch in getattr(self.layout, "items", []):
+            if widget not in self.root.children:
+                widget.parent = self.root
+                self.root.children.append(widget)
         self.root.arrange(Rect(0, 0, self.canvas.width, self.canvas.height))
         self.layout.arrange(self.root, self.root.rect)
         self._sync_a11y()
