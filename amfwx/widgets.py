@@ -322,6 +322,146 @@ class CheckBox(Widget):
             self.toggle()
 
 
+class RadioButton(Widget):
+    focusable = True
+
+    def __init__(self, text="", group=None, checked=False, on_change=None):
+        super().__init__()
+        self.text = str(text)
+        self.group = group if group is not None else []
+        self.checked = bool(checked)
+        self.on_change = on_change
+        if self.checked:
+            self._select_group()
+        self.group.append(self)
+
+    def _select_group(self):
+        for other in self.group:
+            if other is not self and other.checked:
+                other.checked = False
+
+    def select(self):
+        self._select_group()
+        self.checked = True
+        if self.on_change:
+            self.on_change(self.checked)
+        return self
+
+    def mouse_up(self, x, y, button="left"):
+        self.select()
+
+    def size_hint(self):
+        return (max(120, measure_text(self.text, 2) + 34), 26)
+
+    def paint(self, canvas):
+        theme = self.theme()
+        center_x = self.rect.x + 9
+        center_y = self.rect.y + 9
+        canvas.fill_circle_aa(center_x, center_y, 8,
+                              theme.focus if self.focused else theme.border)
+        canvas.fill_circle_aa(center_x, center_y, 7, theme.surface)
+        if self.checked:
+            canvas.fill_circle(center_x, center_y, 4, theme.accent)
+        draw_text(canvas, self.text, self.rect.x + 26, self.rect.y + 6,
+                  theme.text, 2)
+
+
+class SpinBox(Widget):
+    focusable = True
+
+    def __init__(self, value=0, minimum=0, maximum=100, step=1, on_change=None):
+        super().__init__()
+        self.minimum = int(minimum)
+        self.maximum = int(maximum)
+        self.step = max(1, int(step))
+        self._value = max(self.minimum, min(self.maximum, int(value)))
+        self.on_change = on_change
+
+    def size_hint(self):
+        return (120, 30)
+
+    def value(self):
+        return self._value
+
+    def set_value(self, value):
+        value = max(self.minimum, min(self.maximum, int(value)))
+        if value != self._value:
+            self._value = value
+            if self.on_change:
+                self.on_change(value)
+        return self
+
+    def increment(self, amount=1):
+        return self.set_value(self._value + self.step * amount)
+
+    def mouse_up(self, x, y, button="left"):
+        if x >= self.rect.right - 22:
+            self.increment(1 if y < self.rect.y + self.rect.h // 2 else -1)
+
+    def key_down(self, key, modifiers=0):
+        if key == 38:
+            self.increment(1)
+        elif key == 40:
+            self.increment(-1)
+
+    def paint(self, canvas):
+        theme = self.theme()
+        canvas.rounded_rect(self.rect, theme.radius, theme.surface)
+        canvas.draw_rect(self.rect, theme.focus if self.focused else theme.border, 1)
+        draw_text(canvas, str(self._value), self.rect.x + 8, self.rect.y + 9,
+                  theme.text, 2)
+        mid = self.rect.x + self.rect.w - 11
+        top = self.rect.y + self.rect.h // 2
+        canvas.line(mid - 4, top - 3, mid, top - 7, theme.muted, 2)
+        canvas.line(mid, top - 7, mid + 4, top - 3, theme.muted, 2)
+        canvas.line(mid - 4, top + 3, mid, top + 7, theme.muted, 2)
+        canvas.line(mid, top + 7, mid + 4, top + 3, theme.muted, 2)
+
+
+class ListBox(Widget):
+    focusable = True
+
+    def __init__(self, items=None, on_select=None):
+        super().__init__()
+        self.items = list(items or [])
+        self.selected = -1
+        self.on_select = on_select
+
+    def size_hint(self):
+        return (220, 160)
+
+    def set_items(self, items):
+        self.items = list(items)
+        self.selected = min(self.selected, len(self.items) - 1)
+        return self
+
+    def selected_item(self):
+        if 0 <= self.selected < len(self.items):
+            return self.items[self.selected]
+        return None
+
+    def mouse_up(self, x, y, button="left"):
+        if self.rect.contains(x, y):
+            index = int((y - self.rect.y - 4) // 26)
+            if 0 <= index < len(self.items):
+                self.selected = index
+                if self.on_select:
+                    self.on_select(self.items[index])
+
+    def paint(self, canvas):
+        theme = self.theme()
+        canvas.fill_rect(self.rect, theme.surface)
+        canvas.draw_rect(self.rect, theme.border, 1)
+        y = self.rect.y + 4
+        for index, item in enumerate(self.items):
+            if index == self.selected:
+                canvas.fill_rect(Rect(self.rect.x, y, self.rect.w, 24),
+                                 theme.accent.with_alpha(60))
+            draw_text(canvas, str(item), self.rect.x + 8, y + 5,
+                      theme.text, 2)
+            y += 26
+
+
 class Slider(Widget):
     focusable = True
 

@@ -76,18 +76,19 @@ from .textlayout import Line, TextLayout, bidi_reorder
 from .theme import DARK, HIGH_CONTRAST, LIGHT, Theme, get_theme
 from .widgets import (
     BoxLayout, Button, CheckBox, ComboBox, FormLayout, GridLayout, Label,
-    LineEdit, MenuBar, Panel, ProgressBar, ScrollArea, ScrollBar, Slider,
+    LineEdit, ListBox, MenuBar, Panel, ProgressBar, RadioButton, ScrollArea,
+    ScrollBar, Slider, SpinBox,
     TableView,
     TreeItem, TreeView, Widget,
 )
 from .window import Window
 
-__version__ = "3.16.0"
+__version__ = "3.17.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
     "ProgressBar",
-    "ScrollBar", "MenuBar", "TableView", "TreeView", "TreeItem",
+    "ScrollBar", "MenuBar", "RadioButton", "SpinBox", "ListBox", "TableView", "TreeView", "TreeItem",
     "BoxLayout", "GridLayout",
     "FormLayout", "Dialog", "MessageBox", "FindReplaceDialog", "ColorDialog", "ColorSwatch", "FontDialog", "Settings", "default_path", "Model", "ListModel", "TableModel",
     "SortFilterModel", "QuickView", "State", "ListState", "Stack", "VStack", "HStack",
