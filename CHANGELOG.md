@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.33.0 - 2026-11-22
+
+LIN.
+
+### IO
+
+* `LinFrame`.
+* PCAN-LIN-Backend.
+* 241 Tests.
+
 ## 3.32.0 - 2026-11-22
 
 CAN.
