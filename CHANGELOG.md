@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.5.0 - 2026-11-22
+
+DB/Netzwerk.
+
+### Platform
+
+* `Database`.
+* `HttpClient`.
+* 179 Tests.
+
 ## 3.4.0 - 2026-11-22
 
 Quick/State vollstaendig.

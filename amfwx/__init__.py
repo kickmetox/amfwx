@@ -42,6 +42,8 @@ from .agent import LLMAgent
 from .sdk import SDK, create_sdk
 from .conversation import Conversation
 from .pdf import canvas_to_pdf
+from .db import Database
+from .net import HttpClient, NetworkError
 from .designer import DesignerCanvas, DesignerDocument, DesignerItem, DesignerWindow
 from .keystore import KeyStore, KeyStoreError
 from .dsp import AudioBuffer, Biquad, DspGraph, Gain, Mixer
@@ -76,7 +78,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.4.0"
+__version__ = "3.5.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -89,7 +91,7 @@ __all__ = [
     "AnimatedValue", "linear", "ease_in", "ease_out", "ease_in_out",
     "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "SecurityError", "AIError", "AIProvider", "EchoProvider",
     "OllamaProvider", "OpenAICompatibleProvider", "provider_from_name",
-    "TOOL_SPECS", "UiSession", "call_tool", "LLMAgent", "SDK", "create_sdk", "Conversation", "canvas_to_pdf", "DesignerItem", "DesignerDocument",
+    "TOOL_SPECS", "UiSession", "call_tool", "LLMAgent", "SDK", "create_sdk", "Conversation", "canvas_to_pdf", "Database", "HttpClient", "NetworkError", "DesignerItem", "DesignerDocument",
     "DesignerCanvas", "DesignerWindow",
     "KeyStore", "KeyStoreError", "verify_native_dlls",
     "safe_resource_name", "AudioBuffer", "Gain", "Mixer", "Biquad", "DspGraph",

@@ -35,7 +35,6 @@ Stand: 167 Tests, Windows-only. Öffentliche Signatur ist bewusst **kein Ziel**.
 | echter Ollama-Test in CI | P0 | ⚠️ optional, nicht in CI |
 | Studio/Projektstarter | P1 | ❌ |
 | Compat-Adapter | P2 | ❌ |
-| Datenbank/Netzwerk | P2 | ❌ |
 | RichText/HTML-Subset | P2 | ❌ |
 | weitere AMFW-Widgets | P2 | ❌ |
 | Vision-/Bild-Eingabe | P2 | ❌ |
