@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.36.0 - 2026-11-22
+
+Optionales OPC UA.
+
+### IO
+
+* `OpcUaClient`.
+* `asyncua` optional.
+* 247 Tests.
+
 ## 3.35.0 - 2026-11-22
 
 S7comm (experimentell).
