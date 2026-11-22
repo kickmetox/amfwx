@@ -82,19 +82,50 @@ class WiaScanner:
         except Exception as error:
             raise WiaError(f"WIA-Verbindung fehlgeschlagen: {error}") from error
 
-    def acquire(self, path, image_format="png", dpi=None):
+    def acquire(self, path, image_format="png", dpi=None, color=None,
+                duplex=False, adf=False):
         device = self._connect()
         try:
-            item = device.Items.Item(1)
-            if dpi:
-                for property_id in ("6146", "6147"):
+            items = device.Items
+            count = max(1, int(items.Count))
+            if not adf:
+                count = 1
+            pages = []
+            for index in range(1, count + 1):
+                item = items.Item(index)
+                for property_id, value in self._settings(dpi, color, duplex):
                     try:
-                        item.Properties(property_id).Value = int(dpi)
+                        item.Properties(property_id).Value = value
                     except Exception:
                         pass
-            image = item.Transfer(WIA_FORMATS.get(str(image_format).lower(),
-                                                   WIA_FORMATS["png"]))
-            image.SaveFile(str(path))
-            return str(path)
+                image = item.Transfer(WIA_FORMATS.get(
+                    str(image_format).lower(), WIA_FORMATS["png"]))
+                target = path if count == 1 else self._page_path(path, index)
+                image.SaveFile(str(target))
+                pages.append(str(target))
+            return pages[0] if len(pages) == 1 else pages
         except Exception as error:
             raise WiaError(f"WIA-Transfer fehlgeschlagen: {error}") from error
+
+    @staticmethod
+    def _settings(dpi, color, duplex):
+        values = []
+        if dpi:
+            values.extend((("6146", int(dpi)), ("6147", int(dpi))))
+        if color is not None:
+            values.append(("6148", int(color)))
+        if duplex:
+            values.append(("3088", 1))
+        return values
+
+    @staticmethod
+    def _page_path(path, index):
+        from pathlib import Path
+        path = Path(path)
+        return str(path.with_name(f"{path.stem}_{index:03d}{path.suffix}"))
+
+    def acquire_pages(self, directory, prefix="scan", **kwargs):
+        from pathlib import Path
+        folder = Path(directory)
+        folder.mkdir(parents=True, exist_ok=True)
+        return self.acquire(str(folder / f"{prefix}.png"), adf=True, **kwargs)

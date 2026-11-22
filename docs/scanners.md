@@ -54,9 +54,21 @@ Both were signed by the TWAIN Working Group. Source:
 `twain_32.dll` cannot be loaded into a 64-bit process. That is a Windows
 architecture rule, not an AMFWX limitation.
 
+## WIA acquisition
+
+```python
+from amfwx import WiaScanner
+
+WiaScanner(index=1).acquire("scan.png", dpi=300, color=1)
+WiaScanner(index=1).acquire_pages("out", prefix="page")
+```
+
+ADF/duplex depends on the scanner driver exposing multiple WIA items.
+Flatbed drivers usually report one item.
+
 ## Not implemented
 
-- image acquisition
+- TWAIN image acquisition
 - TWAIN memory/file transfer
 - WIA item transfer
 - ADF/duplex settings

@@ -30,6 +30,17 @@ class ScannerTests(unittest.TestCase):
         for device in devices:
             self.assertTrue(device.device_id)
 
+    def test_wia_settings(self):
+        values = WiaScanner._settings(300, 1, True)
+        self.assertIn(("6146", 300), values)
+        self.assertIn(("6147", 300), values)
+        self.assertIn(("6148", 1), values)
+        self.assertIn(("3088", 1), values)
+
+    def test_page_path(self):
+        self.assertTrue(WiaScanner._page_path("scan.png", 2).endswith(
+            "scan_002.png"))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

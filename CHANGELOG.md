@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.44.0 - 2026-11-23
+
+WIA-ADF/Optionen.
+
+### Scanners
+
+* DPI/Farbe/Duplex.
+* Mehrseiten.
+* 261 Tests.
+
 ## 3.43.0 - 2026-11-23
 
 WIA-Bildaufnahme.
