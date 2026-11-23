@@ -183,12 +183,14 @@ class EsclScanner:
     def scan_pages(self, directory, prefix="page", resolution=300,
                    color="RGB24", document_format="image/jpeg",
                    max_pages=50, duplex=False, region=None,
-                   source="Platen"):
+                   source="Platen", wake=True):
         folder = Path(directory)
         folder.mkdir(parents=True, exist_ok=True)
         payload = _settings_xml(resolution, color, document_format,
                                 duplex, region, source)
         feeder = str(source).lower() in ("adf", "feeder")
+        if wake and feeder:
+            self._wake_scan_engine()
         job_base = None
         pages = []
         for index in range(1, int(max_pages) + 1):
@@ -220,10 +222,12 @@ class EsclScanner:
 
     def scan(self, path, resolution=300, color="RGB24",
              document_format="image/jpeg", duplex=False, region=None,
-             source="Platen"):
+             source="Platen", wake=True):
         payload = _settings_xml(resolution, color, document_format,
                                 duplex, region, source)
         feeder = str(source).lower() in ("adf", "feeder")
+        if wake and feeder:
+            self._wake_scan_engine()
         job_base = self._create_job_with_wake(payload, feeder)
         try:
             try:

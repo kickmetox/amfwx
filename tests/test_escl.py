@@ -218,7 +218,8 @@ class EsclTests(unittest.TestCase):
             scanner = EsclScanner("127.0.0.1", server.server_port)
             with tempfile.TemporaryDirectory() as folder:
                 pages = scanner.scan_pages(folder, prefix="page",
-                                           source="Feeder", max_pages=5)
+                                           source="Feeder", max_pages=5,
+                                           wake=False)
                 self.assertEqual(len(pages), 2)
                 self.assertEqual(FeederHandler.jobs, 2)
         finally:

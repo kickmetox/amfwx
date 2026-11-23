@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 4.3.0 - 2026-11-23
+
+Weckscan vor jedem ADF-Paket.
+
+### Scanner
+
+* Pre-Wake fuer Feeder.
+* Einzel/Ordner/PDF.
+* 361 Tests.
+
 ## 4.2.0 - 2026-11-23
 
 Scan-Fenster.
