@@ -35,7 +35,9 @@ class Handler(BaseHTTPRequestHandler):
             self._json({"error_code": 0}, cookie=True)
 
     def do_GET(self):
-        if self.path == "/devices":
+        if self.path == "/scenes":
+            self._json({"scenes": [{"id": 7, "name": "Abend"}]})
+        elif self.path == "/devices":
             if "session=ok" not in self.headers.get("Cookie", ""):
                 self.send_response(401)
                 self.end_headers()
@@ -75,6 +77,17 @@ class HomePilotTests(unittest.TestCase):
             pilot = HomePilot(f"127.0.0.1:{server.server_port}")
             self.assertEqual(pilot.open_cover(1)["error_code"], 0)
             self.assertEqual(pilot.set_position(1, 30)["error_code"], 0)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_scenes(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            pilot = HomePilot(f"127.0.0.1:{server.server_port}")
+            self.assertEqual(pilot.scenes()[0]["name"], "Abend")
+            self.assertEqual(pilot.execute_scene(7)["error_code"], 0)
         finally:
             server.shutdown()
             server.server_close()

@@ -75,6 +75,16 @@ class HomePilot:
         self.authenticated = True
         return True
 
+    def scenes(self):
+        data = self._json("/scenes")
+        return data.get("scenes", [])
+
+    def execute_scene(self, scene_id):
+        return self._json(f"/scenes/{scene_id}/actions", method="POST",
+                          payload={"request_type": "EXECUTESCENE",
+                                   "trigger_event":
+                                       "TRIGGER_SCENE_MANUALLY_EVT"})
+
     def devices(self):
         return self._json("/devices").get("payload", {}).get("devices", [])
 

@@ -6,10 +6,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.87.0  
+**Version:** 3.88.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 340 passing
+**Tests:** 341 passing
 
 ## Features
 

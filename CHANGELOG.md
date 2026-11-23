@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.88.0 - 2026-11-23
+
+HomePilot-Szenen.
+
+### Home
+
+* `scenes`.
+* `execute_scene`.
+* 341 Tests.
+
 ## 3.87.0 - 2026-11-23
 
 Tuya LAN 3.3.
