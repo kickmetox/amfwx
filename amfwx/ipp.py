@@ -40,7 +40,7 @@ def build_print_job(printer_uri, job_name, user, document_format,
 
 
 def _decode_value(value_tag, data):
-    if value_tag == 0x21 and len(data) == 4:
+    if value_tag in (0x21, 0x23) and len(data) == 4:
         return struct.unpack(">i", data)[0]
     if value_tag == 0x22 and len(data) == 1:
         return bool(data[0])
@@ -117,6 +117,18 @@ def build_job_request(operation, printer_uri, user, job_id=None,
     return bytes(payload)
 
 
+def build_job_attributes_request(printer_uri, user, job_id):
+    payload = bytearray(b"\x02\x00\x00\x09\x00\x00\x00\x01")
+    payload.append(0x01)
+    payload.extend(_attribute(0x47, "attributes-charset", "utf-8", 0x47))
+    payload.extend(_attribute(0x48, "attributes-natural-language", "en", 0x48))
+    payload.extend(_attribute(0x45, "printer-uri", printer_uri, 0x45))
+    payload.extend(_attribute(0x21, "job-id", int(job_id), 0x21))
+    payload.extend(_attribute(0x42, "requesting-user-name", user))
+    payload.append(0x03)
+    return bytes(payload)
+
+
 def parse_response(data):
     if len(data) < 8:
         raise IppError("IPP-Antwort zu kurz")
@@ -156,6 +168,22 @@ class IppPrinter:
         if response["status"] != 200:
             raise IppError(f"IPP HTTP {response['status']}")
         return parse_attributes(response["body"])
+
+    def get_job_attributes(self, job_id):
+        payload = build_job_attributes_request(self.uri, self.user, job_id)
+        response = self._request(payload)
+        return parse_attributes(response["body"])
+
+    def wait_for_job(self, job_id, timeout=60.0, interval=1.0):
+        import time
+        deadline = time.monotonic() + float(timeout)
+        while time.monotonic() < deadline:
+            attributes = self.get_job_attributes(job_id)
+            state = attributes.get("job-state")
+            if state in (7, 8, 9):
+                return state
+            time.sleep(max(0.1, float(interval)))
+        raise IppError("Timeout beim Warten auf den Druckjob")
 
     def get_jobs(self, which_jobs="not-completed"):
         payload = build_job_request(0x000A, self.uri, self.user,

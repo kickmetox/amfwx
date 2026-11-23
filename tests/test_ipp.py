@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import struct
 import sys
 import tempfile
 import threading
@@ -48,6 +49,29 @@ class AttributeHandler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", "0"))
         self.rfile.read(length)
         body = attribute_response()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/ipp")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+
+
+def job_state_response(state=9):
+    name = b"job-state\x00"
+    return (b"\x02\x00\x00\x00\x00\x00\x00\x01\x01" +
+            b"\x23" + name + b"\x00\x04" + struct.pack(">i", state) +
+            b"\x03")
+
+
+class JobStateHandler(BaseHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+    def do_POST(self):
+        length = int(self.headers.get("Content-Length", "0"))
+        self.rfile.read(length)
+        body = job_state_response()
         self.send_response(200)
         self.send_header("Content-Type", "application/ipp")
         self.send_header("Content-Length", str(len(body)))
@@ -120,6 +144,23 @@ class IppTests(unittest.TestCase):
         finally:
             server.shutdown()
             server.server_close()
+
+    def test_job_state(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), JobStateHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            printer = IppPrinter("127.0.0.1", server.server_port)
+            attributes = printer.get_job_attributes(7)
+            self.assertEqual(attributes["job-state"], 9)
+            self.assertEqual(printer.wait_for_job(7, timeout=2), 9)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_job_state_parse(self):
+        self.assertEqual(parse_attributes(job_state_response())["job-state"],
+                         9)
 
 
 if __name__ == "__main__":

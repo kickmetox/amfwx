@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.63.0 - 2026-11-23
+
+IPP-Jobstatus.
+
+### Network
+
+* Get-Job-Attributes.
+* `wait_for_job`.
+* 289 Tests.
+
 ## 3.62.0 - 2026-11-23
 
 IPP-Jobs.
