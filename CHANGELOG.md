@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.72.0 - 2026-11-23
+
+Home-Registry.
+
+### Home
+
+* `HomeRegistry`.
+* Adapter-Factory.
+* Persistenz.
+* 315 Tests.
+
 ## 3.71.0 - 2026-11-23
 
 Home-Automation und Discovery.

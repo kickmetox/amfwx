@@ -76,6 +76,20 @@ Use this for:
 **These are not protocol-verified implementations.** The endpoints and payloads
 must match the device/bridge.
 
+## Registry / add
+
+```python
+from amfwx import HomeRegistry, discover_home
+
+registry = HomeRegistry("devices.json")
+for found in discover_home(timeout=4.0):
+    entry = registry.add_discovered(found)
+    print(entry["id"], entry["kind"])
+registry.save()
+
+adapter = registry.adapter(entry["id"])
+```
+
 ## Automatic discovery
 
 ```python
