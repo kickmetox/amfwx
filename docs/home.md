@@ -89,6 +89,14 @@ from amfwx import HomeDevicesWindow, HomeRegistry
 HomeDevicesWindow(HomeRegistry("devices.json")).run()
 ```
 
+## CLI control
+
+```powershell
+python -m amfwx --list-devices --registry devices.json
+python -m amfwx --device Lamp --action on --registry devices.json
+python -m amfwx --device Rollladen --action close --registry devices.json
+```
+
 ## Credentials
 
 ```python

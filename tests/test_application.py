@@ -60,6 +60,32 @@ class ApplicationTests(unittest.TestCase):
         self.assertTrue(config.devices)
         self.assertEqual(config.registry, "devices.json")
 
+    def test_device_options(self):
+        config = AppConfig.parse(["--device", "Lamp", "--action", "on"])
+        self.assertEqual(config.device, "Lamp")
+        self.assertEqual(config.device_action, "on")
+        self.assertTrue(AppConfig.parse(["--list-devices"]).list_devices)
+
+    def test_list_devices(self):
+        import tempfile
+        from amfwx import HomeRegistry
+        class Device:
+            kind = "shelly"
+            name = "Lamp"
+            host = "127.0.0.1"
+            port = 80
+        with tempfile.TemporaryDirectory() as folder:
+            path = os.path.join(folder, "devices.json")
+            registry = HomeRegistry(path)
+            registry.add(Device())
+            registry.save()
+            output = io.StringIO()
+            with redirect_stdout(output):
+                result = Application(AppConfig(registry=path,
+                                               list_devices=True)).run()
+            self.assertEqual(result, 0)
+            self.assertIn("Lamp", output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

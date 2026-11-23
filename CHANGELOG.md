@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.78.0 - 2026-11-23
+
+Geraete-CLI.
+
+### App
+
+* `--list-devices`.
+* `--device/--action`.
+* 326 Tests.
+
 ## 3.77.0 - 2026-11-23
 
 Zugangsdaten-Dialog.

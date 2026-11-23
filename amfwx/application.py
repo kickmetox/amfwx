@@ -11,7 +11,8 @@ from .window import Window
 class AppConfig:
     def __init__(self, title="AMFWX", width=800, height=600, theme="dark",
                  single=True, show_version=False, help=False,
-                 doctor=False, devices=False, registry=None):
+                 doctor=False, devices=False, registry=None,
+                 list_devices=False, device_action=None, device=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -22,6 +23,9 @@ class AppConfig:
         self.doctor = bool(doctor)
         self.devices = bool(devices)
         self.registry = registry
+        self.list_devices = bool(list_devices)
+        self.device_action = device_action
+        self.device = device
 
     @classmethod
     def parse(cls, argv=None):
@@ -41,6 +45,14 @@ class AppConfig:
             elif value == "--registry" and index + 1 < len(args):
                 index += 1
                 config.registry = args[index]
+            elif value == "--list-devices":
+                config.list_devices = True
+            elif value == "--device" and index + 1 < len(args):
+                index += 1
+                config.device = args[index]
+            elif value == "--action" and index + 1 < len(args):
+                index += 1
+                config.device_action = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -61,6 +73,9 @@ class AppConfig:
                 "  --doctor        Hardware-Diagnose\n"
                 "  --devices       Geräte-Discovery öffnen\n"
                 "  --registry PATH Registry-JSON\n"
+                "  --list-devices  Gespeicherte Geräte anzeigen\n"
+                "  --device NAME   Gerät für --action\n"
+                "  --action NAME   open/close/on/off\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -75,6 +90,33 @@ class Application:
     def _default_window(self):
         return Window(self.config.title, self.config.width,
                       self.config.height, self.config.theme)
+
+    def _device_command(self):
+        from .home_registry import HomeRegistry
+        registry = HomeRegistry(self.config.registry)
+        if self.config.list_devices:
+            for entry in registry.devices.values():
+                print(f"{entry['id']}  {entry['kind']}  {entry['name']}  "
+                      f"{entry['host']}:{entry['port']}")
+            return 0
+        action = (self.config.device_action or "").lower()
+        if action not in ("open", "close", "on", "off"):
+            print("--action muss open, close, on oder off sein")
+            return 2
+        target = None
+        for entry in registry.devices.values():
+            if entry["id"] == self.config.device or entry["name"] == self.config.device:
+                target = entry
+                break
+        if target is None:
+            print("Gerät nicht gefunden")
+            return 2
+        adapter = registry.adapter(target["id"])
+        method = {"open": "open_cover", "close": "close_cover",
+                  "on": "on", "off": "off"}[action]
+        result = getattr(adapter, method)()
+        print(result if result is not None else "ok")
+        return 0
 
     def activate(self):
         if self.window is not None:
@@ -97,6 +139,8 @@ class Application:
             return 0
         if self.config.single and not self.lock.acquire():
             return 0
+        if self.config.list_devices or self.config.device_action:
+            return self._device_command()
         if self.config.devices:
             from .home_registry import HomeRegistry
             from .home_ui import HomeDevicesWindow
