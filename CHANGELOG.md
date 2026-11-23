@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.59.0 - 2026-11-23
+
+IPP-Druck.
+
+### Network
+
+* `IppPrinter`.
+* Print-Job.
+* 281 Tests.
+
 ## 3.58.0 - 2026-11-23
 
 eSCL Duplex/Regionen.

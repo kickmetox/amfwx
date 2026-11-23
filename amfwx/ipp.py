@@ -1,0 +1,98 @@
+"""Minimal IPP/1.1 and 2.0 Print-Job client."""
+
+from __future__ import annotations
+
+import struct
+from pathlib import Path
+
+from .net import HttpClient, NetworkError
+
+
+class IppError(RuntimeError):
+    pass
+
+
+def _attribute(tag, name, value, value_tag=0x42):
+    name_data = str(name).encode("utf-8")
+    value_data = str(value).encode("utf-8")
+    return (bytes([tag]) + name_data + b"\x00" + bytes([value_tag]) +
+            struct.pack(">H", len(value_data)) + value_data)
+
+
+def build_print_job(printer_uri, job_name, user, document_format,
+                    document):
+    payload = bytearray()
+    payload.extend(b"\x02\x00")             # IPP 2.0
+    payload.extend(b"\x00\x02")             # Print-Job
+    payload.extend(struct.pack(">I", 1))    # request-id
+    payload.append(0x01)                    # operation attributes
+    payload.extend(_attribute(0x47, "attributes-charset", "utf-8", 0x47))
+    payload.extend(_attribute(0x48, "attributes-natural-language", "en",
+                              0x48))
+    payload.extend(_attribute(0x45, "printer-uri", printer_uri, 0x45))
+    payload.extend(_attribute(0x42, "requesting-user-name", user))
+    payload.extend(_attribute(0x42, "job-name", job_name))
+    payload.extend(_attribute(0x49, "document-format", document_format,
+                              0x49))
+    payload.append(0x03)                    # end of attributes
+    payload.extend(bytes(document))
+    return bytes(payload)
+
+
+def parse_response(data):
+    if len(data) < 8:
+        raise IppError("IPP-Antwort zu kurz")
+    status = struct.unpack(">H", data[2:4])[0]
+    job_id = None
+    marker = b"job-id\x00"
+    index = data.find(marker)
+    if index >= 0:
+        position = index + len(marker) + 2
+        if position + 2 <= len(data):
+            length = struct.unpack(">H", data[position:position + 2])[0]
+            if length == 4 and position + 6 <= len(data):
+                job_id = struct.unpack(">I", data[position + 2:position + 6])[0]
+    return {"status": status, "job_id": job_id}
+
+
+class IppPrinter:
+    def __init__(self, host, port=631, path="/ipp/print", secure=False,
+                 timeout=20.0, user="AMFWX"):
+        self.host = str(host)
+        self.port = int(port)
+        self.path = str(path)
+        self.user = str(user)
+        scheme = "https" if secure else "http"
+        self.uri = f"ipp://{self.host}:{self.port}{self.path}"
+        self.client = HttpClient(f"{scheme}://{self.host}:{self.port}",
+                                 timeout=timeout)
+
+    def print_job(self, document, document_format="application/pdf",
+                  job_name="AMFWX"):
+        payload = build_print_job(self.uri, job_name, self.user,
+                                  document_format, document)
+        try:
+            response = self.client.request(
+                self.path, method="POST", data=payload,
+                headers={"Content-Type": "application/ipp"})
+        except NetworkError as error:
+            raise IppError(str(error)) from error
+        if response["status"] != 200:
+            raise IppError(f"IPP HTTP {response['status']}")
+        result = parse_response(response["body"])
+        if result["status"] != 0:
+            raise IppError(f"IPP-Status {result['status']:#06x}")
+        return result
+
+    def print_file(self, path, document_format=None, job_name=None):
+        path = Path(path)
+        if document_format is None:
+            document_format = {
+                ".pdf": "application/pdf",
+                ".jpg": "image/jpeg",
+                ".jpeg": "image/jpeg",
+                ".png": "image/png",
+                ".txt": "text/plain",
+            }.get(path.suffix.lower(), "application/octet-stream")
+        return self.print_job(path.read_bytes(), document_format,
+                              job_name or path.name)

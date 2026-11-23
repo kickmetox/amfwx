@@ -6,10 +6,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 3.58.0  
+**Version:** 3.59.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 279 passing
+**Tests:** 281 passing
 
 ## Features
 
@@ -150,6 +150,7 @@ Build instructions:
 - [Scanners: WIA/TWAIN](docs/scanners.md)
 - [Network printers/scanners](docs/network_scan.md)
 - [eSCL scan](docs/escl.md)
+- [IPP printing](docs/ipp.md)
 - [Raw USB/WinUSB](docs/usb_raw.md)
 - [mDNS/Bonjour](docs/mdns.md)
 - [EtherNet/IP](docs/enip.md)
