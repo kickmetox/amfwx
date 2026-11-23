@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.80.0 - 2026-11-23
+
+Native Becker CentralControl.
+
+### Home
+
+* `BeckerCentral`.
+* JSON-RPC CC51.
+* Gruppen/Status/Kommandos.
+* 331 Tests.
+
 ## 3.79.0 - 2026-11-23
 
 Native HomePilot.
