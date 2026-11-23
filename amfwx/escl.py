@@ -90,13 +90,15 @@ def parse_capabilities(xml):
 
 class EsclScanner:
     def __init__(self, host, port=80, timeout=15.0, secure=False,
-                 username=None, password=None):
+                 username=None, password=None, certfile=None,
+                 keyfile=None):
         self.host = str(host)
         self.port = int(port)
         self.timeout = float(timeout)
         scheme = "https" if secure else "http"
         self.base_url = f"{scheme}://{self.host}:{self.port}"
-        self.client = HttpClient(self.base_url, timeout=self.timeout)
+        self.client = HttpClient(self.base_url, timeout=self.timeout,
+                                 certfile=certfile, keyfile=keyfile)
         self.auth_headers = {}
         if username is not None:
             token = base64.b64encode(

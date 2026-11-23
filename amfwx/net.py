@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import ssl
 import urllib.error
 import urllib.request
 from urllib.parse import urlparse, urlsplit
@@ -15,13 +16,18 @@ class NetworkError(RuntimeError):
 
 class HttpClient:
     def __init__(self, base_url="", headers=None, timeout=30.0,
-                 max_bytes=8 * 1024 * 1024, username=None, password=None):
+                 max_bytes=8 * 1024 * 1024, username=None, password=None,
+                 ssl_context=None, certfile=None, keyfile=None):
         self.base_url = str(base_url).rstrip("/")
         self.headers = dict(headers or {})
         self.timeout = float(timeout)
         self.max_bytes = int(max_bytes)
         self.username = username
         self.password = password
+        self.ssl_context = ssl_context
+        if certfile:
+            self.ssl_context = ssl.create_default_context()
+            self.ssl_context.load_cert_chain(certfile, keyfile or None)
         if self.base_url:
             parsed = urlparse(self.base_url)
             if parsed.scheme not in ("http", "https"):
@@ -81,7 +87,11 @@ class HttpClient:
                                          method=method.upper(),
                                          headers=request_headers)
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+            kwargs = {}
+            if self.ssl_context is not None and request.full_url.startswith("https"):
+                kwargs["context"] = self.ssl_context
+            with urllib.request.urlopen(request, timeout=self.timeout,
+                                        **kwargs) as response:
                 raw = response.read(self.max_bytes)
                 return {"status": response.status, "headers": dict(response.headers),
                         "body": raw}
@@ -99,7 +109,11 @@ class HttpClient:
                                                  method=method.upper(),
                                                  headers=retry_headers)
                 try:
-                    with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                    kwargs = {}
+                    if self.ssl_context is not None and request.full_url.startswith("https"):
+                        kwargs["context"] = self.ssl_context
+                    with urllib.request.urlopen(request, timeout=self.timeout,
+                                                **kwargs) as response:
                         return {"status": response.status,
                                 "headers": dict(response.headers),
                                 "body": response.read(self.max_bytes)}

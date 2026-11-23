@@ -147,6 +147,11 @@ class EsclTests(unittest.TestCase):
         scanner = EsclScanner("scanner.local", secure=True)
         self.assertTrue(scanner.base_url.startswith("https://"))
 
+    def test_tls_cert_missing(self):
+        with self.assertRaises(FileNotFoundError):
+            EsclScanner("example.invalid", secure=True,
+                        certfile="missing-client.pem")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

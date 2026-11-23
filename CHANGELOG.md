@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.67.0 - 2026-11-23
+
+TLS-Clientzertifikate.
+
+### Network
+
+* `certfile`/`keyfile`.
+* IPP/eSCL HTTPS.
+* 295 Tests.
+
 ## 3.66.0 - 2026-11-23
 
 HTTP Digest Auth.

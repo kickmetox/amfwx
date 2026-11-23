@@ -149,7 +149,7 @@ def parse_response(data):
 class IppPrinter:
     def __init__(self, host, port=631, path="/ipp/print", secure=False,
                  timeout=20.0, user="AMFWX", username=None,
-                 password=None):
+                 password=None, certfile=None, keyfile=None):
         self.host = str(host)
         self.port = int(port)
         self.path = str(path)
@@ -157,7 +157,8 @@ class IppPrinter:
         scheme = "https" if secure else "http"
         self.uri = f"ipp://{self.host}:{self.port}{self.path}"
         self.client = HttpClient(f"{scheme}://{self.host}:{self.port}",
-                                 timeout=timeout)
+                                 timeout=timeout, certfile=certfile,
+                                 keyfile=keyfile)
         self.auth_headers = {}
         if username is not None:
             token = base64.b64encode(
