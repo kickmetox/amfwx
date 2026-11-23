@@ -40,3 +40,8 @@ native/*.exp
 vendor/
 temp_twain/
 twain_check.py
+python32.zip
+apps.cpp
+dsm.cpp
+debug_*.py
+test_helper.py
