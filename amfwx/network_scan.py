@@ -117,10 +117,15 @@ def _unique(devices):
     return result
 
 
-def probe_escl(host, port=80, timeout=3.0):
+def probe_escl(host, port=80, timeout=3.0, secure=None):
     """Return True if the endpoint exposes eSCL scanner capabilities."""
+    if secure is None:
+        secure = int(port) in (443, 9096)
+    scheme = "https" if secure else "http"
+    context = ssl._create_unverified_context() if secure else None
     try:
-        client = HttpClient(f"http://{host}:{int(port)}", timeout=timeout)
+        client = HttpClient(f"{scheme}://{host}:{int(port)}", timeout=timeout,
+                            ssl_context=context)
         response = client.request("/eSCL/ScannerCapabilities")
     except (NetworkError, OSError, ValueError):
         return False

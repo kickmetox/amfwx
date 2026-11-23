@@ -4,6 +4,8 @@
 from amfwx import EsclScanner
 
 scanner = EsclScanner("192.168.1.50", 80)
+# Kyocera eSCL often uses HTTPS on port 9096:
+# scanner = EsclScanner("192.168.1.50", 9096, secure=True)
 print(scanner.capabilities())
 scanner.scan("scan.jpg", resolution=300, color="RGB24",
              document_format="image/jpeg")
@@ -35,3 +37,8 @@ scanner.scan("scan.jpg", resolution=300, color="RGB24",
 - device must support eSCL/AirScan
 - no authentication
 - no scanner UI
+
+## Kyocera
+
+Many Kyocera ECOSYS devices expose eSCL on `https://<ip>:9096`.
+Use `EsclScanner(host, 9096, secure=True)` and `source="Feeder"` for ADF.

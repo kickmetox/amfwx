@@ -15,33 +15,29 @@ class EsclError(RuntimeError):
 
 
 def _settings_xml(resolution=300, color="RGB24", document_format="image/jpeg",
-                  duplex=False, region=None):
+                  duplex=False, region=None, source="Platen"):
+    width, height = (2481, 3507)
+    x_offset = y_offset = 0
+    if region:
+        x_offset, y_offset, width, height = [int(value) for value in region]
+    feeder = str(source).lower() in ("adf", "feeder")
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <scan:ScanSettings xmlns:scan="http://schemas.hp.com/imaging/escl/2011/05/03"
  xmlns:pwg="http://www.pwg.org/schemas/2010/12/sm">
-  <pwg:Version>2.63</pwg:Version>
+  <pwg:Version>2.6</pwg:Version>
+  <pwg:ScanRegions><pwg:ScanRegion>
+    <pwg:XOffset>{x_offset}</pwg:XOffset><pwg:YOffset>{y_offset}</pwg:YOffset>
+    <pwg:Width>{width}</pwg:Width><pwg:Height>{height}</pwg:Height>
+    <pwg:ContentRegionUnits>escl:ThreeHundredthsOfInches</pwg:ContentRegionUnits>
+  </pwg:ScanRegion></pwg:ScanRegions>
+  <pwg:InputSource>{'Feeder' if feeder else 'Platen'}</pwg:InputSource>
   <scan:DocumentFormatExt>{document_format}</scan:DocumentFormatExt>
+  <pwg:DocumentFormat>{document_format}</pwg:DocumentFormat>
   <scan:XResolution>{int(resolution)}</scan:XResolution>
   <scan:YResolution>{int(resolution)}</scan:YResolution>
   <scan:ColorMode>{color}</scan:ColorMode>
   <scan:Duplex>{'true' if duplex else 'false'}</scan:Duplex>
-{_region_xml(region)}
 </scan:ScanSettings>'''.encode("utf-8")
-
-
-def _region_xml(region):
-    if not region:
-        return ""
-    x, y, width, height = [int(value) for value in region]
-    return (
-        "  <pwg:ScanRegions><pwg:ScanRegion>"
-        f"<pwg:XOffset>{x}</pwg:XOffset>"
-        f"<pwg:YOffset>{y}</pwg:YOffset>"
-        f"<pwg:Width>{width}</pwg:Width>"
-        f"<pwg:Height>{height}</pwg:Height>"
-        "<pwg:ContentRegionUnits>escl:ThreeHundredthsOfInches"
-        "</pwg:ContentRegionUnits>"
-        "</pwg:ScanRegion></pwg:ScanRegions>")
 
 
 @dataclass
@@ -115,11 +111,12 @@ class EsclScanner:
 
     def scan_pages(self, directory, prefix="page", resolution=300,
                    color="RGB24", document_format="image/jpeg",
-                   max_pages=50, duplex=False, region=None):
+                   max_pages=50, duplex=False, region=None,
+                   source="Platen"):
         folder = Path(directory)
         folder.mkdir(parents=True, exist_ok=True)
         payload = _settings_xml(resolution, color, document_format,
-                                duplex, region)
+                                duplex, region, source)
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
@@ -157,9 +154,10 @@ class EsclScanner:
         return parse_capabilities(self.capabilities())
 
     def scan(self, path, resolution=300, color="RGB24",
-             document_format="image/jpeg", duplex=False, region=None):
+             document_format="image/jpeg", duplex=False, region=None,
+             source="Platen"):
         payload = _settings_xml(resolution, color, document_format,
-                                duplex, region)
+                                duplex, region, source)
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,

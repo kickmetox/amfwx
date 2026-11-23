@@ -19,7 +19,7 @@ class PrinterEndpoint:
         return f"PrinterEndpoint({self.host!r}, {self.port}, escl={self.escl})"
 
 
-def scan_host(host, ports=(80, 631), timeout=0.25):
+def scan_host(host, ports=(80, 631, 9096), timeout=0.25):
     found = []
     for port in ports:
         try:
@@ -28,11 +28,12 @@ def scan_host(host, ports=(80, 631), timeout=0.25):
         except OSError:
             continue
         found.append(PrinterEndpoint(host, port,
-                                     probe_escl(host, port, timeout=timeout)))
+                                     probe_escl(host, port, timeout=timeout,
+                                                secure=port in (443, 9096))))
     return found
 
 
-def scan_network(cidr, ports=(80, 631), timeout=0.25, workers=64):
+def scan_network(cidr, ports=(80, 631, 9096), timeout=0.25, workers=64):
     network = ipaddress.ip_network(str(cidr), strict=False)
     hosts = list(network.hosts()) if network.num_addresses > 1 else [network.network_address]
     endpoints = []

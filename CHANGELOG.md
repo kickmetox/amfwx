@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.96.0 - 2026-11-23
+
+eSCL Kyocera-Pfad.
+
+### Scanners
+
+* HTTPS-Port 9096.
+* InputSource/ScanRegions/DocumentFormat.
+* ADF-Quelle.
+* 352 Tests.
+
 ## 3.95.2 - 2026-11-23
 
 Fritz-v2-Challenge.
