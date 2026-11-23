@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.91.0 - 2026-11-23
+
+MQTT-Subscribe.
+
+### Remote
+
+* `MqttClient.subscribe`.
+* `read_message`.
+* 344 Tests.
+
 ## 3.90.0 - 2026-11-23
 
 Becker-Sensoren.

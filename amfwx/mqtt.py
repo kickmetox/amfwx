@@ -59,6 +59,66 @@ class MqttClient:
             raise MqttError("MQTT-CONNACK fehlgeschlagen")
         return self
 
+    def subscribe(self, topic, qos=0):
+        if self.socket is None:
+            self.connect()
+        packet_id = 1
+        body = (packet_id.to_bytes(2, "big") + encode_string(topic) +
+                bytes([qos]))
+        packet = bytes([0x82]) + encode_length(len(body)) + body
+        self.socket.sendall(packet)
+        response = self.socket.recv(5)
+        if len(response) < 5 or response[0] != 0x90:
+            raise MqttError("MQTT-SUBACK fehlgeschlagen")
+        return True
+
+    @staticmethod
+    def _remaining(data, offset=0):
+        multiplier = 1
+        value = 0
+        while True:
+            byte = data[offset]
+            offset += 1
+            value += (byte & 0x7F) * multiplier
+            if not (byte & 0x80):
+                return value, offset
+            multiplier *= 128
+
+    def read_message(self, timeout=None):
+        if self.socket is None:
+            raise MqttError("nicht verbunden")
+        old_timeout = self.socket.gettimeout()
+        self.socket.settimeout(timeout or self.timeout)
+        try:
+            header = self.socket.recv(1)
+            if not header:
+                raise MqttError("MQTT-Verbindung beendet")
+            length = 0
+            multiplier = 1
+            while True:
+                byte = self.socket.recv(1)
+                if not byte:
+                    raise MqttError("MQTT-Verbindung beendet")
+                length += (byte[0] & 0x7F) * multiplier
+                if not (byte[0] & 0x80):
+                    break
+                multiplier *= 128
+            body = b""
+            while len(body) < length:
+                chunk = self.socket.recv(length - len(body))
+                if not chunk:
+                    break
+                body += chunk
+        finally:
+            self.socket.settimeout(old_timeout)
+        packet_type = header[0] >> 4
+        if packet_type != 3:
+            return None
+        topic_length = int.from_bytes(body[:2], "big")
+        topic = body[2:2 + topic_length].decode("utf-8", "replace")
+        payload = body[2 + topic_length:]
+        return {"topic": topic, "payload": payload}
+
     def publish(self, topic, payload, retain=False):
         if self.socket is None:
             self.connect()
