@@ -19,6 +19,12 @@ print(result)
 - PDF/JPEG/PNG/text mapping
 - HTTP/HTTPS transport
 
+## Printer attributes
+
+```python
+print(printer.get_attributes())
+```
+
 ## Not implemented
 
 - IPP Everywhere discovery details

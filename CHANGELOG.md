@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.61.0 - 2026-11-23
+
+IPP-Attribute.
+
+### Network
+
+* Get-Printer-Attributes.
+* Attributparser.
+* 285 Tests.
+
 ## 3.60.0 - 2026-11-23
 
 eSCL-Faehigkeiten.

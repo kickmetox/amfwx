@@ -39,6 +39,66 @@ def build_print_job(printer_uri, job_name, user, document_format,
     return bytes(payload)
 
 
+def _decode_value(value_tag, data):
+    if value_tag == 0x21 and len(data) == 4:
+        return struct.unpack(">i", data)[0]
+    if value_tag == 0x22 and len(data) == 1:
+        return bool(data[0])
+    if value_tag in (0x41, 0x42, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49):
+        return data.decode("utf-8", "replace")
+    if value_tag == 0x32 and len(data) == 8:
+        x, y = struct.unpack(">ii", data)
+        return (x, y)
+    return data
+
+
+def parse_attributes(data):
+    if len(data) < 8:
+        raise IppError("IPP-Antwort zu kurz")
+    result = {}
+    offset = 8
+    current = ""
+    while offset < len(data):
+        tag = data[offset]
+        offset += 1
+        if tag in (0x01, 0x02, 0x03, 0x04, 0x05):
+            current = ""
+            if tag == 0x03:
+                break
+            continue
+        end = data.find(b"\x00", offset)
+        if end < 0 or end + 3 > len(data):
+            break
+        name = data[offset:end].decode("utf-8", "replace")
+        value_tag = tag
+        length = struct.unpack(">H", data[end + 1:end + 3])[0]
+        value = data[end + 3:end + 3 + length]
+        offset = end + 3 + length
+        key = name or current
+        current = key
+        decoded = _decode_value(value_tag, value)
+        if key in result:
+            if not isinstance(result[key], list):
+                result[key] = [result[key]]
+            result[key].append(decoded)
+        else:
+            result[key] = decoded
+    return result
+
+
+def build_get_attributes(printer_uri, user, requested=None):
+    payload = bytearray(b"\x02\x00\x00\x0b\x00\x00\x00\x01")
+    payload.append(0x01)
+    payload.extend(_attribute(0x47, "attributes-charset", "utf-8", 0x47))
+    payload.extend(_attribute(0x48, "attributes-natural-language", "en", 0x48))
+    payload.extend(_attribute(0x45, "printer-uri", printer_uri, 0x45))
+    payload.extend(_attribute(0x42, "requesting-user-name", user))
+    payload.extend(_attribute(0x44, "requested-attributes",
+                              requested or "printer-name", 0x44))
+    payload.append(0x03)
+    return bytes(payload)
+
+
 def parse_response(data):
     if len(data) < 8:
         raise IppError("IPP-Antwort zu kurz")
@@ -66,6 +126,18 @@ class IppPrinter:
         self.uri = f"ipp://{self.host}:{self.port}{self.path}"
         self.client = HttpClient(f"{scheme}://{self.host}:{self.port}",
                                  timeout=timeout)
+
+    def get_attributes(self, requested=None):
+        payload = build_get_attributes(self.uri, self.user, requested)
+        try:
+            response = self.client.request(
+                self.path, method="POST", data=payload,
+                headers={"Content-Type": "application/ipp"})
+        except NetworkError as error:
+            raise IppError(str(error)) from error
+        if response["status"] != 200:
+            raise IppError(f"IPP HTTP {response['status']}")
+        return parse_attributes(response["body"])
 
     def print_job(self, document, document_format="application/pdf",
                   job_name="AMFWX"):
