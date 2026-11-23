@@ -12,6 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import BeckerCentral
+from amfwx.home_discovery import probe_becker
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -81,6 +82,11 @@ class BeckerTests(unittest.TestCase):
         self.assertEqual(Handler.calls[-1]["params"]["value"], -1)
         self.box.set_position(1, 30)
         self.assertEqual(Handler.calls[-1]["params"]["value"], 70)
+
+    def test_probe(self):
+        device = probe_becker("127.0.0.1", self.server.server_port)
+        self.assertIsNotNone(device)
+        self.assertEqual(device.kind, "becker")
 
 
 if __name__ == "__main__":

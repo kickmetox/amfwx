@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.84.0 - 2026-11-23
+
+Becker-Discovery.
+
+### Discovery
+
+* JSON-RPC-Probe.
+* 336 Tests.
+
 ## 3.83.0 - 2026-11-23
 
 HomePilot-Discovery.

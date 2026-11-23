@@ -142,6 +142,7 @@ Implemented sources:
 
 - `_matter._tcp`, `_matterc._udp` (Matter/Thread)
 - `_kizboxdev._tcp` (TaHoma/Connexoon)
+- JSON-RPC probe (Becker CC51)
 
 | Source | State |
 |---|---|

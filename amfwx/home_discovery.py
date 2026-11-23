@@ -175,6 +175,19 @@ def tuya_broadcast(timeout=1.0):
     return found
 
 
+def probe_becker(host, port=80, timeout=1.0):
+    from .becker import BeckerCentral
+    try:
+        groups = BeckerCentral(host, port, timeout=timeout).groups()
+    except Exception:
+        return None
+    if not groups:
+        return None
+    return DiscoveredDevice("becker", groups[0].get("name", "Becker"),
+                            host, port, "becker-rpc",
+                            "deviced_get_item_list")
+
+
 def discover_home(timeout=3.0, fritz=None):
     from .network_scan import discover_network_devices
     devices = []
@@ -208,6 +221,8 @@ def discover_home(timeout=3.0, fritz=None):
             continue
         seen.add(key)
         probe = probe_http(host, port, timeout=min(1.0, timeout))
+        if probe is None:
+            probe = probe_becker(host, port, timeout=min(1.0, timeout))
         if probe:
             devices.append(probe)
     unique = []
