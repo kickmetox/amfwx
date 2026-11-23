@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.87.0 - 2026-11-23
+
+Tuya LAN 3.3.
+
+### Home
+
+* `TuyaLocal`.
+* AES-128-ECB.
+* DP-Query/Control.
+* 340 Tests.
+
 ## 3.86.0 - 2026-11-23
 
 TaHoma-Polling.

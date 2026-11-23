@@ -64,6 +64,7 @@ from .application import AppConfig, Application
 from .single_instance import SingleInstance, SingleInstanceError
 from .icons import default_icon_path, load_icon, set_window_icon
 from .home_ui import HomeDevicesPanel, HomeDevicesWindow
+from .tuya_local import TuyaLocal, TuyaLocalError
 from .tahoma import Tahoma, TahomaError
 from .becker import BeckerCentral, BeckerError
 from .homepilot import HomePilot, HomePilotError
@@ -131,7 +132,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.86.0"
+__version__ = "3.87.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
