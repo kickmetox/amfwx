@@ -11,6 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import NetworkDevice, discover_network_devices, probe_escl
+from amfwx.network_scan import SERVICE_TYPES
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -44,6 +45,10 @@ class NetworkScanTests(unittest.TestCase):
 
     def test_discovery_returns_list(self):
         self.assertIsInstance(discover_network_devices(timeout=0.1), list)
+
+    def test_service_types(self):
+        for service in SERVICE_TYPES:
+            self.assertTrue(service.endswith(".local."))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.68.1 - 2026-11-23
+
+Zeroconf-Servicenamen.
+
+### Fix
+
+* `.local.`-Trailing-Dot.
+* 297 Tests.
+
 ## 3.68.0 - 2026-11-23
 
 Netzwerkgeraete im DeviceManager.

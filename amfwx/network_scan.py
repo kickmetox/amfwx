@@ -7,13 +7,13 @@ from .net import HttpClient, NetworkError
 
 
 SERVICE_TYPES = (
-    "_ipp._tcp.local",
-    "_ipps._tcp.local",
-    "_printer._tcp.local",
-    "_pdl-datastream._tcp.local",
-    "_scanner._tcp.local",
-    "_uscan._tcp.local",
-    "_uscans._tcp.local",
+    "_ipp._tcp.local.",
+    "_ipps._tcp.local.",
+    "_printer._tcp.local.",
+    "_pdl-datastream._tcp.local.",
+    "_scanner._tcp.local.",
+    "_uscan._tcp.local.",
+    "_uscans._tcp.local.",
 )
 
 
