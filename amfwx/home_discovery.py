@@ -93,7 +93,8 @@ def probe_http(host, port=80, timeout=1.0):
         ("/api/devices", "fibaro", None),
         ("/cm?cmnd=Status%200", "tasmota", ("Status",)),
         ("/api.cgi?cmd=GetDevInfo", "reolink", ("value",)),
-        ("/api/v1/devices", "homepilot", None),
+        ("/devices", "homepilot", None),
+        ("/hp/devices", "homepilot", None),
         ("/api/setup/devices", "tahoma", None),
     ]
     for path, kind, keys in checks:

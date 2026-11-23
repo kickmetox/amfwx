@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.83.0 - 2026-11-23
+
+HomePilot-Discovery.
+
+### Discovery
+
+* `/devices`.
+* `/hp/devices`.
+* 335 Tests.
+
 ## 3.82.0 - 2026-11-23
 
 Matter/TaHoma-Discovery.

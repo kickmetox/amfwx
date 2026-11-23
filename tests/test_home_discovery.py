@@ -43,6 +43,23 @@ class FibaroHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
+
+class HomePilotHandler(BaseHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+    def do_GET(self):
+        if self.path != "/devices":
+            self.send_response(404)
+            self.end_headers()
+            return
+        body = b'{"payload": {"devices": [{"did": 1, "name": "Roll"}]}}'
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+
 class DiscoveryTests(unittest.TestCase):
     def test_probe_shelly(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), ShellyHandler)
@@ -74,6 +91,16 @@ class DiscoveryTests(unittest.TestCase):
 
     def test_discover_home(self):
         self.assertIsInstance(discover_home(timeout=0), list)
+
+    def test_probe_homepilot(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), HomePilotHandler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            device = probe_http("127.0.0.1", server.server_port)
+            self.assertEqual(device.kind, "homepilot")
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":
