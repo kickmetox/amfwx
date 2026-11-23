@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.98.1 - 2026-11-23
+
+ADF-Leer-Meldung.
+
+### Fix
+
+* 409/500/503 bei Feeder als klare Meldung.
+* 354 Tests.
+
 ## 3.98.0 - 2026-11-23
 
 Kyocera eSCL real verifiziert.

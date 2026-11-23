@@ -11,7 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import EsclScanner
+from amfwx import EsclError, EsclScanner
 from amfwx.escl import _settings_xml, parse_capabilities
 
 
@@ -103,6 +103,23 @@ class FeederHandler(Handler):
                 self.end_headers()
             return
         super().do_GET()
+
+
+
+class EmptyAdfHandler(Handler):
+    def do_POST(self):
+        self.send_response(409)
+        self.end_headers()
+
+    def do_GET(self):
+        if self.path == "/eSCL/ScannerStatus":
+            body = (b"<scan:ScannerStatus xmlns:scan='http://schemas.hp.com/imaging/escl/2011/05/03'>"
+                    b"<scan:AdfState>ScannerAdfEmpty</scan:AdfState></scan:ScannerStatus>")
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(body)
+        else:
+            super().do_GET()
 
 
 class EsclTests(unittest.TestCase):
@@ -204,6 +221,20 @@ class EsclTests(unittest.TestCase):
                                            source="Feeder", max_pages=5)
                 self.assertEqual(len(pages), 2)
                 self.assertEqual(FeederHandler.jobs, 2)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_adf_empty_message(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), EmptyAdfHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            scanner = EsclScanner("127.0.0.1", server.server_port)
+            with tempfile.TemporaryDirectory() as folder:
+                with self.assertRaises(EsclError) as context:
+                    scanner.scan_pages(folder, source="Feeder")
+                self.assertIn("Einzug ist leer", str(context.exception))
         finally:
             server.shutdown()
             server.server_close()

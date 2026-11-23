@@ -114,7 +114,7 @@ class EsclScanner:
         except NetworkError as error:
             raise EsclError(str(error)) from error
 
-    def _create_job(self, payload):
+    def _create_job(self, payload, feeder=False):
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
@@ -123,6 +123,8 @@ class EsclScanner:
         except NetworkError as error:
             raise EsclError(str(error)) from error
         if response["status"] not in (200, 201, 202):
+            if feeder and response["status"] in (409, 500, 503):
+                raise EsclError("Der automatische Einzug ist leer oder noch nicht bereit.")
             raise EsclError(f"ScanJobs HTTP {response['status']}")
         location = (response["headers"].get("Location") or
                     response["headers"].get("location"))
@@ -166,7 +168,7 @@ class EsclScanner:
         pages = []
         for index in range(1, int(max_pages) + 1):
             if job_base is None:
-                job_base = self._create_job(payload)
+                job_base = self._create_job(payload, feeder=feeder)
             suffix = Path(prefix).suffix or ".jpg"
             target = folder / f"{Path(prefix).stem}_{index:03d}{suffix}"
             try:
@@ -204,6 +206,8 @@ class EsclScanner:
         except NetworkError as error:
             raise EsclError(str(error)) from error
         if response["status"] not in (200, 201, 202):
+            if feeder and response["status"] in (409, 500, 503):
+                raise EsclError("Der automatische Einzug ist leer oder noch nicht bereit.")
             raise EsclError(f"ScanJobs HTTP {response['status']}")
         location = response["headers"].get("Location") or response["headers"].get("location")
         if not location:
