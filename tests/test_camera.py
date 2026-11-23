@@ -9,7 +9,10 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from PIL import Image, ImageDraw
+try:
+    from PIL import Image, ImageDraw
+except ImportError:
+    raise unittest.SkipTest("Pillow fehlt")
 
 from amfwx import CameraInfo, chroma_key, composite, list_cameras, list_pnp_cameras
 
