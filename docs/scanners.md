@@ -99,3 +99,11 @@ Enumeration is implemented; actual scanning is the next step.
 - optional `comtypes` for WIA
 - vendor DSM required for TWAIN 64-bit
 - no hardware-in-the-loop CI
+
+## Scan to folder
+
+```powershell
+python -m amfwx --scan-host 192.168.178.93 --scan-source Platen --scan-pages 1 --scan-dir "D:\Scans"
+```
+
+The CLI writes directly into the destination folder. Feeder scans request paper in the ADF; an empty feeder is reported clearly.

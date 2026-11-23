@@ -1,5 +1,26 @@
 ﻿# Changelog
 
+## 4.0.0 - 2026-11-23
+
+Scan-Transfer.
+
+### Scanner
+
+* `--scan-host`.
+* Zielordner.
+* ADF real verifiziert.
+* 357 Tests.
+
+## 3.99.0 - 2026-11-23
+
+Kyocera-ADF real verifiziert.
+
+### Scanners
+
+* Weck-Scan bei veraltetem AdfState.
+* Echter ADF-Scan.
+* 355 Tests.
+
 ## 3.98.1 - 2026-11-23
 
 ADF-Leer-Meldung.

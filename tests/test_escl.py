@@ -239,6 +239,20 @@ class EsclTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
 
+    def test_wake_retry(self):
+        from amfwx.escl import EsclError
+        scanner = EsclScanner("127.0.0.1")
+        calls = {"create": 0, "wake": 0}
+        def create(payload, feeder=False):
+            calls["create"] += 1
+            if calls["create"] == 1:
+                raise EsclError("Einzug leer")
+            return "job"
+        scanner._create_job = create
+        scanner._wake_scan_engine = lambda: calls.__setitem__("wake", 1)
+        self.assertEqual(scanner._create_job_with_wake(b"x", True), "job")
+        self.assertEqual(calls["wake"], 1)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

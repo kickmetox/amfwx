@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import ssl
+import time
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
@@ -134,6 +135,30 @@ class EsclScanner:
             return location.rstrip("/")
         return self.base_url + "/" + location.lstrip("/")
 
+    def _wake_scan_engine(self):
+        """Tiny platen scan to refresh a stale ADF sensor."""
+        payload = _settings_xml(75, "Grayscale8", "image/jpeg", False,
+                                (0, 0, 150, 150), "Platen")
+        base = None
+        try:
+            base = self._create_job(payload, feeder=False)
+            self.client.request(base + "/NextDocument")
+        except Exception:
+            pass
+        finally:
+            if base:
+                self._delete_job(base)
+        time.sleep(1.0)
+
+    def _create_job_with_wake(self, payload, feeder):
+        try:
+            return self._create_job(payload, feeder=feeder)
+        except EsclError as error:
+            if not feeder or "Einzug" not in str(error):
+                raise
+            self._wake_scan_engine()
+            return self._create_job(payload, feeder=feeder)
+
     def _delete_job(self, job_base):
         try:
             self.client.request(job_base, method="DELETE")
@@ -168,7 +193,7 @@ class EsclScanner:
         pages = []
         for index in range(1, int(max_pages) + 1):
             if job_base is None:
-                job_base = self._create_job(payload, feeder=feeder)
+                job_base = self._create_job_with_wake(payload, feeder)
             suffix = Path(prefix).suffix or ".jpg"
             target = folder / f"{Path(prefix).stem}_{index:03d}{suffix}"
             try:
@@ -198,30 +223,19 @@ class EsclScanner:
              source="Platen"):
         payload = _settings_xml(resolution, color, document_format,
                                 duplex, region, source)
+        feeder = str(source).lower() in ("adf", "feeder")
+        job_base = self._create_job_with_wake(payload, feeder)
         try:
-            response = self.client.request(
-                "/eSCL/ScanJobs", method="POST", data=payload,
-                headers={"Content-Type": "text/xml",
-                         **self.auth_headers})
-        except NetworkError as error:
-            raise EsclError(str(error)) from error
-        if response["status"] not in (200, 201, 202):
-            if feeder and response["status"] in (409, 500, 503):
-                raise EsclError("Der automatische Einzug ist leer oder noch nicht bereit.")
-            raise EsclError(f"ScanJobs HTTP {response['status']}")
-        location = response["headers"].get("Location") or response["headers"].get("location")
-        if not location:
-            raise EsclError("ScanJobs ohne Location")
-        if location.startswith("http"):
-            document_url = location.rstrip("/") + "/NextDocument"
-        else:
-            document_url = self.base_url + "/" + location.lstrip("/") + "/NextDocument"
-        try:
-            document = self.client.request(document_url)
-        except NetworkError as error:
-            raise EsclError(str(error)) from error
-        if document["status"] != 200:
-            raise EsclError(f"NextDocument HTTP {document['status']}")
-        target = Path(path)
-        target.write_bytes(document["body"])
-        return str(target)
+            try:
+                document = self.client.request(job_base + "/NextDocument")
+            except NetworkError as error:
+                raise EsclError(str(error)) from error
+            if document["status"] != 200:
+                raise EsclError(f"NextDocument HTTP {document['status']}")
+            target = Path(path)
+            target.write_bytes(document["body"])
+            return str(target)
+        finally:
+            self._delete_job(job_base)
+
+
