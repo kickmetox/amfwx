@@ -10,7 +10,8 @@ from .window import Window
 
 class AppConfig:
     def __init__(self, title="AMFWX", width=800, height=600, theme="dark",
-                 single=True, show_version=False, help=False):
+                 single=True, show_version=False, help=False,
+                 doctor=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -18,6 +19,7 @@ class AppConfig:
         self.single = bool(single)
         self.show_version = bool(show_version)
         self.help = bool(help)
+        self.doctor = bool(doctor)
 
     @classmethod
     def parse(cls, argv=None):
@@ -30,6 +32,8 @@ class AppConfig:
                 config.show_version = True
             elif value in ("-h", "--help"):
                 config.help = True
+            elif value == "--doctor":
+                config.doctor = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -47,6 +51,7 @@ class AppConfig:
                 "  --theme NAME    Theme (dark, light, high_contrast)\n"
                 "  --title TEXT    Fenstertitel\n"
                 "  --no-single     Mehrfachstart erlauben\n"
+                "  --doctor        Hardware-Diagnose\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -76,6 +81,10 @@ class Application:
         if self.config.show_version:
             from . import __version__
             print(f"AMFWX {__version__}")
+            return 0
+        if self.config.doctor:
+            from .diagnostics import diagnostics, format_diagnostics
+            print(format_diagnostics(diagnostics()))
             return 0
         if self.config.single and not self.lock.acquire():
             return 0

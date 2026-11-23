@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.69.0 - 2026-11-23
+
+Hardware-Diagnose.
+
+### App
+
+* `--doctor`.
+* TWAIN/WIA/Netzwerk-Status.
+* 299 Tests.
+
 ## 3.68.1 - 2026-11-23
 
 Zeroconf-Servicenamen.

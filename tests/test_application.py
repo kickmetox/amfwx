@@ -40,6 +40,21 @@ class ApplicationTests(unittest.TestCase):
             window.close()
             window.process_events(40)
 
+    def test_doctor(self):
+        from amfwx import diagnostics
+        data = diagnostics(timeout=0.1)
+        for key in ("version", "bits", "twain64", "twain32", "wia",
+                    "network"):
+            self.assertIn(key, data)
+        self.assertIsInstance(data["twain32"]["available"], bool)
+
+    def test_doctor_cli(self):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            result = Application(AppConfig(doctor=True)).run()
+        self.assertEqual(result, 0)
+        self.assertIn("twain32", output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
