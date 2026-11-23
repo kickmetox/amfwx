@@ -11,6 +11,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import DeconzClient, FritzBox, TuyaCloud, WlanController
+from amfwx.fritz import _challenge_response
 
 
 class FritzHandler(BaseHTTPRequestHandler):
@@ -140,6 +141,12 @@ class RemoteTests(unittest.TestCase):
         self.assertEqual(controller.current()["ssid"], "Home")
         controller.connect("Home")
         self.assertEqual(calls[-1][3], "name=Home")
+
+    def test_fritz_v2_challenge(self):
+        challenge = "2$1000$00112233445566778899aabbccddeeff$1000$ffeeddccbbaa99887766554433221100"
+        response = _challenge_response(challenge, "secret")
+        self.assertTrue(response.endswith("$" + challenge))
+        self.assertGreater(len(response), len(challenge))
 
 
 if __name__ == "__main__":

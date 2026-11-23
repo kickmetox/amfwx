@@ -37,10 +37,10 @@ def _challenge_response(challenge, password):
         iterations1, salt1, iterations2, salt2 = parts[1:]
         first = hashlib.pbkdf2_hmac(
             "sha256", password.encode("utf-8"),
-            bytes.fromhex(salt1), int(iterations1)).hexdigest()
+            bytes.fromhex(salt1), int(iterations1)).hex()
         second = hashlib.pbkdf2_hmac(
             "sha256", first.encode("ascii"),
-            bytes.fromhex(salt2), int(iterations2)).hexdigest()
+            bytes.fromhex(salt2), int(iterations2)).hex()
         return f"{second}${challenge}"
     digest = hashlib.md5(
         f"{challenge}-{password}".encode("utf-16le")).hexdigest()

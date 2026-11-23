@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.95.2 - 2026-11-23
+
+Fritz-v2-Challenge.
+
+### Fix
+
+* PBKDF2 `.hex()` statt `.hexdigest()`.
+* 352 Tests.
+
 ## 3.95.1 - 2026-11-23
 
 eSCL-Erkennung verschaerft.
