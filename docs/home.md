@@ -140,6 +140,9 @@ for device in discover_home(timeout=4.0):
 
 Implemented sources:
 
+- `_matter._tcp`, `_matterc._udp` (Matter/Thread)
+- `_kizboxdev._tcp` (TaHoma/Connexoon)
+
 | Source | State |
 |---|---|
 | mDNS/Bonjour | ✅ |

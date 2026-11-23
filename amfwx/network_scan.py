@@ -14,6 +14,9 @@ SERVICE_TYPES = (
     "_scanner._tcp.local.",
     "_uscan._tcp.local.",
     "_uscans._tcp.local.",
+    "_kizboxdev._tcp.local.",
+    "_matter._tcp.local.",
+    "_matterc._udp.local.",
 )
 
 
@@ -28,6 +31,10 @@ class NetworkDevice:
     @property
     def kind(self):
         value = self.service_type.lower()
+        if "kizboxdev" in value:
+            return "tahoma"
+        if "matter" in value:
+            return "matter"
         if "uscan" in value or "scanner" in value or "escl" in value:
             return "scanner"
         if "ipp" in value or "printer" in value or "pdl-datastream" in value:

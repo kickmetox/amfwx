@@ -50,6 +50,10 @@ class NetworkScanTests(unittest.TestCase):
         for service in SERVICE_TYPES:
             self.assertTrue(service.endswith(".local."))
 
+    def test_matter_and_tahoma(self):
+        self.assertEqual(NetworkDevice("m", "_matter._tcp").kind, "matter")
+        self.assertEqual(NetworkDevice("t", "_kizboxdev._tcp").kind, "tahoma")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

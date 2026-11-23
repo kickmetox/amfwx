@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.82.0 - 2026-11-23
+
+Matter/TaHoma-Discovery.
+
+### Network
+
+* `_matter`, `_matterc`.
+* `_kizboxdev`.
+* 334 Tests.
+
 ## 3.81.0 - 2026-11-23
 
 Native TaHoma.
