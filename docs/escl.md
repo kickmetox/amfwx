@@ -47,3 +47,13 @@ Use `EsclScanner(host, 9096, secure=True)` and `source="Feeder"` for ADF.
 
 - multi-page job: repeated `NextDocument`
 - Kyocera one-job-per-page: after 404, `ScannerStatus/AdfState` is checked; if loaded, a new job is created
+
+## Verified hardware
+
+Kyocera ECOSYS M5521cdn at `192.168.178.93`:
+
+- HTTP eSCL: port `9095`
+- HTTPS eSCL: port `9096`
+- platen and ADF
+- resolutions 200/100/400/300/600
+- real scan: 1654x2337 JPEG, 217958 bytes (content deleted after the test)

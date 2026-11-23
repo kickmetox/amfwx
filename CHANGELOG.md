@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.98.0 - 2026-11-23
+
+Kyocera eSCL real verifiziert.
+
+### Scanners
+
+* Port 9095 HTTP ergaenzt.
+* Self-signed HTTPS 9096.
+* Echter Scan 1654x2337 JPEG.
+* 353 Tests.
+
 ## 3.97.0 - 2026-11-23
 
 Kyocera-ADF-Strategie.

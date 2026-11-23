@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import ssl
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
@@ -87,14 +88,18 @@ def parse_capabilities(xml):
 class EsclScanner:
     def __init__(self, host, port=80, timeout=15.0, secure=False,
                  username=None, password=None, certfile=None,
-                 keyfile=None):
+                 keyfile=None, verify_tls=False):
         self.host = str(host)
         self.port = int(port)
         self.timeout = float(timeout)
         scheme = "https" if secure else "http"
         self.base_url = f"{scheme}://{self.host}:{self.port}"
+        context = None
+        if secure and not verify_tls:
+            context = ssl._create_unverified_context()
         self.client = HttpClient(self.base_url, timeout=self.timeout,
-                                 certfile=certfile, keyfile=keyfile)
+                                 certfile=certfile, keyfile=keyfile,
+                                 ssl_context=context)
         self.auth_headers = {}
         if username is not None:
             token = base64.b64encode(
