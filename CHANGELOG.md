@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.51.0 - 2026-11-23
+
+Single-Instance.
+
+### Platform
+
+* Benannter Mutex.
+* `SingleInstance`.
+* 270 Tests.
+
 ## 3.50.0 - 2026-11-23
 
 Windows-Manifest/Versionsinfo.
