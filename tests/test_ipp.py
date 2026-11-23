@@ -96,6 +96,31 @@ class IppTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
 
+    def test_get_jobs(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            printer = IppPrinter("127.0.0.1", server.server_port)
+            self.assertIsInstance(printer.get_jobs(), dict)
+            self.assertIn(b"\x00\x0a", Handler.bodies[-1])
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_cancel_job(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            printer = IppPrinter("127.0.0.1", server.server_port)
+            result = printer.cancel_job(7)
+            self.assertEqual(result["status"], 0)
+            self.assertIn(b"\x00\x08", Handler.bodies[-1])
+        finally:
+            server.shutdown()
+            server.server_close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

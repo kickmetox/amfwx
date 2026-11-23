@@ -99,6 +99,24 @@ def build_get_attributes(printer_uri, user, requested=None):
     return bytes(payload)
 
 
+def build_job_request(operation, printer_uri, user, job_id=None,
+                      which_jobs="not-completed"):
+    payload = bytearray(b"\x02\x00")
+    payload.extend(struct.pack(">H", int(operation)))
+    payload.extend(struct.pack(">I", 1))
+    payload.append(0x01)
+    payload.extend(_attribute(0x47, "attributes-charset", "utf-8", 0x47))
+    payload.extend(_attribute(0x48, "attributes-natural-language", "en", 0x48))
+    payload.extend(_attribute(0x45, "printer-uri", printer_uri, 0x45))
+    payload.extend(_attribute(0x42, "requesting-user-name", user))
+    if job_id is not None:
+        payload.extend(_attribute(0x21, "job-id", int(job_id), 0x21))
+    if which_jobs:
+        payload.extend(_attribute(0x44, "which-jobs", which_jobs, 0x44))
+    payload.append(0x03)
+    return bytes(payload)
+
+
 def parse_response(data):
     if len(data) < 8:
         raise IppError("IPP-Antwort zu kurz")
@@ -138,6 +156,29 @@ class IppPrinter:
         if response["status"] != 200:
             raise IppError(f"IPP HTTP {response['status']}")
         return parse_attributes(response["body"])
+
+    def get_jobs(self, which_jobs="not-completed"):
+        payload = build_job_request(0x000A, self.uri, self.user,
+                                    which_jobs=which_jobs)
+        response = self._request(payload)
+        return parse_attributes(response["body"])
+
+    def cancel_job(self, job_id):
+        payload = build_job_request(0x0008, self.uri, self.user,
+                                    job_id=job_id, which_jobs="")
+        response = self._request(payload)
+        return parse_response(response["body"])
+
+    def _request(self, payload):
+        try:
+            response = self.client.request(
+                self.path, method="POST", data=payload,
+                headers={"Content-Type": "application/ipp"})
+        except NetworkError as error:
+            raise IppError(str(error)) from error
+        if response["status"] != 200:
+            raise IppError(f"IPP HTTP {response['status']}")
+        return response
 
     def print_job(self, document, document_format="application/pdf",
                   job_name="AMFWX"):

@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.62.0 - 2026-11-23
+
+IPP-Jobs.
+
+### Network
+
+* Get-Jobs.
+* Cancel-Job.
+* 287 Tests.
+
 ## 3.61.0 - 2026-11-23
 
 IPP-Attribute.
