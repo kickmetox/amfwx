@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 
 APP_NAME = "AMFWX"
-APP_VERSION = "3.67.1"
+APP_VERSION = "3.68.0"
 
 
 def payload_path():

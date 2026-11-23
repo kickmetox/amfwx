@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.68.0 - 2026-11-23
+
+Netzwerkgeraete im DeviceManager.
+
+### Devices
+
+* `network`-Inventar.
+* 296 Tests.
+
 ## 3.67.1 - 2026-11-23
 
 Streaming-Test stabilisiert.
