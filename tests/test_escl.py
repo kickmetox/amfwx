@@ -43,6 +43,21 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
 
 
+class PageHandler(Handler):
+    def do_GET(self):
+        if self.path == "/eSCL/ScanJobs/1/NextDocument":
+            self.server.pages = getattr(self.server, "pages", 0) + 1
+            if self.server.pages <= 2:
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"\xff\xd8\xff\xd9")
+            else:
+                self.send_response(404)
+                self.end_headers()
+        else:
+            super().do_GET()
+
+
 class EsclTests(unittest.TestCase):
     def test_capabilities_and_scan(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -63,6 +78,19 @@ class EsclTests(unittest.TestCase):
         xml = _settings_xml(600, "RGB24", "image/png")
         self.assertIn(b"<scan:XResolution>600</scan:XResolution>", xml)
         self.assertIn(b"image/png", xml)
+
+    def test_multipage(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), PageHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            scanner = EsclScanner("127.0.0.1", server.server_port)
+            with tempfile.TemporaryDirectory() as folder:
+                pages = scanner.scan_pages(folder, prefix="page")
+                self.assertEqual(len(pages), 2)
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

@@ -38,6 +38,44 @@ class EsclScanner:
         except NetworkError as error:
             raise EsclError(str(error)) from error
 
+    def scan_pages(self, directory, prefix="page", resolution=300,
+                   color="RGB24", document_format="image/jpeg",
+                   max_pages=50):
+        folder = Path(directory)
+        folder.mkdir(parents=True, exist_ok=True)
+        payload = _settings_xml(resolution, color, document_format)
+        try:
+            response = self.client.request(
+                "/eSCL/ScanJobs", method="POST", data=payload,
+                headers={"Content-Type": "text/xml"})
+        except NetworkError as error:
+            raise EsclError(str(error)) from error
+        if response["status"] not in (200, 201, 202):
+            raise EsclError(f"ScanJobs HTTP {response['status']}")
+        location = (response["headers"].get("Location") or
+                    response["headers"].get("location"))
+        if not location:
+            raise EsclError("ScanJobs ohne Location")
+        if location.startswith("http"):
+            base = location.rstrip("/")
+        else:
+            base = self.base_url + "/" + location.lstrip("/")
+        pages = []
+        for index in range(1, int(max_pages) + 1):
+            suffix = Path(prefix).suffix or ".jpg"
+            target = folder / f"{Path(prefix).stem}_{index:03d}{suffix}"
+            try:
+                document = self.client.request(base + "/NextDocument")
+            except NetworkError as error:
+                raise EsclError(str(error)) from error
+            if document["status"] in (204, 404):
+                break
+            if document["status"] != 200:
+                raise EsclError(f"NextDocument HTTP {document['status']}")
+            target.write_bytes(document["body"])
+            pages.append(str(target))
+        return pages
+
     def scan(self, path, resolution=300, color="RGB24",
              document_format="image/jpeg"):
         payload = _settings_xml(resolution, color, document_format)

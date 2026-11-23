@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.57.0 - 2026-11-23
+
+eSCL-Mehrseiten.
+
+### Network
+
+* `scan_pages`.
+* ADF/NextDocument.
+* 278 Tests.
+
 ## 3.56.0 - 2026-11-23
 
 eSCL-Scan.
