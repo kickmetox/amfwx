@@ -12,7 +12,8 @@ class AppConfig:
     def __init__(self, title="AMFWX", width=800, height=600, theme="dark",
                  single=True, show_version=False, help=False,
                  doctor=False, devices=False, registry=None,
-                 list_devices=False, device_action=None, device=None):
+                 list_devices=False, device_action=None, device=None,
+                 scan_printers=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -26,6 +27,7 @@ class AppConfig:
         self.list_devices = bool(list_devices)
         self.device_action = device_action
         self.device = device
+        self.scan_printers = scan_printers
 
     @classmethod
     def parse(cls, argv=None):
@@ -53,6 +55,9 @@ class AppConfig:
             elif value == "--action" and index + 1 < len(args):
                 index += 1
                 config.device_action = args[index]
+            elif value == "--scan-printers" and index + 1 < len(args):
+                index += 1
+                config.scan_printers = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -76,6 +81,7 @@ class AppConfig:
                 "  --list-devices  Gespeicherte Geräte anzeigen\n"
                 "  --device NAME   Gerät für --action\n"
                 "  --action NAME   open/close/on/off\n"
+                "  --scan-printers CIDR  eSCL/IPP im LAN suchen\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -136,6 +142,11 @@ class Application:
         if self.config.doctor:
             from .diagnostics import diagnostics, format_diagnostics
             print(format_diagnostics(diagnostics()))
+            return 0
+        if self.config.scan_printers:
+            from .print_discovery import scan_network
+            for endpoint in scan_network(self.config.scan_printers):
+                print(f"{endpoint.host}:{endpoint.port} escl={endpoint.escl}")
             return 0
         if self.config.single and not self.lock.acquire():
             return 0

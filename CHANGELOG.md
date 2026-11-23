@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.95.0 - 2026-11-23
+
+Drucker-Subnetzsuche.
+
+### CLI
+
+* `--scan-printers CIDR`.
+* eSCL-Probe.
+* 350 Tests.
+
 ## 3.94.0 - 2026-11-23
 
 Geraesteuerung im Discovery-Fenster.

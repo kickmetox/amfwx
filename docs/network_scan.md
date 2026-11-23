@@ -48,3 +48,18 @@ Epson network devices. Actual eSCL scanning is not implemented yet.
 - no eSCL scan job yet
 - no WSD discovery
 - multicast/firewall dependent
+
+## Subnet scan
+
+```powershell
+python -m amfwx --scan-printers 192.168.178.0/24
+```
+
+Output:
+
+```text
+192.168.178.45:80 escl=True
+192.168.178.45:631 escl=False
+```
+
+This is an explicit opt-in scan, not part of normal discovery.
