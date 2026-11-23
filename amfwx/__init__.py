@@ -64,6 +64,7 @@ from .application import AppConfig, Application
 from .single_instance import SingleInstance, SingleInstanceError
 from .icons import default_icon_path, load_icon, set_window_icon
 from .home_ui import HomeDevicesPanel, HomeDevicesWindow
+from .homepilot import HomePilot, HomePilotError
 from .home_registry import HomeRegistry
 from .home import (FibaroHomeCenter, GenericHttpDevice, HomeError,
                     JaroliftBridge, ShellyDevice)
@@ -128,7 +129,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.78.0"
+__version__ = "3.79.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -149,7 +150,8 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "EsclError", "EsclScanner", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
     "GenericHttpDevice", "JaroliftBridge", "HomeError", "HomeRegistry", "HomeDevicesPanel",
-    "HomeDevicesWindow", "CredentialsDialog", "MqttClient",
+    "HomeDevicesWindow", "CredentialsDialog", "HomePilot",
+    "HomePilotError", "MqttClient",
     "MqttError", "DiscoveredDevice", "discover_home", "probe_http",
     "TuyaCloud", "TuyaError", "DeconzClient", "ZigbeeError",
     "WlanController", "WlanControlError", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",

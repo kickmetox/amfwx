@@ -40,8 +40,8 @@ class RegistryTests(unittest.TestCase):
 
     def test_generic(self):
         class Generic:
-            kind = "homepilot"
-            name = "HomePilot"
+            kind = "generic"
+            name = "Generic"
             host = "127.0.0.1"
             port = 80
 

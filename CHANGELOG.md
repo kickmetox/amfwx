@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.79.0 - 2026-11-23
+
+Native HomePilot.
+
+### Home
+
+* `HomePilot` REST-Client.
+* Login/Salt.
+* Geraete/Status/Kommandos.
+* 328 Tests.
+
 ## 3.78.0 - 2026-11-23
 
 Geraete-CLI.

@@ -7,6 +7,7 @@ import uuid
 from pathlib import Path
 
 from .secrets import protect_text, unprotect_text
+from .homepilot import HomePilot
 from .home import (FibaroHomeCenter, GenericHttpDevice, HomeError,
                    JaroliftBridge, ShellyDevice)
 
@@ -74,6 +75,9 @@ class HomeRegistry:
         config = entry["config"]
         host = entry["host"]
         port = entry["port"]
+        if kind == "homepilot":
+            return HomePilot(host, config.get("password", ""),
+                             config.get("api_version", 1))
         if kind == "shelly":
             return ShellyDevice(host, port)
         if kind == "fibaro":
