@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 4.7.2 - 2026-11-23
+
+GDI+ Signaturen.
+
+### Fix
+
+* argtypes fuer GDI+.
+* Overflow auf 64-Bit behoben.
+* 365 Tests.
+
 ## 4.7.1 - 2026-11-23
 
 PDF-Drucktest optional.

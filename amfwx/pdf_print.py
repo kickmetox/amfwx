@@ -113,8 +113,38 @@ class GDIPLUSSTARTUPINPUT(ctypes.Structure):
                 ("SuppressExternalCodecs", wintypes.BOOL)]
 
 
+
+
+def _bind_gdiplus(gdiplus):
+    gdiplus.GdiplusStartup.argtypes = [ctypes.POINTER(ctypes.c_void_p),
+                                       ctypes.POINTER(GDIPLUSSTARTUPINPUT),
+                                       ctypes.c_void_p]
+    gdiplus.GdiplusStartup.restype = ctypes.c_int
+    gdiplus.GdiplusShutdown.argtypes = [ctypes.c_void_p]
+    gdiplus.GdipCreateFromHDC.argtypes = [wintypes.HDC,
+                                          ctypes.POINTER(ctypes.c_void_p)]
+    gdiplus.GdipCreateFromHDC.restype = ctypes.c_int
+    gdiplus.GdipDeleteGraphics.argtypes = [ctypes.c_void_p]
+    gdiplus.GdipSetPageUnit.argtypes = [ctypes.c_void_p, ctypes.c_int]
+    gdiplus.GdipSetInterpolationMode.argtypes = [ctypes.c_void_p,
+                                                 ctypes.c_int]
+    gdiplus.GdipLoadImageFromFile.argtypes = [wintypes.LPCWSTR,
+                                              ctypes.POINTER(ctypes.c_void_p)]
+    gdiplus.GdipLoadImageFromFile.restype = ctypes.c_int
+    gdiplus.GdipGetImageWidth.argtypes = [ctypes.c_void_p,
+                                          ctypes.POINTER(ctypes.c_uint)]
+    gdiplus.GdipGetImageHeight.argtypes = [ctypes.c_void_p,
+                                           ctypes.POINTER(ctypes.c_uint)]
+    gdiplus.GdipDrawImageRectI.argtypes = [ctypes.c_void_p, ctypes.c_void_p,
+                                           ctypes.c_int, ctypes.c_int,
+                                           ctypes.c_int, ctypes.c_int]
+    gdiplus.GdipDrawImageRectI.restype = ctypes.c_int
+    gdiplus.GdipDisposeImage.argtypes = [ctypes.c_void_p]
+
+
 def _print_images_gdiplus(images, hdc, document_name, page_width, page_height):
     gdiplus = ctypes.WinDLL("gdiplus", use_last_error=True)
+    _bind_gdiplus(gdiplus)
     token = ctypes.c_void_p()
     startup = GDIPLUSSTARTUPINPUT(1, None, False, False)
     if gdiplus.GdiplusStartup(ctypes.byref(token),
