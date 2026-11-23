@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.55.0 - 2026-11-23
+
+App-Entrypoint.
+
+### App
+
+* CLI ueber Application.
+* Crash-Logger installiert.
+* Demo-Fenster als Factory.
+* 275 Tests.
+
 ## 3.54.0 - 2026-11-23
 
 App-Lifecycle/CLI.

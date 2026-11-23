@@ -29,6 +29,17 @@ class ApplicationTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertIn("AMFWX", output.getvalue())
 
+    def test_demo_window(self):
+        from tools.amfwx_app import create_window
+        window = create_window(AppConfig(title="Demo", width=320,
+                                         height=200))
+        try:
+            self.assertEqual(window.title, "Demo")
+            self.assertGreaterEqual(len(window.root.children), 3)
+        finally:
+            window.close()
+            window.process_events(40)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
