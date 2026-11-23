@@ -109,14 +109,7 @@ class EsclScanner:
         except NetworkError as error:
             raise EsclError(str(error)) from error
 
-    def scan_pages(self, directory, prefix="page", resolution=300,
-                   color="RGB24", document_format="image/jpeg",
-                   max_pages=50, duplex=False, region=None,
-                   source="Platen"):
-        folder = Path(directory)
-        folder.mkdir(parents=True, exist_ok=True)
-        payload = _settings_xml(resolution, color, document_format,
-                                duplex, region, source)
+    def _create_job(self, payload):
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
@@ -131,19 +124,59 @@ class EsclScanner:
         if not location:
             raise EsclError("ScanJobs ohne Location")
         if location.startswith("http"):
-            base = location.rstrip("/")
-        else:
-            base = self.base_url + "/" + location.lstrip("/")
+            return location.rstrip("/")
+        return self.base_url + "/" + location.lstrip("/")
+
+    def _delete_job(self, job_base):
+        try:
+            self.client.request(job_base, method="DELETE")
+        except NetworkError:
+            pass
+
+    def _adf_loaded(self):
+        try:
+            response = self.client.request("/eSCL/ScannerStatus",
+                                           headers=self.auth_headers)
+        except NetworkError:
+            return None
+        if response["status"] != 200:
+            return None
+        text = response["body"].decode("utf-8", "replace")
+        if "ScannerAdfLoaded" in text:
+            return True
+        if "ScannerAdfEmpty" in text:
+            return False
+        return None
+
+    def scan_pages(self, directory, prefix="page", resolution=300,
+                   color="RGB24", document_format="image/jpeg",
+                   max_pages=50, duplex=False, region=None,
+                   source="Platen"):
+        folder = Path(directory)
+        folder.mkdir(parents=True, exist_ok=True)
+        payload = _settings_xml(resolution, color, document_format,
+                                duplex, region, source)
+        feeder = str(source).lower() in ("adf", "feeder")
+        job_base = None
         pages = []
         for index in range(1, int(max_pages) + 1):
+            if job_base is None:
+                job_base = self._create_job(payload)
             suffix = Path(prefix).suffix or ".jpg"
             target = folder / f"{Path(prefix).stem}_{index:03d}{suffix}"
             try:
-                document = self.client.request(base + "/NextDocument")
+                document = self.client.request(job_base + "/NextDocument")
             except NetworkError as error:
                 raise EsclError(str(error)) from error
             if document["status"] in (204, 404):
+                if feeder and pages and self._adf_loaded() is True:
+                    self._delete_job(job_base)
+                    job_base = None
+                    continue
+                self._delete_job(job_base)
                 break
+            if document["status"] == 503:
+                continue
             if document["status"] != 200:
                 raise EsclError(f"NextDocument HTTP {document['status']}")
             target.write_bytes(document["body"])

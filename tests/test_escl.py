@@ -67,6 +67,44 @@ class AuthHandler(Handler):
         super().do_GET()
 
 
+
+class FeederHandler(Handler):
+    jobs = 0
+    pages = 0
+    served = set()
+
+    def do_POST(self):
+        if self.path != "/eSCL/ScanJobs":
+            return super().do_POST()
+        FeederHandler.jobs += 1
+        self.send_response(201)
+        self.send_header("Location", f"/eSCL/ScanJobs/{FeederHandler.jobs}")
+        self.end_headers()
+
+    def do_GET(self):
+        if self.path == "/eSCL/ScannerStatus":
+            state = "ScannerAdfLoaded" if FeederHandler.pages < 2 else "ScannerAdfEmpty"
+            body = (f"<scan:ScannerStatus xmlns:scan='http://schemas.hp.com/imaging/escl/2011/05/03'>"
+                    f"<scan:AdfState>{state}</scan:AdfState></scan:ScannerStatus>").encode()
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if self.path.endswith("/NextDocument"):
+            job = self.path.split("/")[-2]
+            if job not in FeederHandler.served:
+                FeederHandler.served.add(job)
+                FeederHandler.pages += 1
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"\xff\xd8\xff\xd9")
+            else:
+                self.send_response(404)
+                self.end_headers()
+            return
+        super().do_GET()
+
+
 class EsclTests(unittest.TestCase):
     def test_capabilities_and_scan(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -151,6 +189,24 @@ class EsclTests(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             EsclScanner("example.invalid", secure=True,
                         certfile="missing-client.pem")
+
+    def test_feeder_one_job_per_page(self):
+        FeederHandler.jobs = 0
+        FeederHandler.pages = 0
+        FeederHandler.served = set()
+        server = ThreadingHTTPServer(("127.0.0.1", 0), FeederHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            scanner = EsclScanner("127.0.0.1", server.server_port)
+            with tempfile.TemporaryDirectory() as folder:
+                pages = scanner.scan_pages(folder, prefix="page",
+                                           source="Feeder", max_pages=5)
+                self.assertEqual(len(pages), 2)
+                self.assertEqual(FeederHandler.jobs, 2)
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

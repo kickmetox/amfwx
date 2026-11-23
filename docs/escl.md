@@ -42,3 +42,8 @@ scanner.scan("scan.jpg", resolution=300, color="RGB24",
 
 Many Kyocera ECOSYS devices expose eSCL on `https://<ip>:9096`.
 Use `EsclScanner(host, 9096, secure=True)` and `source="Feeder"` for ADF.
+
+## ADF termination
+
+- multi-page job: repeated `NextDocument`
+- Kyocera one-job-per-page: after 404, `ScannerStatus/AdfState` is checked; if loaded, a new job is created

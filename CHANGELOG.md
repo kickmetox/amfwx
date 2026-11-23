@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.97.0 - 2026-11-23
+
+Kyocera-ADF-Strategie.
+
+### Scanners
+
+* Ein-Job-pro-Seite.
+* AdfState-Pruefung.
+* 353 Tests.
+
 ## 3.96.0 - 2026-11-23
 
 eSCL Kyocera-Pfad.
