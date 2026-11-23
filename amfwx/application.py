@@ -140,12 +140,20 @@ class Application:
         if self.config.single and not self.lock.acquire():
             return 0
         if self.config.list_devices or self.config.device_action:
-            return self._device_command()
+            try:
+                return self._device_command()
+            finally:
+                self.lock.release()
         if self.config.devices:
             from .home_registry import HomeRegistry
             from .home_ui import HomeDevicesWindow
-            self.window = HomeDevicesWindow(HomeRegistry(self.config.registry))
-            return self.window.run()
+            try:
+                self.window = HomeDevicesWindow(HomeRegistry(self.config.registry))
+                return self.window.run()
+            finally:
+                if self.window is not None:
+                    self.window.close()
+                self.lock.release()
         try:
             self.window = self.window_factory()
             return self.window.run()

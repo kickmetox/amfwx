@@ -1,5 +1,24 @@
 ﻿# Changelog
 
+## 3.93.2 - 2026-11-23
+
+Single-Instance-Freigabe im CLI.
+
+### Fix
+
+* `--list-devices`/`--device` geben Mutex frei.
+* `--devices` gibt Mutex frei.
+* 347 Tests.
+
+## 3.93.1 - 2026-11-23
+
+CLI-Geraetesteuerung getestet.
+
+### Tests
+
+* End-to-End Shelly-Mock.
+* 347 Tests.
+
 ## 3.93.0 - 2026-11-23
 
 TaHoma-Ausfuehrungen.
