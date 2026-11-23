@@ -15,7 +15,8 @@ class AppConfig:
                  list_devices=False, device_action=None, device=None,
                  scan_printers=None, scan_host=None, scan_dir=None,
                  scan_source="Platen", scan_pages=1, scan_port=9096,
-                 scan_http=False, scan_pdf=None, scan_ui=False):
+                 scan_http=False, scan_pdf=None, scan_ui=False,
+                 list_printers=False, print_file=None, printer=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -38,6 +39,9 @@ class AppConfig:
         self.scan_http = bool(scan_http)
         self.scan_pdf = scan_pdf
         self.scan_ui = bool(scan_ui)
+        self.list_printers = bool(list_printers)
+        self.print_file = print_file
+        self.printer = printer
 
     @classmethod
     def parse(cls, argv=None):
@@ -90,6 +94,14 @@ class AppConfig:
                 config.scan_pdf = args[index]
             elif value == "--scan-ui":
                 config.scan_ui = True
+            elif value == "--list-printers":
+                config.list_printers = True
+            elif value == "--print-file" and index + 1 < len(args):
+                index += 1
+                config.print_file = args[index]
+            elif value == "--printer" and index + 1 < len(args):
+                index += 1
+                config.printer = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -122,6 +134,9 @@ class AppConfig:
                 "  --scan-http       HTTP statt HTTPS\n"
                 "  --scan-pdf PATH   Scan als mehrseitiges PDF speichern\n"
                 "  --scan-ui         Scan-Fenster oeffnen\n"
+                "  --list-printers   Windows-Drucker anzeigen\n"
+                "  --print-file PATH Datei an Drucker senden\n"
+                "  --printer NAME    Ziel-Drucker\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -182,6 +197,23 @@ class Application:
         if self.config.doctor:
             from .diagnostics import diagnostics, format_diagnostics
             print(format_diagnostics(diagnostics()))
+            return 0
+        if self.config.list_printers:
+            from .winprint import list_printers
+            for item in list_printers():
+                print(item.name)
+            return 0
+        if self.config.print_file:
+            from .winprint import print_raw
+            if not self.config.printer:
+                print("--printer fehlt")
+                return 2
+            try:
+                job = print_raw(self.config.print_file, self.config.printer)
+            except Exception as error:
+                print(f"Druck fehlgeschlagen: {error}")
+                return 1
+            print(f"Druckjob {job}")
             return 0
         if self.config.scan_ui:
             from .scan_ui import ScanWindow

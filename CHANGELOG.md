@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 4.4.0 - 2026-11-23
+
+Windows-Druckwarteschlange.
+
+### Printing
+
+* `list_printers`.
+* `print_raw`.
+* `--list-printers`.
+* 363 Tests.
+
 ## 4.3.1 - 2026-11-23
 
 IPP Self-Signed TLS.
