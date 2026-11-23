@@ -15,7 +15,7 @@ class AppConfig:
                  list_devices=False, device_action=None, device=None,
                  scan_printers=None, scan_host=None, scan_dir=None,
                  scan_source="Platen", scan_pages=1, scan_port=9096,
-                 scan_http=False):
+                 scan_http=False, scan_pdf=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -36,6 +36,7 @@ class AppConfig:
         self.scan_pages = int(scan_pages)
         self.scan_port = int(scan_port)
         self.scan_http = bool(scan_http)
+        self.scan_pdf = scan_pdf
 
     @classmethod
     def parse(cls, argv=None):
@@ -83,6 +84,9 @@ class AppConfig:
                 config.scan_port = int(args[index])
             elif value == "--scan-http":
                 config.scan_http = True
+            elif value == "--scan-pdf" and index + 1 < len(args):
+                index += 1
+                config.scan_pdf = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -113,6 +117,7 @@ class AppConfig:
                 "  --scan-pages N    Anzahl Seiten\n"
                 "  --scan-port PORT  9096 HTTPS / 9095 HTTP\n"
                 "  --scan-http       HTTP statt HTTPS\n"
+                "  --scan-pdf PATH   Scan als mehrseitiges PDF speichern\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -181,6 +186,13 @@ class Application:
                                   self.config.scan_port,
                                   secure=not self.config.scan_http)
             try:
+                if self.config.scan_pdf:
+                    from .scan_pdf import scan_to_pdf
+                    filename = scan_to_pdf(scanner, self.config.scan_pdf,
+                                           source=self.config.scan_source,
+                                           max_pages=self.config.scan_pages)
+                    print(filename)
+                    return 0
                 files = scan_to_folder(scanner, self.config.scan_dir,
                                        source=self.config.scan_source,
                                        max_pages=self.config.scan_pages)

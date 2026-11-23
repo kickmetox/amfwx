@@ -107,3 +107,11 @@ python -m amfwx --scan-host 192.168.178.93 --scan-source Platen --scan-pages 1 -
 ```
 
 The CLI writes directly into the destination folder. Feeder scans request paper in the ADF; an empty feeder is reported clearly.
+
+## Scan as PDF
+
+```powershell
+python -m amfwx --scan-host 192.168.178.93 --scan-source Platen --scan-pdf "D:\Scans\scan.pdf"
+```
+
+Echter Kyocera-Test: PDF 1.4, 435967 Bytes.

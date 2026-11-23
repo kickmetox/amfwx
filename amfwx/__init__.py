@@ -79,6 +79,7 @@ from .zigbee import DeconzClient, ZigbeeError
 from .wlan_control import WlanController, WlanControlError
 from .diagnostics import diagnostics, format_diagnostics
 from .ipp import IppError, IppPrinter
+from .scan_pdf import images_to_pdf, scan_to_pdf
 from .scan_transfer import default_scan_dir, scan_to_folder, transfer_files
 from .escl import EsclError, EsclScanner
 from .print_discovery import PrinterEndpoint, scan_network
@@ -134,7 +135,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "4.0.0"
+__version__ = "4.1.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -154,7 +155,8 @@ __all__ = [
     "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "HidDevice", "UsbDeviceInfo", "UsbRawError", "WinUsbDevice",
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
-    "transfer_files", "scan_to_folder", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
+    "transfer_files", "scan_to_folder", "images_to_pdf",
+    "scan_to_pdf", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
     "GenericHttpDevice", "JaroliftBridge", "HomeError", "HomeRegistry", "HomeDevicesPanel",
     "HomeDevicesWindow", "CredentialsDialog", "HomePilot",
     "HomePilotError", "MqttClient",

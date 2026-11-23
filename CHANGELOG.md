@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 4.1.0 - 2026-11-23
+
+Scan als PDF.
+
+### Scanner
+
+* `images_to_pdf`.
+* `scan_to_pdf`.
+* `--scan-pdf`.
+* 359 Tests.
+
 ## 4.0.0 - 2026-11-23
 
 Scan-Transfer.
