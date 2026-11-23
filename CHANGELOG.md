@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.71.0 - 2026-11-23
+
+Home-Automation und Discovery.
+
+### Home
+
+* Shelly Gen1/2/3.
+* Fibaro HC.
+* Jarolift MQTT.
+* Discovery mDNS/SSDP/KNX/Tuya/Fritz/HTTP.
+* 312 Tests.
+
 ## 3.70.0 - 2026-11-23
 
 Remote/IoT.
