@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.65.0 - 2026-11-23
+
+eSCL Auth/HTTPS.
+
+### Network
+
+* Basic Auth.
+* HTTPS.
+* 292 Tests.
+
 ## 3.64.0 - 2026-11-23
 
 IPP-Basic-Auth.

@@ -58,6 +58,15 @@ class PageHandler(Handler):
             super().do_GET()
 
 
+
+class AuthHandler(Handler):
+    auth = ""
+
+    def do_GET(self):
+        AuthHandler.auth = self.headers.get("Authorization", "")
+        super().do_GET()
+
+
 class EsclTests(unittest.TestCase):
     def test_capabilities_and_scan(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -120,6 +129,23 @@ class EsclTests(unittest.TestCase):
             "</scan:ScannerCapabilities>")
         self.assertTrue(caps.platen)
         self.assertIn("RGB24", caps.color_modes)
+
+    def test_basic_auth(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), AuthHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            scanner = EsclScanner("127.0.0.1", server.server_port,
+                                  username="user", password="secret")
+            scanner.capabilities()
+            self.assertTrue(AuthHandler.auth.startswith("Basic "))
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_secure_url(self):
+        scanner = EsclScanner("scanner.local", secure=True)
+        self.assertTrue(scanner.base_url.startswith("https://"))
 
 
 if __name__ == "__main__":

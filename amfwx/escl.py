@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
@@ -88,17 +89,25 @@ def parse_capabilities(xml):
 
 
 class EsclScanner:
-    def __init__(self, host, port=80, timeout=15.0, secure=False):
+    def __init__(self, host, port=80, timeout=15.0, secure=False,
+                 username=None, password=None):
         self.host = str(host)
         self.port = int(port)
         self.timeout = float(timeout)
         scheme = "https" if secure else "http"
         self.base_url = f"{scheme}://{self.host}:{self.port}"
         self.client = HttpClient(self.base_url, timeout=self.timeout)
+        self.auth_headers = {}
+        if username is not None:
+            token = base64.b64encode(
+                f"{username}:{password or ''}".encode("utf-8")).decode("ascii")
+            self.auth_headers["Authorization"] = f"Basic {token}"
 
     def capabilities(self):
         try:
-            return self.client.text("/eSCL/ScannerCapabilities")
+            response = self.client.request("/eSCL/ScannerCapabilities",
+                                           headers=self.auth_headers)
+            return response["body"].decode("utf-8", "replace")
         except NetworkError as error:
             raise EsclError(str(error)) from error
 
@@ -112,7 +121,8 @@ class EsclScanner:
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
-                headers={"Content-Type": "text/xml"})
+                headers={"Content-Type": "text/xml",
+                         **self.auth_headers})
         except NetworkError as error:
             raise EsclError(str(error)) from error
         if response["status"] not in (200, 201, 202):
@@ -151,7 +161,8 @@ class EsclScanner:
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
-                headers={"Content-Type": "text/xml"})
+                headers={"Content-Type": "text/xml",
+                         **self.auth_headers})
         except NetworkError as error:
             raise EsclError(str(error)) from error
         if response["status"] not in (200, 201, 202):
