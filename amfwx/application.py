@@ -15,7 +15,7 @@ class AppConfig:
                  list_devices=False, device_action=None, device=None,
                  scan_printers=None, scan_host=None, scan_dir=None,
                  scan_source="Platen", scan_pages=1, scan_port=9096,
-                 scan_http=False, scan_pdf=None):
+                 scan_http=False, scan_pdf=None, scan_ui=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -37,6 +37,7 @@ class AppConfig:
         self.scan_port = int(scan_port)
         self.scan_http = bool(scan_http)
         self.scan_pdf = scan_pdf
+        self.scan_ui = bool(scan_ui)
 
     @classmethod
     def parse(cls, argv=None):
@@ -87,6 +88,8 @@ class AppConfig:
             elif value == "--scan-pdf" and index + 1 < len(args):
                 index += 1
                 config.scan_pdf = args[index]
+            elif value == "--scan-ui":
+                config.scan_ui = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -118,6 +121,7 @@ class AppConfig:
                 "  --scan-port PORT  9096 HTTPS / 9095 HTTP\n"
                 "  --scan-http       HTTP statt HTTPS\n"
                 "  --scan-pdf PATH   Scan als mehrseitiges PDF speichern\n"
+                "  --scan-ui         Scan-Fenster oeffnen\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -179,6 +183,10 @@ class Application:
             from .diagnostics import diagnostics, format_diagnostics
             print(format_diagnostics(diagnostics()))
             return 0
+        if self.config.scan_ui:
+            from .scan_ui import ScanWindow
+            self.window = ScanWindow()
+            return self.window.run()
         if self.config.scan_host:
             from .escl import EsclScanner
             from .scan_transfer import scan_to_folder

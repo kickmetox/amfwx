@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 4.2.0 - 2026-11-23
+
+Scan-Fenster.
+
+### UI
+
+* `ScanWindow`.
+* `--scan-ui`.
+* PDF/JPEG.
+* 361 Tests.
+
 ## 4.1.0 - 2026-11-23
 
 Scan als PDF.

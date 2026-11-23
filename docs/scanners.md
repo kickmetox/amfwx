@@ -115,3 +115,11 @@ python -m amfwx --scan-host 192.168.178.93 --scan-source Platen --scan-pdf "D:\S
 ```
 
 Echter Kyocera-Test: PDF 1.4, 435967 Bytes.
+
+## Scan window
+
+```powershell
+python -m amfwx --scan-ui
+```
+
+Host, port, source, pages, target folder, JPEG/PDF.
