@@ -76,6 +76,14 @@ Use this for:
 **These are not protocol-verified implementations.** The endpoints and payloads
 must match the device/bridge.
 
+## Discovery window
+
+```python
+from amfwx import HomeDevicesWindow, HomeRegistry
+
+HomeDevicesWindow(HomeRegistry("devices.json")).run()
+```
+
 ## Registry / add
 
 ```python

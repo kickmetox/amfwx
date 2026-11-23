@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.74.0 - 2026-11-23
+
+Discovery-UI.
+
+### UI
+
+* `HomeDevicesPanel`.
+* `HomeDevicesWindow`.
+* Ein-Klick-Hinzufuegen.
+* 319 Tests.
+
 ## 3.73.0 - 2026-11-23
 
 DPAPI-Secrets.
