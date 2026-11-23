@@ -21,8 +21,11 @@ class StreamHandler(BaseHTTPRequestHandler):
         pass
 
     def do_POST(self):
+        self.protocol_version = "HTTP/1.0"
+        self.close_connection = True
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
+        self.send_header("Connection", "close")
         self.end_headers()
         if self.path == "/api/chat":
             self.wfile.write(b'{"message":{"content":"a"},"done":false}\n')
@@ -30,6 +33,7 @@ class StreamHandler(BaseHTTPRequestHandler):
         else:
             self.wfile.write(b'data: {"choices":[{"delta":{"content":"x"}}]}\n\n')
             self.wfile.write(b'data: [DONE]\n\n')
+        self.wfile.flush()
 
 
 class AIExtrasTests(unittest.TestCase):

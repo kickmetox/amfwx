@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.67.1 - 2026-11-23
+
+Streaming-Test stabilisiert.
+
+### Fix
+
+* HTTP/1.0 + Connection close im Mock.
+* 295 Tests.
+
 ## 3.67.0 - 2026-11-23
 
 TLS-Clientzertifikate.
