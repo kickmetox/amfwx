@@ -51,6 +51,12 @@ class RegistryTests(unittest.TestCase):
         adapter = registry.adapter(entry["id"])
         self.assertEqual(adapter.status_path, "/api/status")
 
+    def test_update(self):
+        registry = HomeRegistry()
+        entry = registry.add(Device())
+        updated = registry.update(entry["id"], password="secret")
+        self.assertEqual(updated["config"]["password"], "secret")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

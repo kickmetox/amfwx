@@ -89,6 +89,13 @@ from amfwx import HomeDevicesWindow, HomeRegistry
 HomeDevicesWindow(HomeRegistry("devices.json")).run()
 ```
 
+## Remove / update
+
+```python
+registry.update(device_id, password="secret")
+registry.remove(device_id)
+```
+
 ## Registry / add
 
 ```python

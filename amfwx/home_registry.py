@@ -57,6 +57,15 @@ class HomeRegistry:
     def remove(self, identifier):
         return self.devices.pop(identifier, None)
 
+    def update(self, identifier, **config):
+        entry = self.devices.get(identifier)
+        if entry is None:
+            raise HomeError("Ger\u00e4t nicht gefunden")
+        entry["config"].update(config)
+        if "name" in config:
+            entry["name"] = config["name"]
+        return entry
+
     def adapter(self, identifier):
         entry = self.devices.get(identifier)
         if entry is None:

@@ -34,6 +34,14 @@ class PanelTests(unittest.TestCase):
         self.assertIn(entry["id"], registry.devices)
         self.assertEqual(added[0]["kind"], "shelly")
 
+    def test_remove(self):
+        registry = HomeRegistry()
+        panel = HomeDevicesPanel(registry)
+        entry = panel.add_device(Device())
+        self.assertIn(entry["id"], registry.devices)
+        panel.remove_device(entry["id"])
+        self.assertNotIn(entry["id"], registry.devices)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

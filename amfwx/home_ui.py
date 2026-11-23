@@ -18,10 +18,14 @@ class HomeDevicesPanel(Stack):
         self.on_added = on_added
         self.devices = []
         self.rows = Stack("vertical", spacing=4, padding=0)
+        self.saved = Stack("vertical", spacing=4, padding=0)
         self.status = Label("Noch keine Suche.")
         self.add(Text("Gefundene Geräte"))
         self.add(self.rows)
+        self.add(Text("Gespeicherte Ger\u00e4te"))
+        self.add(self.saved)
         self.add(self.status)
+        self.refresh_saved()
 
     def set_devices(self, devices):
         self.devices = list(devices)
@@ -47,6 +51,23 @@ class HomeDevicesPanel(Stack):
         self.status.text = f"Hinzugefügt: {entry['name']}"
         if self.on_added is not None:
             self.on_added(entry)
+        return entry
+
+    def refresh_saved(self):
+        self.saved.children.clear()
+        self.saved.layout.items.clear()
+        for entry in self.registry.devices.values():
+            button = Button("Entfernen",
+                            on_click=lambda value=entry["id"]: self.remove_device(value))
+            self.saved.add(HStack(Label(f"{entry['name']}  [{entry['kind']}]  {entry['host']}"), button))
+        if not self.registry.devices:
+            self.saved.add(Label("Noch nichts gespeichert."))
+        return self
+
+    def remove_device(self, identifier):
+        entry = self.registry.remove(identifier)
+        self.status.text = "Entfernt." if entry else "Nicht gefunden."
+        self.refresh_saved()
         return entry
 
 

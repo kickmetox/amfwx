@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.76.0 - 2026-11-23
+
+Registry-UI entfernen/aktualisieren.
+
+### UI
+
+* Gespeicherte Geraete.
+* Entfernen.
+* `HomeRegistry.update`.
+* 322 Tests.
+
 ## 3.75.0 - 2026-11-23
 
 Discovery-CLI.
