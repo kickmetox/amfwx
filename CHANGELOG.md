@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.52.0 - 2026-11-23
+
+Instanz-Aktivierung.
+
+### Platform
+
+* Aktivierungs-Event.
+* `on_activate`.
+* 271 Tests.
+
 ## 3.51.0 - 2026-11-23
 
 Single-Instance.

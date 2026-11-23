@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
+import threading
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -32,6 +33,19 @@ class SingleInstanceTests(unittest.TestCase):
         again = SingleInstance(name)
         self.assertTrue(again.acquire())
         again.release()
+
+    def test_activation(self):
+        name = "amfwx-test-mutex-3"
+        activated = threading.Event()
+        first = SingleInstance(name, on_activate=activated.set)
+        second = SingleInstance(name)
+        try:
+            self.assertTrue(first.acquire())
+            self.assertFalse(second.acquire())
+            self.assertTrue(activated.wait(2.0))
+        finally:
+            first.release()
+            second.release()
 
 
 if __name__ == "__main__":
