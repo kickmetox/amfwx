@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.48.0 - 2026-11-23
+
+AMFWX-Icon.
+
+### Branding
+
+* AMFWX.png.
+* AMFWX.ico (16-256).
+* App-/Installer-Icon.
+* 266 Tests.
+
 ## 3.47.0 - 2026-11-23
 
 Netzwerk-Scanner/Drucker.

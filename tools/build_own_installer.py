@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 APP = DIST / "AMFWX"
 PAYLOAD = ROOT / "build" / "payload.zip"
-VERSION = "3.47.0"
+VERSION = "3.48.0"
 
 
 def build_payload():
@@ -38,6 +38,7 @@ def build_installer():
         sys.executable, "-m", "PyInstaller",
         "--noconfirm", "--clean", "--onefile", "--windowed",
         "--name", "AMFWX-Setup",
+        "--icon", str(ROOT / "assets" / "AMFWX.ico"),
         "--distpath", str(DIST / "own"),
         "--workpath", str(work),
         "--specpath", str(ROOT / "build"),
