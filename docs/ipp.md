@@ -50,3 +50,11 @@ python -m amfwx --print-file scan.pdf --printer "ECOSYS M5521cdn"
 ```
 
 Uses `winspool.drv` and RAW spooling. This is the path Scantuxio uses via QPrinter.
+
+## Scan and print
+
+```powershell
+python -m amfwx --scan-host 192.168.178.93 --scan-source Platen --scan-print "ECOSYS M5521cdn"
+```
+
+Scans to PDF and sends it to the Windows queue.

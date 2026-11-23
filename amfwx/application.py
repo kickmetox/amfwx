@@ -16,7 +16,8 @@ class AppConfig:
                  scan_printers=None, scan_host=None, scan_dir=None,
                  scan_source="Platen", scan_pages=1, scan_port=9096,
                  scan_http=False, scan_pdf=None, scan_ui=False,
-                 list_printers=False, print_file=None, printer=None):
+                 list_printers=False, print_file=None, printer=None,
+                 scan_print=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -42,6 +43,7 @@ class AppConfig:
         self.list_printers = bool(list_printers)
         self.print_file = print_file
         self.printer = printer
+        self.scan_print = scan_print
 
     @classmethod
     def parse(cls, argv=None):
@@ -102,6 +104,9 @@ class AppConfig:
             elif value == "--printer" and index + 1 < len(args):
                 index += 1
                 config.printer = args[index]
+            elif value == "--scan-print" and index + 1 < len(args):
+                index += 1
+                config.scan_print = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -137,6 +142,7 @@ class AppConfig:
                 "  --list-printers   Windows-Drucker anzeigen\n"
                 "  --print-file PATH Datei an Drucker senden\n"
                 "  --printer NAME    Ziel-Drucker\n"
+                "  --scan-print NAME Scan direkt drucken\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -179,7 +185,59 @@ class Application:
         print(result if result is not None else "ok")
         return 0
 
+    def _scan_command(self):
+        from .escl import EsclScanner
+        scanner = EsclScanner(self.config.scan_host, self.config.scan_port,
+                              secure=not self.config.scan_http, timeout=90)
+        temporary = None
+        try:
+            if self.config.scan_print:
+                import tempfile
+                from .scan_pdf import scan_to_pdf
+                from .winprint import print_file
+                if self.config.scan_pdf:
+                    target = self.config.scan_pdf
+                else:
+                    handle = tempfile.NamedTemporaryFile(
+                        suffix=".pdf", prefix="amfwx_print_", delete=False)
+                    handle.close()
+                    target = handle.name
+                    temporary = target
+                filename = scan_to_pdf(scanner, target,
+                                       source=self.config.scan_source,
+                                       max_pages=self.config.scan_pages)
+                job = print_file(filename, self.config.scan_print,
+                                "AMFWX Scan")
+                print(filename)
+                print(f"Druckauftrag gesendet: {job}")
+                return 0
+            if self.config.scan_pdf:
+                from .scan_pdf import scan_to_pdf
+                filename = scan_to_pdf(scanner, self.config.scan_pdf,
+                                       source=self.config.scan_source,
+                                       max_pages=self.config.scan_pages)
+                print(filename)
+                return 0
+            from .scan_transfer import scan_to_folder
+            files = scan_to_folder(scanner, self.config.scan_dir,
+                                   source=self.config.scan_source,
+                                   max_pages=self.config.scan_pages)
+        except Exception as error:
+            print(f"Scan fehlgeschlagen: {error}")
+            return 1
+        finally:
+            if temporary:
+                try:
+                    import os
+                    os.unlink(temporary)
+                except OSError:
+                    pass
+        for filename in files:
+            print(filename)
+        return 0
+
     def activate(self):
+
         if self.window is not None:
             import ctypes
             user32 = ctypes.windll.user32
@@ -204,12 +262,12 @@ class Application:
                 print(item.name)
             return 0
         if self.config.print_file:
-            from .winprint import print_raw
+            from .winprint import print_file
             if not self.config.printer:
                 print("--printer fehlt")
                 return 2
             try:
-                job = print_raw(self.config.print_file, self.config.printer)
+                job = print_file(self.config.print_file, self.config.printer)
             except Exception as error:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
@@ -220,28 +278,7 @@ class Application:
             self.window = ScanWindow()
             return self.window.run()
         if self.config.scan_host:
-            from .escl import EsclScanner
-            from .scan_transfer import scan_to_folder
-            scanner = EsclScanner(self.config.scan_host,
-                                  self.config.scan_port,
-                                  secure=not self.config.scan_http)
-            try:
-                if self.config.scan_pdf:
-                    from .scan_pdf import scan_to_pdf
-                    filename = scan_to_pdf(scanner, self.config.scan_pdf,
-                                           source=self.config.scan_source,
-                                           max_pages=self.config.scan_pages)
-                    print(filename)
-                    return 0
-                files = scan_to_folder(scanner, self.config.scan_dir,
-                                       source=self.config.scan_source,
-                                       max_pages=self.config.scan_pages)
-            except Exception as error:
-                print(f"Scan fehlgeschlagen: {error}")
-                return 1
-            for filename in files:
-                print(filename)
-            return 0
+            return self._scan_command()
         if self.config.scan_printers:
             from .print_discovery import scan_network
             for endpoint in scan_network(self.config.scan_printers):

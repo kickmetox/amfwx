@@ -1,5 +1,36 @@
 ﻿# Changelog
 
+## 4.7.0 - 2026-11-23
+
+GDI+-Druck korrigiert.
+
+### Printing
+
+* StartPage/EndPage pro Seite.
+* GDI+ Pixel-Einheit.
+* PDF-Renderer.
+* 365 Tests.
+
+## 4.6.0 - 2026-11-23
+
+GDI+-Druck korrigiert.
+
+### Printing
+
+* StartPage/EndPage wieder eingefuegt.
+* PDF 150 dpi, max 1500x2100.
+* 364 Tests.
+
+## 4.5.0 - 2026-11-23
+
+Scannen und drucken.
+
+### Workflow
+
+* `--scan-print`.
+* Scan -> PDF -> Windows-Queue.
+* 364 Tests.
+
 ## 4.4.0 - 2026-11-23
 
 Windows-Druckwarteschlange.

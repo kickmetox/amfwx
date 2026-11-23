@@ -38,6 +38,13 @@ class ScanTransferTests(unittest.TestCase):
         self.assertEqual(config.scan_pages, 3)
         self.assertEqual(config.scan_port, 9096)
 
+    def test_scan_print_parse(self):
+        config = AppConfig.parse([
+            "--scan-host", "192.168.178.93",
+            "--scan-print", "ECOSYS M5521cdn",
+        ])
+        self.assertEqual(config.scan_print, "ECOSYS M5521cdn")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
