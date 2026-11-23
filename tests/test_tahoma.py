@@ -36,8 +36,13 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == BASE + "/setup":
             self._send({"devices": [{"deviceURL": "io://1/2",
                                      "label": "Rollladen"}]})
+        elif self.path == BASE + "/exec/current":
+            self._send([{"id": "exec-1"}])
         else:
             self._send([{"name": "core:ClosureState", "value": 40}])
+
+    def do_DELETE(self):
+        self._send({})
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length", "0"))
@@ -111,6 +116,19 @@ class TahomaTests(unittest.TestCase):
 
             tahoma.poll_events(callback, interval=0.01, stop=stop)
             self.assertEqual(events[0]["name"], "DeviceStateChangedEvent")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_executions(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            tahoma = Tahoma("127.0.0.1", "token", server.server_port,
+                            secure=False)
+            self.assertEqual(tahoma.executions()[0]["id"], "exec-1")
+            self.assertEqual(tahoma.cancel_all(), {})
+            self.assertEqual(tahoma.cancel_execution("exec-1"), {})
         finally:
             server.shutdown()
             server.server_close()

@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.93.0 - 2026-11-23
+
+TaHoma-Ausfuehrungen.
+
+### Home
+
+* `executions`.
+* `cancel_execution`.
+* `cancel_all`.
+* 346 Tests.
+
 ## 3.92.0 - 2026-11-23
 
 Fibaro-Szenen.

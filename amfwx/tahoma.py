@@ -77,6 +77,25 @@ class Tahoma:
         finally:
             self.unregister_listener()
 
+    def executions(self):
+        try:
+            return self.client.json("/exec/current")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+
+    def cancel_execution(self, execution_id):
+        try:
+            return self.client.json(
+                f"/exec/current/setup/{execution_id}", method="DELETE")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+
+    def cancel_all(self):
+        try:
+            return self.client.json("/exec/current/setup", method="DELETE")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+
     def setup(self):
         try:
             return self.client.json("/setup")
