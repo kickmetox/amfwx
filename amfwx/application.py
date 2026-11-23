@@ -20,7 +20,8 @@ class AppConfig:
                  scan_print=None, list_cameras=False, camera_index=0,
                  camera_tether=None, camera_frames=1,
                  camera_interval=1.0, camera_settings=False,
-                 camera_chroma=False, camera_ui=False):
+                 camera_chroma=False, camera_ui=False, list_mtp=False,
+                 mtp_download=None, mtp_device=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -55,6 +56,9 @@ class AppConfig:
         self.camera_settings = bool(camera_settings)
         self.camera_chroma = bool(camera_chroma)
         self.camera_ui = bool(camera_ui)
+        self.list_mtp = bool(list_mtp)
+        self.mtp_download = mtp_download
+        self.mtp_device = mtp_device
 
     @classmethod
     def parse(cls, argv=None):
@@ -138,6 +142,14 @@ class AppConfig:
                 config.camera_chroma = True
             elif value == "--camera-ui":
                 config.camera_ui = True
+            elif value == "--list-mtp":
+                config.list_mtp = True
+            elif value == "--mtp-download" and index + 1 < len(args):
+                index += 1
+                config.mtp_download = args[index]
+            elif value == "--mtp-device" and index + 1 < len(args):
+                index += 1
+                config.mtp_device = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -179,6 +191,9 @@ class AppConfig:
                 "  --camera-frames N Anzahl Aufnahmen\n"
                 "  --camera-chroma   gruenen Hintergrund entfernen\n"
                 "  --camera-ui       Kamera-Fenster oeffnen\n"
+                "  --list-mtp        MTP/PTP-Kameras anzeigen\n"
+                "  --mtp-download DIR Fotos von MTP-Kamera kopieren\n"
+                "  --mtp-device NAME MTP-Geraet\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -308,6 +323,25 @@ class Application:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
             print(f"Druckjob {job}")
+            return 0
+        if self.config.list_mtp:
+            from .mtp import list_mtp_devices
+            for device in list_mtp_devices():
+                print(device["name"])
+            return 0
+        if self.config.mtp_download:
+            from .mtp import download_images, list_mtp_devices
+            devices = list_mtp_devices()
+            name = self.config.mtp_device or (devices[0]["name"] if devices else "")
+            if not name:
+                print("keine MTP-Kamera gefunden")
+                return 1
+            try:
+                count = download_images(name, self.config.mtp_download)
+            except Exception as error:
+                print(f"MTP-Download fehlgeschlagen: {error}")
+                return 1
+            print(f"{count} Datei(en) kopiert")
             return 0
         if self.config.camera_ui:
             from .camera_ui import CameraWindow

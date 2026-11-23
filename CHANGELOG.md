@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.2.0 - 2026-11-24
+
+MTP/PTP-Kameras.
+
+### Cameras
+
+* Shell-Inventar.
+* Foto-Download.
+* 374 Tests.
+
 ## 5.1.0 - 2026-11-24
 
 Kamera-Fenster.

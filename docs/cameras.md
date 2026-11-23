@@ -107,3 +107,12 @@ python -m amfwx --camera-ui
 ```
 
 Snapshot, tethering, resolution and green-screen chroma key.
+
+## MTP/PTP cameras
+
+```powershell
+python -m amfwx --list-mtp
+python -m amfwx --mtp-download "D:\Photos" --mtp-device "OsmoAction4"
+```
+
+Uses the Windows Shell to access MTP/PTP camera storage. It supports JPEG, PNG, TIFF, HEIC, DNG, CR2, NEF, ARW, RAF and ORF. No vendor SDK needed.
