@@ -17,7 +17,10 @@ class AppConfig:
                  scan_source="Platen", scan_pages=1, scan_port=9096,
                  scan_http=False, scan_pdf=None, scan_ui=False,
                  list_printers=False, print_file=None, printer=None,
-                 scan_print=None):
+                 scan_print=None, list_cameras=False, camera_index=0,
+                 camera_tether=None, camera_frames=1,
+                 camera_interval=1.0, camera_settings=False,
+                 camera_chroma=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -44,6 +47,13 @@ class AppConfig:
         self.print_file = print_file
         self.printer = printer
         self.scan_print = scan_print
+        self.list_cameras = bool(list_cameras)
+        self.camera_index = int(camera_index)
+        self.camera_tether = camera_tether
+        self.camera_frames = int(camera_frames)
+        self.camera_interval = float(camera_interval)
+        self.camera_settings = bool(camera_settings)
+        self.camera_chroma = bool(camera_chroma)
 
     @classmethod
     def parse(cls, argv=None):
@@ -107,6 +117,24 @@ class AppConfig:
             elif value == "--scan-print" and index + 1 < len(args):
                 index += 1
                 config.scan_print = args[index]
+            elif value == "--list-cameras":
+                config.list_cameras = True
+            elif value == "--camera-index" and index + 1 < len(args):
+                index += 1
+                config.camera_index = int(args[index])
+            elif value == "--camera-tether" and index + 1 < len(args):
+                index += 1
+                config.camera_tether = args[index]
+            elif value == "--camera-frames" and index + 1 < len(args):
+                index += 1
+                config.camera_frames = int(args[index])
+            elif value == "--camera-interval" and index + 1 < len(args):
+                index += 1
+                config.camera_interval = float(args[index])
+            elif value == "--camera-settings":
+                config.camera_settings = True
+            elif value == "--camera-chroma":
+                config.camera_chroma = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -143,6 +171,10 @@ class AppConfig:
                 "  --print-file PATH Datei an Drucker senden\n"
                 "  --printer NAME    Ziel-Drucker\n"
                 "  --scan-print NAME Scan direkt drucken\n"
+                "  --list-cameras    Webcams anzeigen\n"
+                "  --camera-tether DIR Kamera-Tethering\n"
+                "  --camera-frames N Anzahl Aufnahmen\n"
+                "  --camera-chroma   gruenen Hintergrund entfernen\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -273,6 +305,33 @@ class Application:
                 return 1
             print(f"Druckjob {job}")
             return 0
+        if self.config.list_cameras:
+            from .camera import list_cameras, list_pnp_cameras
+            for camera in list_cameras() + list_pnp_cameras():
+                print(f"{camera.index}: {camera.name}")
+            return 0
+        if self.config.camera_settings or self.config.camera_tether:
+            from .camera import Webcam
+            try:
+                camera = Webcam(self.config.camera_index)
+                try:
+                    if self.config.camera_settings:
+                        print(camera.settings())
+                        return 0
+                    files = camera.tether(
+                        self.config.camera_tether,
+                        count=self.config.camera_frames,
+                        interval=self.config.camera_interval,
+                        chroma_key=(0, 255, 0)
+                        if self.config.camera_chroma else None)
+                    for filename in files:
+                        print(filename)
+                    return 0
+                finally:
+                    camera.close()
+            except Exception as error:
+                print(f"Kamera fehlgeschlagen: {error}")
+                return 1
         if self.config.scan_ui:
             from .scan_ui import ScanWindow
             self.window = ScanWindow()

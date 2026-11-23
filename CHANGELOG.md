@@ -1,5 +1,19 @@
 ﻿# Changelog
 
+## 5.0.0 - 2026-11-23
+
+Kameras.
+
+### Cameras
+
+* Webcam/OpenCV.
+* PnP-Inventar.
+* GoPro HTTP.
+* gPhoto2-Adapter.
+* Chroma Key.
+* Tethering.
+* 370 Tests.
+
 ## 4.8.0 - 2026-11-23
 
 GDI-Druck.
