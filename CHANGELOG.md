@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.56.0 - 2026-11-23
+
+eSCL-Scan.
+
+### Network
+
+* `EsclScanner`.
+* ScanJobs/NextDocument.
+* 277 Tests.
+
 ## 3.55.0 - 2026-11-23
 
 App-Entrypoint.

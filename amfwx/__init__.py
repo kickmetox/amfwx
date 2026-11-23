@@ -62,6 +62,7 @@ from .medical import DicomFile, MedicalError, parse_dicom, parse_fhir, parse_hl7
 from .application import AppConfig, Application
 from .single_instance import SingleInstance, SingleInstanceError
 from .icons import default_icon_path, load_icon, set_window_icon
+from .escl import EsclError, EsclScanner
 from .network_scan import (NetworkDevice, discover_network_devices,
                            probe_escl)
 from .devices import DeviceManager, list_devices
@@ -114,7 +115,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.55.0"
+__version__ = "3.56.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -133,7 +134,7 @@ __all__ = [
     "openai_vision_content", "vision_message", "MCPClient", "MCPError",
     "MCPServer", "Field", "Form", "TrayIcon", "BluetoothRadio", "list_radios", "list_bluetooth_devices", "HidDevice", "UsbDeviceInfo", "UsbRawError", "WinUsbDevice",
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
-    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",
+    "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "EsclError", "EsclScanner", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",
     "discover_network_devices", "probe_escl", "DicomFile", "MedicalError",
     "parse_dicom", "parse_fhir", "parse_hl7", "TwainSource",
     "list_twain_sources", "dsm_available", "dsm_path", "Twain32Source", "Twain32Error",
