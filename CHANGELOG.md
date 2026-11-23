@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.95.1 - 2026-11-23
+
+eSCL-Erkennung verschaerft.
+
+### Fix
+
+* Nur echte ScannerCapabilities zaehlen.
+* 351 Tests.
+
 ## 3.95.0 - 2026-11-23
 
 Drucker-Subnetzsuche.

@@ -22,7 +22,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/eSCL/ScannerCapabilities":
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(b"<scan/>")
+            self.wfile.write(b"<scan:ScannerCapabilities/>")
         else:
             self.send_response(404)
             self.end_headers()
@@ -53,6 +53,26 @@ class NetworkScanTests(unittest.TestCase):
     def test_matter_and_tahoma(self):
         self.assertEqual(NetworkDevice("m", "_matter._tcp").kind, "matter")
         self.assertEqual(NetworkDevice("t", "_kizboxdev._tcp").kind, "tahoma")
+
+    def test_escl_rejects_html(self):
+        class HtmlHandler(BaseHTTPRequestHandler):
+            def log_message(self, *args):
+                pass
+
+            def do_GET(self):
+                body = b"<html><body>router</body></html>"
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), HtmlHandler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            self.assertFalse(probe_escl("127.0.0.1", server.server_port))
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

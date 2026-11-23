@@ -124,4 +124,7 @@ def probe_escl(host, port=80, timeout=3.0):
         response = client.request("/eSCL/ScannerCapabilities")
     except (NetworkError, OSError, ValueError):
         return False
-    return response["status"] == 200
+    if response["status"] != 200:
+        return False
+    body = response["body"].decode("utf-8", "replace")
+    return "ScannerCapabilities" in body
