@@ -96,6 +96,25 @@ class TahomaTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
 
+    def test_poll_events(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            tahoma = Tahoma("127.0.0.1", "token", server.server_port,
+                            secure=False)
+            stop = threading.Event()
+            events = []
+
+            def callback(event):
+                events.append(event)
+                stop.set()
+
+            tahoma.poll_events(callback, interval=0.01, stop=stop)
+            self.assertEqual(events[0]["name"], "DeviceStateChangedEvent")
+        finally:
+            server.shutdown()
+            server.server_close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

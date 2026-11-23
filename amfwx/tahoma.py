@@ -61,6 +61,22 @@ class Tahoma:
         self.listener_id = None
         return result
 
+    def poll_events(self, callback, interval=1.0, stop=None,
+                    register=True):
+        import threading
+        import time
+        stop = stop or threading.Event()
+        if register:
+            self.register_listener()
+        try:
+            while not stop.is_set():
+                for event in self.fetch_events():
+                    callback(event)
+                if stop.wait(float(interval)):
+                    break
+        finally:
+            self.unregister_listener()
+
     def setup(self):
         try:
             return self.client.json("/setup")
