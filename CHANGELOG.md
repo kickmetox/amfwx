@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.58.0 - 2026-11-23
+
+eSCL Duplex/Regionen.
+
+### Network
+
+* Duplex-Flag.
+* Scan-Regionen.
+* 279 Tests.
+
 ## 3.57.0 - 2026-11-23
 
 eSCL-Mehrseiten.

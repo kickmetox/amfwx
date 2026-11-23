@@ -92,6 +92,13 @@ class EsclTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
 
+    def test_duplex_region(self):
+        xml = _settings_xml(300, "RGB24", "image/jpeg", True,
+                            (10, 20, 100, 200))
+        self.assertIn(b"<scan:Duplex>true</scan:Duplex>", xml)
+        self.assertIn(b"<pwg:XOffset>10</pwg:XOffset>", xml)
+        self.assertIn(b"<pwg:Width>100</pwg:Width>", xml)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

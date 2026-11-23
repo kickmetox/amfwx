@@ -11,7 +11,8 @@ class EsclError(RuntimeError):
     pass
 
 
-def _settings_xml(resolution=300, color="RGB24", document_format="image/jpeg"):
+def _settings_xml(resolution=300, color="RGB24", document_format="image/jpeg",
+                  duplex=False, region=None):
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <scan:ScanSettings xmlns:scan="http://schemas.hp.com/imaging/escl/2011/05/03"
  xmlns:pwg="http://www.pwg.org/schemas/2010/12/sm">
@@ -20,7 +21,24 @@ def _settings_xml(resolution=300, color="RGB24", document_format="image/jpeg"):
   <scan:XResolution>{int(resolution)}</scan:XResolution>
   <scan:YResolution>{int(resolution)}</scan:YResolution>
   <scan:ColorMode>{color}</scan:ColorMode>
+  <scan:Duplex>{'true' if duplex else 'false'}</scan:Duplex>
+{_region_xml(region)}
 </scan:ScanSettings>'''.encode("utf-8")
+
+
+def _region_xml(region):
+    if not region:
+        return ""
+    x, y, width, height = [int(value) for value in region]
+    return (
+        "  <pwg:ScanRegions><pwg:ScanRegion>"
+        f"<pwg:XOffset>{x}</pwg:XOffset>"
+        f"<pwg:YOffset>{y}</pwg:YOffset>"
+        f"<pwg:Width>{width}</pwg:Width>"
+        f"<pwg:Height>{height}</pwg:Height>"
+        "<pwg:ContentRegionUnits>escl:ThreeHundredthsOfInches"
+        "</pwg:ContentRegionUnits>"
+        "</pwg:ScanRegion></pwg:ScanRegions>")
 
 
 class EsclScanner:
@@ -40,10 +58,11 @@ class EsclScanner:
 
     def scan_pages(self, directory, prefix="page", resolution=300,
                    color="RGB24", document_format="image/jpeg",
-                   max_pages=50):
+                   max_pages=50, duplex=False, region=None):
         folder = Path(directory)
         folder.mkdir(parents=True, exist_ok=True)
-        payload = _settings_xml(resolution, color, document_format)
+        payload = _settings_xml(resolution, color, document_format,
+                                duplex, region)
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
@@ -77,8 +96,9 @@ class EsclScanner:
         return pages
 
     def scan(self, path, resolution=300, color="RGB24",
-             document_format="image/jpeg"):
-        payload = _settings_xml(resolution, color, document_format)
+             document_format="image/jpeg", duplex=False, region=None):
+        payload = _settings_xml(resolution, color, document_format,
+                                duplex, region)
         try:
             response = self.client.request(
                 "/eSCL/ScanJobs", method="POST", data=payload,
