@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 5.1.0 - 2026-11-24
+
+Kamera-Fenster.
+
+### UI
+
+* `--camera-ui`.
+* Snapshot.
+* Tethering.
+* Chroma Key.
+* 372 Tests.
+
 ## 5.0.1 - 2026-11-24
 
 Kamera-Test optional.

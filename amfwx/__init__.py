@@ -80,6 +80,7 @@ from .wlan_control import WlanController, WlanControlError
 from .diagnostics import diagnostics, format_diagnostics
 from .ipp import IppError, IppPrinter
 from .winprint import PrinterInfo, list_printers, print_file, print_raw
+from .camera_ui import CameraWindow
 from .camera import (CameraInfo, Webcam, WebcamError, list_cameras,
                      list_pnp_cameras)
 from .gopro import GoProCamera, GoProError
@@ -142,7 +143,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.0.1"
+__version__ = "5.1.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -163,7 +164,7 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
     "transfer_files", "scan_to_folder", "images_to_pdf",
-    "scan_to_pdf", "ScanWindow", "CameraInfo", "Webcam", "WebcamError", "list_cameras",
+    "scan_to_pdf", "ScanWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
     "GPhoto2Error",
     "chroma_key", "composite", "save_chroma", "PrinterInfo", "list_printers", "print_raw", "print_file", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",

@@ -99,3 +99,11 @@ result = composite(foreground, background)
 
 There is **no single native SDK** for all vendors. Vendor SDKs (Canon EDSDK,
 Nikon SDK, Sony Camera Remote SDK, etc.) are not bundled.
+
+## Camera window
+
+```powershell
+python -m amfwx --camera-ui
+```
+
+Snapshot, tethering, resolution and green-screen chroma key.

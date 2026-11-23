@@ -20,7 +20,7 @@ class AppConfig:
                  scan_print=None, list_cameras=False, camera_index=0,
                  camera_tether=None, camera_frames=1,
                  camera_interval=1.0, camera_settings=False,
-                 camera_chroma=False):
+                 camera_chroma=False, camera_ui=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -54,6 +54,7 @@ class AppConfig:
         self.camera_interval = float(camera_interval)
         self.camera_settings = bool(camera_settings)
         self.camera_chroma = bool(camera_chroma)
+        self.camera_ui = bool(camera_ui)
 
     @classmethod
     def parse(cls, argv=None):
@@ -135,6 +136,8 @@ class AppConfig:
                 config.camera_settings = True
             elif value == "--camera-chroma":
                 config.camera_chroma = True
+            elif value == "--camera-ui":
+                config.camera_ui = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -175,6 +178,7 @@ class AppConfig:
                 "  --camera-tether DIR Kamera-Tethering\n"
                 "  --camera-frames N Anzahl Aufnahmen\n"
                 "  --camera-chroma   gruenen Hintergrund entfernen\n"
+                "  --camera-ui       Kamera-Fenster oeffnen\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -305,6 +309,10 @@ class Application:
                 return 1
             print(f"Druckjob {job}")
             return 0
+        if self.config.camera_ui:
+            from .camera_ui import CameraWindow
+            self.window = CameraWindow()
+            return self.window.run()
         if self.config.list_cameras:
             from .camera import list_cameras, list_pnp_cameras
             for camera in list_cameras() + list_pnp_cameras():
