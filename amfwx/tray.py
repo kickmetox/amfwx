@@ -71,12 +71,24 @@ class TrayIcon:
         data.uID = self.icon_id
         data.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP
         data.uCallbackMessage = 0x0400 + 100
+        if self.icon is None:
+            try:
+                from .icons import load_icon
+                self.icon = load_icon()
+            except Exception:
+                self.icon = None
         data.hIcon = self.icon or user32.LoadIconW(None, IDI_APPLICATION)
         data.szTip = self.tooltip[:127]
         return data
 
     def add(self):
-        self.icon = user32.LoadIconW(None, IDI_APPLICATION)
+        try:
+            from .icons import load_icon
+            self.icon = load_icon()
+        except Exception:
+            self.icon = None
+        if self.icon is None:
+            self.icon = user32.LoadIconW(None, IDI_APPLICATION)
         data = self._data()
         ok = shell32.Shell_NotifyIconW(NIM_ADD, byref(data))
         self.visible = bool(ok)

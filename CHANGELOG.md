@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.49.0 - 2026-11-23
+
+Icon zur Laufzeit.
+
+### Branding
+
+* Fenster-Icon.
+* Tray-Icon.
+* 268 Tests.
+
 ## 3.48.0 - 2026-11-23
 
 AMFWX-Icon.

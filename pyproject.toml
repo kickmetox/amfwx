@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "amfwx"
-version = "3.48.0"
+version = "3.49.0"
 description = "AMFWX - an independent self-contained GUI framework experiment"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,4 +16,4 @@ dependencies = []
 include = ["amfwx*"]
 
 [tool.setuptools.package-data]
-amfwx = ["bin/*.dll", "bin/*.txt"]
+amfwx = ["bin/*.dll", "bin/*.txt", "bin/*.ico"]

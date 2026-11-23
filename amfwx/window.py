@@ -400,6 +400,11 @@ class Window:
         user32.SetWindowPos(self.hwnd, None, 0, 0, self.physical_width,
                             self.physical_height, 0x0002 | 0x0004)
         self._layout_root()
+        try:
+            from .icons import set_window_icon
+            set_window_icon(self)
+        except Exception:
+            pass
         user32.ShowWindow(self.hwnd, 1)
         user32.UpdateWindow(self.hwnd)
 
