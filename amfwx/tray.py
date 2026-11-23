@@ -12,6 +12,8 @@ NIM_DELETE = 2
 NIF_MESSAGE = 0x00000001
 NIF_ICON = 0x00000002
 NIF_TIP = 0x00000004
+NIF_INFO = 0x00000010
+NIIF_INFO = 0x00000001
 IDI_APPLICATION = 32512
 TPM_RETURNCMD = 0x0100
 TPM_LEFTALIGN = 0x0000
@@ -105,6 +107,15 @@ class TrayIcon:
         shell32.Shell_NotifyIconW(NIM_DELETE, byref(data))
         self.visible = False
         return self
+
+    def notify(self, title, message, timeout=5000):
+        data = self._data()
+        data.uFlags |= NIF_INFO
+        data.szInfoTitle = str(title)[:63]
+        data.szInfo = str(message)[:255]
+        data.dwInfoFlags = NIIF_INFO
+        data.uVersion = int(timeout)
+        return bool(shell32.Shell_NotifyIconW(NIM_MODIFY, byref(data)))
 
     def show_menu(self, items):
         menu = user32.CreatePopupMenu()

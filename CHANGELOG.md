@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.53.0 - 2026-11-23
+
+Tray-Benachrichtigungen.
+
+### Platform
+
+* `TrayIcon.notify`.
+* 272 Tests.
+
 ## 3.52.0 - 2026-11-23
 
 Instanz-Aktivierung.
