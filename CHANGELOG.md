@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.60.0 - 2026-11-23
+
+eSCL-Faehigkeiten.
+
+### Network
+
+* `EsclCapabilities`.
+* `parse_capabilities`.
+* 283 Tests.
+
 ## 3.59.0 - 2026-11-23
 
 IPP-Druck.

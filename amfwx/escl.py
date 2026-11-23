@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass, field
 
 from .net import HttpClient, NetworkError
 
@@ -39,6 +41,50 @@ def _region_xml(region):
         "<pwg:ContentRegionUnits>escl:ThreeHundredthsOfInches"
         "</pwg:ContentRegionUnits>"
         "</pwg:ScanRegion></pwg:ScanRegions>")
+
+
+@dataclass
+class EsclCapabilities:
+    make: str = ""
+    model: str = ""
+    adf: bool = False
+    platen: bool = False
+    duplex: bool = False
+    resolutions: list = field(default_factory=list)
+    color_modes: list = field(default_factory=list)
+
+
+def _local(tag):
+    return tag.rsplit("}", 1)[-1]
+
+
+def parse_capabilities(xml):
+    root = ET.fromstring(xml)
+    result = EsclCapabilities()
+    for element in root.iter():
+        name = _local(element.tag)
+        text = (element.text or "").strip()
+        if name == "MakeAndModel":
+            result.model = text
+        elif name == "Make":
+            result.make = text
+        elif name == "Adf":
+            result.adf = True
+        elif name == "Platen":
+            result.platen = True
+        elif name == "Duplex":
+            result.duplex = text.lower() == "true"
+        elif name in ("XResolution", "YResolution"):
+            try:
+                value = int(text)
+            except ValueError:
+                continue
+            if value not in result.resolutions:
+                result.resolutions.append(value)
+        elif name in ("ColorMode", "ColorModes"):
+            if text and text not in result.color_modes:
+                result.color_modes.append(text)
+    return result
 
 
 class EsclScanner:
@@ -94,6 +140,9 @@ class EsclScanner:
             target.write_bytes(document["body"])
             pages.append(str(target))
         return pages
+
+    def capabilities_info(self):
+        return parse_capabilities(self.capabilities())
 
     def scan(self, path, resolution=300, color="RGB24",
              document_format="image/jpeg", duplex=False, region=None):

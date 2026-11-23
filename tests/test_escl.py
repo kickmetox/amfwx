@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import EsclScanner
-from amfwx.escl import _settings_xml
+from amfwx.escl import _settings_xml, parse_capabilities
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -98,6 +98,28 @@ class EsclTests(unittest.TestCase):
         self.assertIn(b"<scan:Duplex>true</scan:Duplex>", xml)
         self.assertIn(b"<pwg:XOffset>10</pwg:XOffset>", xml)
         self.assertIn(b"<pwg:Width>100</pwg:Width>", xml)
+
+    def test_capabilities_parse(self):
+        xml = ("<scan:ScannerCapabilities xmlns:scan='x'>"
+               "<scan:MakeAndModel>Canon</scan:MakeAndModel>"
+               "<scan:Adf/><scan:Duplex>true</scan:Duplex>"
+               "<scan:XResolution>300</scan:XResolution>"
+               "<scan:ColorMode>RGB24</scan:ColorMode>"
+               "</scan:ScannerCapabilities>")
+        caps = parse_capabilities(xml)
+        self.assertEqual(caps.model, "Canon")
+        self.assertTrue(caps.adf)
+        self.assertTrue(caps.duplex)
+        self.assertIn(300, caps.resolutions)
+        self.assertIn("RGB24", caps.color_modes)
+
+    def test_capabilities_platen(self):
+        caps = parse_capabilities(
+            "<scan:ScannerCapabilities xmlns:scan='x'>"
+            "<scan:Platen/><scan:ColorModes>RGB24</scan:ColorModes>"
+            "</scan:ScannerCapabilities>")
+        self.assertTrue(caps.platen)
+        self.assertIn("RGB24", caps.color_modes)
 
 
 if __name__ == "__main__":
