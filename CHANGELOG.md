@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.66.0 - 2026-11-23
+
+HTTP Digest Auth.
+
+### Network
+
+* Digest-Challenge.
+* Automatischer Retry.
+* 294 Tests.
+
 ## 3.65.0 - 2026-11-23
 
 eSCL Auth/HTTPS.
