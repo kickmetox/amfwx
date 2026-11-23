@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 4.7.1 - 2026-11-23
+
+PDF-Drucktest optional.
+
+### Fix
+
+* Skip ohne pymupdf.
+* 365 Tests.
+
 ## 4.7.0 - 2026-11-23
 
 GDI+-Druck korrigiert.

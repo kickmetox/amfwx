@@ -14,6 +14,19 @@ from amfwx import images_to_pdf
 from amfwx.pdf_print import render_pdf
 
 
+def available():
+    try:
+        import pymupdf  # noqa: F401
+        return True
+    except ImportError:
+        try:
+            import fitz  # noqa: F401
+            return True
+        except ImportError:
+            return False
+
+
+@unittest.skipUnless(available(), "pymupdf fehlt")
 class PdfPrintTests(unittest.TestCase):
     def test_render(self):
         from tests.test_scan_pdf import JPEG
