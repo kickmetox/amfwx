@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 4.8.0 - 2026-11-23
+
+GDI-Druck.
+
+### Printing
+
+* GDI-DIB statt GDI+.
+* StartPage pro Seite.
+* TCP/IP-Warteschlange getestet.
+* 365 Tests.
+
 ## 4.7.2 - 2026-11-23
 
 GDI+ Signaturen.

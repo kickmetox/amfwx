@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
 APP = DIST / "AMFWX"
 PAYLOAD = ROOT / "build" / "payload.zip"
-VERSION = "4.7.2"
+VERSION = "4.8.0"
 
 
 def build_payload():

@@ -198,6 +198,26 @@ def _print_images_gdiplus(images, hdc, document_name, page_width, page_height):
         gdiplus.GdiplusShutdown(token)
 
 
+
+def _print_dib(images, hdc, page_width, page_height):
+    gdi32.SetStretchBltMode(hdc, HALFTONE)
+    for image in images:
+        width, height, buffer, info = _dib(image)
+        scale = min(page_width / max(1, width), page_height / max(1, height))
+        target_width = max(1, int(width * scale))
+        target_height = max(1, int(height * scale))
+        if not gdi32.StartPage(hdc):
+            raise PdfPrintError(f"StartPage: {ctypes.get_last_error()}")
+        try:
+            result = gdi32.StretchDIBits(
+                hdc, 0, 0, target_width, target_height, 0, 0, width, height,
+                buffer, ctypes.byref(info), DIB_RGB_COLORS, SRCCOPY)
+            if result == 0:
+                raise PdfPrintError(f"StretchDIBits: {ctypes.get_last_error()}")
+        finally:
+            gdi32.EndPage(hdc)
+
+
 def print_images(images, printer_name, document_name="AMFWX", output_file=None):
     hdc = gdi32.CreateDCW("WINSPOOL", printer_name, None, None)
     if not hdc:
@@ -210,8 +230,7 @@ def print_images(images, printer_name, document_name="AMFWX", output_file=None):
         started = True
         page_width = gdi32.GetDeviceCaps(hdc, HORZRES)
         page_height = gdi32.GetDeviceCaps(hdc, VERTRES)
-        _print_images_gdiplus(images, hdc, document_name,
-                              page_width, page_height)
+        _print_dib(images, hdc, page_width, page_height)
     finally:
         if started:
             gdi32.EndDoc(hdc)
