@@ -211,10 +211,11 @@ class Panel(Widget):
 class LineEdit(Widget):
     focusable = True
 
-    def __init__(self, text="", placeholder=""):
+    def __init__(self, text="", placeholder="", password=False):
         super().__init__()
         self._text = str(text)
         self.placeholder = placeholder
+        self.password = bool(password)
         self.cursor = len(self._text)
         self.on_change = None
         self.on_enter = None
@@ -237,12 +238,13 @@ class LineEdit(Widget):
         canvas.rounded_rect(self.rect, theme.radius, background)
         border = theme.focus if self.focused else theme.border
         canvas.draw_rect(self.rect, border, 2 if self.focused else 1)
-        text = self._text if self._text else self.placeholder
-        color = theme.text if self._text else theme.muted
+        visible = "*" * len(self._text) if self.password else self._text
+        text = visible if visible else self.placeholder
+        color = theme.text if visible else theme.muted
         draw_text(canvas, text, self.rect.x + 8, self.rect.y + 9,
                   color, 2)
         if self.focused:
-            width = measure_text(self._text[:self.cursor], 2)
+            width = measure_text(visible[:self.cursor], 2)
             x = min(self.rect.right - 8, self.rect.x + 8 + width)
             canvas.fill_rect(Rect(x, self.rect.y + 6, 2, self.rect.h - 12),
                              theme.text)

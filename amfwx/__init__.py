@@ -11,6 +11,7 @@ from .clipboard import (
     get_text as get_clipboard_text, set_files as set_clipboard_files,
     set_html as set_clipboard_html, set_text as set_clipboard_text,
 )
+from .dialog import CredentialsDialog
 from .dialog import (
     ColorDialog, ColorSwatch, Dialog, FindReplaceDialog, FontDialog, MessageBox,
 )
@@ -127,7 +128,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "3.76.0"
+__version__ = "3.77.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -148,7 +149,7 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "EsclError", "EsclScanner", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
     "GenericHttpDevice", "JaroliftBridge", "HomeError", "HomeRegistry", "HomeDevicesPanel",
-    "HomeDevicesWindow", "MqttClient",
+    "HomeDevicesWindow", "CredentialsDialog", "MqttClient",
     "MqttError", "DiscoveredDevice", "discover_home", "probe_http",
     "TuyaCloud", "TuyaError", "DeconzClient", "ZigbeeError",
     "WlanController", "WlanControlError", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",

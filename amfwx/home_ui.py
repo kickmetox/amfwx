@@ -46,8 +46,14 @@ class HomeDevicesPanel(Stack):
                         on_click=lambda: self.add_device(device))
         return HStack(Label(f"{name}  [{kind}]  {host}"), button)
 
-    def add_device(self, device):
-        entry = self.registry.add_discovered(device)
+    def add_device(self, device, config=None):
+        if config is None and getattr(device, "kind", "") == "fibaro":
+            from .dialog import CredentialsDialog
+            config = CredentialsDialog.ask(self.window(),
+                                           "Fibaro-Zugangsdaten")
+            if not config:
+                return None
+        entry = self.registry.add_discovered(device, **(config or {}))
         self.status.text = f"Hinzugefügt: {entry['name']}"
         if self.on_added is not None:
             self.on_added(entry)

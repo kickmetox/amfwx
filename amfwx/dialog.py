@@ -204,3 +204,34 @@ class FontDialog(Dialog):
         dialog = cls(parent, font)
         dialog.run()
         return dialog.result
+
+class CredentialsDialog(Dialog):
+    """Username/password dialog for protected devices."""
+
+    def __init__(self, parent=None, title="Zugangsdaten", username=""):
+        super().__init__(parent, title, 420, 260)
+        self.result = None
+        self.username = LineEdit(str(username))
+        self.password = LineEdit("", password=True)
+        self.add(Label("Benutzername", scale=1))
+        self.add(self.username)
+        self.add(Label("Passwort", scale=1))
+        self.add(self.password)
+        self.add(Button("OK", on_click=self.accept, variant="primary"))
+        self.add(Button("Abbrechen", on_click=self.cancel))
+
+    def accept(self):
+        self.result = {"username": self.username.text(),
+                       "password": self.password.text()}
+        self.close()
+
+    def cancel(self):
+        self.result = None
+        self.close()
+
+    @classmethod
+    def ask(cls, parent=None, title="Zugangsdaten", username=""):
+        dialog = cls(parent, title, username)
+        dialog.run()
+        return dialog.result
+

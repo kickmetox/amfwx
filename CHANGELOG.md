@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.77.0 - 2026-11-23
+
+Zugangsdaten-Dialog.
+
+### UI
+
+* Passwortfeld.
+* `CredentialsDialog`.
+* Fibaro-Flow.
+* 324 Tests.
+
 ## 3.76.0 - 2026-11-23
 
 Registry-UI entfernen/aktualisieren.

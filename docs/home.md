@@ -89,6 +89,17 @@ from amfwx import HomeDevicesWindow, HomeRegistry
 HomeDevicesWindow(HomeRegistry("devices.json")).run()
 ```
 
+## Credentials
+
+```python
+from amfwx import CredentialsDialog
+
+credentials = CredentialsDialog.ask(parent, "Fibaro-Zugangsdaten")
+# {'username': ..., 'password': ...}
+```
+
+Fibaro devices prompt automatically when added from the discovery window.
+
 ## Remove / update
 
 ```python
