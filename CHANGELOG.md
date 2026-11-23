@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.81.0 - 2026-11-23
+
+Native TaHoma.
+
+### Home
+
+* `Tahoma` local API.
+* Bearer-Token.
+* Setup/States/Exec.
+* 333 Tests.
+
 ## 3.80.0 - 2026-11-23
 
 Native Becker CentralControl.

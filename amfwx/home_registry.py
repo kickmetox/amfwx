@@ -7,6 +7,7 @@ import uuid
 from pathlib import Path
 
 from .secrets import protect_text, unprotect_text
+from .tahoma import Tahoma
 from .becker import BeckerCentral
 from .homepilot import HomePilot
 from .home import (FibaroHomeCenter, GenericHttpDevice, HomeError,
@@ -76,6 +77,9 @@ class HomeRegistry:
         config = entry["config"]
         host = entry["host"]
         port = entry["port"]
+        if kind == "tahoma":
+            return Tahoma(host, config.get("token", ""), port,
+                          config.get("secure", True))
         if kind == "becker":
             return BeckerCentral(host, port)
         if kind == "homepilot":
