@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.50.0 - 2026-11-23
+
+Windows-Manifest/Versionsinfo.
+
+### Windows
+
+* DPI Awareness PerMonitorV2.
+* Long Paths.
+* UTF-8 ACP.
+* Versionsressource.
+* 268 Tests.
+
 ## 3.49.0 - 2026-11-23
 
 Icon zur Laufzeit.
