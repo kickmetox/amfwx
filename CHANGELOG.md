@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 3.70.0 - 2026-11-23
+
+Remote/IoT.
+
+### Remote
+
+* FRITZ!Box TR-064.
+* deCONZ/Zigbee.
+* Tuya Cloud.
+* WLAN netsh.
+* 303 Tests.
+
 ## 3.69.0 - 2026-11-23
 
 Hardware-Diagnose.
