@@ -30,7 +30,7 @@ class ApplicationTests(unittest.TestCase):
         self.assertIn("AMFWX", output.getvalue())
 
     def test_demo_window(self):
-        from tools.amfwx_app import create_window
+        from amfwx.demo_app import create_window
         window = create_window(AppConfig(title="Demo", width=320,
                                          height=200))
         try:
@@ -85,6 +85,15 @@ class ApplicationTests(unittest.TestCase):
                                                list_devices=True)).run()
             self.assertEqual(result, 0)
             self.assertIn("Lamp", output.getvalue())
+
+    def test_module_cli(self):
+        import subprocess
+        result = subprocess.run(
+            [sys.executable, "-m", "amfwx", "--version"],
+            capture_output=True, text=True,
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("AMFWX", result.stdout)
 
 
 if __name__ == "__main__":

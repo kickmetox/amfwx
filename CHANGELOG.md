@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.89.0 - 2026-11-23
+
+CLI-Einstieg korrigiert.
+
+### Fix
+
+* `python -m amfwx` nutzt Application.
+* `--version/--doctor/--devices` funktionieren.
+* 342 Tests.
+
 ## 3.88.0 - 2026-11-23
 
 HomePilot-Szenen.
