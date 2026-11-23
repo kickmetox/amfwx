@@ -49,7 +49,7 @@ python -m amfwx --list-printers
 python -m amfwx --print-file scan.pdf --printer "ECOSYS M5521cdn"
 ```
 
-Uses `winspool.drv` and RAW spooling. This is the path Scantuxio uses via QPrinter.
+Uses `winspool.drv` + GDI-DIB for PDF and a TCP/IP queue (`AMFWX Kyocera`, port 9100). This is the path Scantuxio uses via QPrinter.
 
 ## Scan and print
 

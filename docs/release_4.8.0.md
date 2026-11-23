@@ -23,3 +23,8 @@ Driver: Kyocera ECOSYS M5521cdn XPS
 A test job was sent to this queue without hanging.
 
 365 tests.
+
+## Physical confirmation
+
+Confirmed by the user: the test page came out printed through the
+`AMFWX Kyocera` TCP/IP queue (port 9100) with GDI-DIB rendering.
