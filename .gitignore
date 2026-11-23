@@ -45,3 +45,7 @@ apps.cpp
 dsm.cpp
 debug_*.py
 test_helper.py
+cyan_info.py
+icon_info.py
+icon_probe.py
+make_icon.py
