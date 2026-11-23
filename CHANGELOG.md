@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.75.0 - 2026-11-23
+
+Discovery-CLI.
+
+### App
+
+* `--devices`.
+* `--registry`.
+* 320 Tests.
+
 ## 3.74.0 - 2026-11-23
 
 Discovery-UI.

@@ -55,6 +55,11 @@ class ApplicationTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertIn("twain32", output.getvalue())
 
+    def test_devices_options(self):
+        config = AppConfig.parse(["--devices", "--registry", "devices.json"])
+        self.assertTrue(config.devices)
+        self.assertEqual(config.registry, "devices.json")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

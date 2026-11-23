@@ -11,7 +11,7 @@ from .window import Window
 class AppConfig:
     def __init__(self, title="AMFWX", width=800, height=600, theme="dark",
                  single=True, show_version=False, help=False,
-                 doctor=False):
+                 doctor=False, devices=False, registry=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -20,6 +20,8 @@ class AppConfig:
         self.show_version = bool(show_version)
         self.help = bool(help)
         self.doctor = bool(doctor)
+        self.devices = bool(devices)
+        self.registry = registry
 
     @classmethod
     def parse(cls, argv=None):
@@ -34,6 +36,11 @@ class AppConfig:
                 config.help = True
             elif value == "--doctor":
                 config.doctor = True
+            elif value == "--devices":
+                config.devices = True
+            elif value == "--registry" and index + 1 < len(args):
+                index += 1
+                config.registry = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -52,6 +59,8 @@ class AppConfig:
                 "  --title TEXT    Fenstertitel\n"
                 "  --no-single     Mehrfachstart erlauben\n"
                 "  --doctor        Hardware-Diagnose\n"
+                "  --devices       Geräte-Discovery öffnen\n"
+                "  --registry PATH Registry-JSON\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -88,6 +97,11 @@ class Application:
             return 0
         if self.config.single and not self.lock.acquire():
             return 0
+        if self.config.devices:
+            from .home_registry import HomeRegistry
+            from .home_ui import HomeDevicesWindow
+            self.window = HomeDevicesWindow(HomeRegistry(self.config.registry))
+            return self.window.run()
         try:
             self.window = self.window_factory()
             return self.window.run()

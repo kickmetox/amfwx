@@ -78,6 +78,11 @@ must match the device/bridge.
 
 ## Discovery window
 
+```powershell
+python -m amfwx --devices --registry devices.json
+```
+
+
 ```python
 from amfwx import HomeDevicesWindow, HomeRegistry
 
