@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.64.0 - 2026-11-23
+
+IPP-Basic-Auth.
+
+### Network
+
+* Benutzer/Passwort.
+* Authorization-Header.
+* 290 Tests.
+
 ## 3.63.0 - 2026-11-23
 
 IPP-Jobstatus.

@@ -79,6 +79,15 @@ class JobStateHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
 
+
+class AuthHandler(Handler):
+    auth = ""
+
+    def do_POST(self):
+        AuthHandler.auth = self.headers.get("Authorization", "")
+        super().do_POST()
+
+
 class IppTests(unittest.TestCase):
     def test_print_job(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -161,6 +170,19 @@ class IppTests(unittest.TestCase):
     def test_job_state_parse(self):
         self.assertEqual(parse_attributes(job_state_response())["job-state"],
                          9)
+
+    def test_basic_auth(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), AuthHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            printer = IppPrinter("127.0.0.1", server.server_port,
+                                 username="user", password="secret")
+            printer.print_job(b"data")
+            self.assertTrue(AuthHandler.auth.startswith("Basic "))
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

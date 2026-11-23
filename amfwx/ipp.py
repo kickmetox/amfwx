@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import struct
 from pathlib import Path
 
@@ -147,7 +148,8 @@ def parse_response(data):
 
 class IppPrinter:
     def __init__(self, host, port=631, path="/ipp/print", secure=False,
-                 timeout=20.0, user="AMFWX"):
+                 timeout=20.0, user="AMFWX", username=None,
+                 password=None):
         self.host = str(host)
         self.port = int(port)
         self.path = str(path)
@@ -156,13 +158,19 @@ class IppPrinter:
         self.uri = f"ipp://{self.host}:{self.port}{self.path}"
         self.client = HttpClient(f"{scheme}://{self.host}:{self.port}",
                                  timeout=timeout)
+        self.auth_headers = {}
+        if username is not None:
+            token = base64.b64encode(
+                f"{username}:{password or ''}".encode("utf-8")).decode("ascii")
+            self.auth_headers["Authorization"] = f"Basic {token}"
 
     def get_attributes(self, requested=None):
         payload = build_get_attributes(self.uri, self.user, requested)
         try:
+            headers = {"Content-Type": "application/ipp"}
+            headers.update(self.auth_headers)
             response = self.client.request(
-                self.path, method="POST", data=payload,
-                headers={"Content-Type": "application/ipp"})
+                self.path, method="POST", data=payload, headers=headers)
         except NetworkError as error:
             raise IppError(str(error)) from error
         if response["status"] != 200:
@@ -199,9 +207,10 @@ class IppPrinter:
 
     def _request(self, payload):
         try:
+            headers = {"Content-Type": "application/ipp"}
+            headers.update(self.auth_headers)
             response = self.client.request(
-                self.path, method="POST", data=payload,
-                headers={"Content-Type": "application/ipp"})
+                self.path, method="POST", data=payload, headers=headers)
         except NetworkError as error:
             raise IppError(str(error)) from error
         if response["status"] != 200:
@@ -212,14 +221,7 @@ class IppPrinter:
                   job_name="AMFWX"):
         payload = build_print_job(self.uri, job_name, self.user,
                                   document_format, document)
-        try:
-            response = self.client.request(
-                self.path, method="POST", data=payload,
-                headers={"Content-Type": "application/ipp"})
-        except NetworkError as error:
-            raise IppError(str(error)) from error
-        if response["status"] != 200:
-            raise IppError(f"IPP HTTP {response['status']}")
+        response = self._request(payload)
         result = parse_response(response["body"])
         if result["status"] != 0:
             raise IppError(f"IPP-Status {result['status']:#06x}")
