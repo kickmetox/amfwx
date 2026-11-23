@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 4.3.1 - 2026-11-23
+
+IPP Self-Signed TLS.
+
+### Fix
+
+* `verify_tls` fuer IPP.
+* 9096 antwortet, aber IPP-Pfad 404.
+* 361 Tests.
+
 ## 4.3.0 - 2026-11-23
 
 Weckscan vor jedem ADF-Paket.
