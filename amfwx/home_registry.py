@@ -6,8 +6,24 @@ import json
 import uuid
 from pathlib import Path
 
+from .secrets import protect_text, unprotect_text
 from .home import (FibaroHomeCenter, GenericHttpDevice, HomeError,
                    JaroliftBridge, ShellyDevice)
+
+
+SECRET_KEYS = {"password", "access_secret", "token", "api_key",
+               "access_token"}
+
+
+def _map_secrets(value, transform):
+    if isinstance(value, dict):
+        return {key: (transform(item) if key in SECRET_KEYS and
+                      isinstance(item, str) else
+                      _map_secrets(item, transform))
+                for key, item in value.items()}
+    if isinstance(value, list):
+        return [_map_secrets(item, transform) for item in value]
+    return value
 
 
 class HomeRegistry:
@@ -73,8 +89,9 @@ class HomeRegistry:
         if target is None:
             raise HomeError("kein Registry-Pfad")
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(json.dumps(list(self.devices.values()),
-                                     indent=2, ensure_ascii=False),
+        data = json.loads(json.dumps(list(self.devices.values())))
+        data = _map_secrets(data, protect_text)
+        target.write_text(json.dumps(data, indent=2, ensure_ascii=False),
                           encoding="utf-8")
         return target
 
@@ -83,5 +100,6 @@ class HomeRegistry:
         if source is None or not source.is_file():
             return self
         data = json.loads(source.read_text(encoding="utf-8"))
+        data = _map_secrets(data, unprotect_text)
         self.devices = {entry["id"]: entry for entry in data}
         return self

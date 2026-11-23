@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.73.0 - 2026-11-23
+
+DPAPI-Secrets.
+
+### Security
+
+* DPAPI protect/unprotect.
+* Registry verschluesselt Passwoerter.
+* 317 Tests.
+
 ## 3.72.0 - 2026-11-23
 
 Home-Registry.
