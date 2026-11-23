@@ -24,11 +24,42 @@ class Tahoma:
         context = None
         if secure and not verify_tls:
             context = ssl._create_unverified_context()
+        self.listener_id = None
         self.client = HttpClient(
             f"{scheme}://{self.host}:{self.port}{BASE_PATH}",
             timeout=timeout,
             headers={"Authorization": f"Bearer {self.token}"},
             ssl_context=context)
+
+    def register_listener(self):
+        try:
+            data = self.client.json("/events/register", method="POST")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+        self.listener_id = data.get("id")
+        return self.listener_id
+
+    def fetch_events(self, listener_id=None):
+        listener = listener_id or self.listener_id
+        if not listener:
+            raise TahomaError("kein Event-Listener registriert")
+        try:
+            return self.client.json(f"/events/{listener}/fetch",
+                                    method="POST")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+
+    def unregister_listener(self, listener_id=None):
+        listener = listener_id or self.listener_id
+        if not listener:
+            return None
+        try:
+            result = self.client.json(f"/events/{listener}/unregister",
+                                      method="POST")
+        except NetworkError as error:
+            raise TahomaError(str(error)) from error
+        self.listener_id = None
+        return result
 
     def setup(self):
         try:

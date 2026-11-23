@@ -41,8 +41,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         length = int(self.headers.get("Content-Length", "0"))
-        Handler.body = json.loads(self.rfile.read(length))
-        self._send({"execId": "exec-1"})
+        raw = self.rfile.read(length)
+        if self.path.endswith("/events/register"):
+            self._send({"id": "listener-1"})
+        elif self.path.endswith("/fetch"):
+            self._send([{"name": "DeviceStateChangedEvent"}])
+        elif self.path.endswith("/unregister"):
+            self._send([])
+        else:
+            Handler.body = json.loads(raw)
+            self._send({"execId": "exec-1"})
 
 
 class TahomaTests(unittest.TestCase):
@@ -70,6 +78,20 @@ class TahomaTests(unittest.TestCase):
             command = Handler.body["actions"][0]["commands"][0]
             self.assertEqual(command["name"], "setClosure")
             self.assertEqual(command["parameters"], [30])
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_events(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            tahoma = Tahoma("127.0.0.1", "token", server.server_port,
+                            secure=False)
+            self.assertEqual(tahoma.register_listener(), "listener-1")
+            self.assertEqual(tahoma.fetch_events()[0]["name"],
+                             "DeviceStateChangedEvent")
+            tahoma.unregister_listener()
         finally:
             server.shutdown()
             server.server_close()
