@@ -67,6 +67,21 @@ class BeckerCentral:
         result = self._rpc(LIST_METHOD, {"item_type": "remote"})
         return result.get("item_list", [])
 
+    def sensors(self):
+        result = []
+        for remote in self.remotes():
+            try:
+                state = self.item_state(remote.get("id"))
+            except BeckerError:
+                state = {}
+            values = {key[6:]: value for key, value in state.items()
+                      if key.startswith("value-")}
+            result.append({"id": remote.get("id"),
+                           "name": remote.get("name", ""),
+                           "type": remote.get("remote_type", ""),
+                           "values": values})
+        return result
+
     def group_state(self, group_id):
         return self._rpc(GROUP_STATE_METHOD,
                          {"group_id": int(group_id)}).get("state", {})

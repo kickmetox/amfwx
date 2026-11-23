@@ -88,6 +88,10 @@ class BeckerTests(unittest.TestCase):
         self.assertIsNotNone(device)
         self.assertEqual(device.kind, "becker")
 
+    def test_sensors(self):
+        sensors = self.box.sensors()
+        self.assertEqual(sensors[0]["values"]["wind"], 2)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

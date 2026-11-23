@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 3.90.0 - 2026-11-23
+
+Becker-Sensoren.
+
+### Home
+
+* `BeckerCentral.sensors`.
+* 343 Tests.
+
 ## 3.89.0 - 2026-11-23
 
 CLI-Einstieg korrigiert.
