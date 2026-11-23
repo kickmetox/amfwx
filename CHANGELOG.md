@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.92.0 - 2026-11-23
+
+Fibaro-Szenen.
+
+### Home
+
+* `scenes`.
+* `execute_scene`.
+* 345 Tests.
+
 ## 3.91.0 - 2026-11-23
 
 MQTT-Subscribe.

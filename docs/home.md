@@ -24,6 +24,8 @@ center = FibaroHomeCenter("192.168.178.50", 80, "admin", "password")
 print(center.devices())
 center.open_cover(12)
 center.set_temperature(8, 21.0)
+print(center.scenes())
+center.execute_scene(7)
 ```
 
 ### Jarolift 433 MHz bridge

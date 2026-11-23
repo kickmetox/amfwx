@@ -50,11 +50,22 @@ class FibaroHandler(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
-        if self.path == "/api/devices":
+        if self.path == "/api/scenes":
+            payload = [{"id": 7, "name": "Abend"}]
+        elif self.path == "/api/devices":
             payload = [{"id": 1, "name": "Rollladen"}]
         else:
             payload = [{"id": 1, "result": True}]
         body = json.dumps(payload).encode()
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_POST(self):
+        length = int(self.headers.get("Content-Length", "0"))
+        self.rfile.read(length)
+        body = b'[{"id": 7, "result": true}]'
         self.send_response(200)
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
@@ -117,6 +128,17 @@ class HomeTests(unittest.TestCase):
         self.assertEqual(encode_length(0), b"\x00")
         self.assertEqual(encode_length(127), b"\x7f")
         self.assertEqual(encode_length(128), b"\x80\x01")
+
+    def test_fibaro_scenes(self):
+        server = ThreadingHTTPServer(("127.0.0.1", 0), FibaroHandler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            center = FibaroHomeCenter("127.0.0.1", server.server_port)
+            self.assertEqual(center.scenes()[0]["name"], "Abend")
+            self.assertTrue(center.execute_scene(7)[0]["result"])
+        finally:
+            server.shutdown()
+            server.server_close()
 
 
 if __name__ == "__main__":

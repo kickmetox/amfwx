@@ -118,6 +118,19 @@ class FibaroHomeCenter:
         except NetworkError as error:
             raise HomeError(str(error)) from error
 
+    def scenes(self):
+        try:
+            return self.client.json("/api/scenes")
+        except NetworkError as error:
+            raise HomeError(str(error)) from error
+
+    def execute_scene(self, scene_id):
+        try:
+            return self.client.json(f"/api/scenes/{int(scene_id)}/execute",
+                                    method="POST")
+        except NetworkError as error:
+            raise HomeError(str(error)) from error
+
     def call_action(self, device_id, action, arguments=None):
         query = {"deviceID": int(device_id), "name": action}
         query.update(arguments or {})
