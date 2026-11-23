@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 3.54.0 - 2026-11-23
+
+App-Lifecycle/CLI.
+
+### App
+
+* `AppConfig`.
+* `Application`.
+* `--version/--theme/--title/--no-single`.
+* 274 Tests.
+
 ## 3.53.0 - 2026-11-23
 
 Tray-Benachrichtigungen.
