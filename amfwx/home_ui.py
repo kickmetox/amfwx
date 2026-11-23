@@ -63,12 +63,30 @@ class HomeDevicesPanel(Stack):
         self.saved.children.clear()
         self.saved.layout.items.clear()
         for entry in self.registry.devices.values():
-            button = Button("Entfernen",
-                            on_click=lambda value=entry["id"]: self.remove_device(value))
-            self.saved.add(HStack(Label(f"{entry['name']}  [{entry['kind']}]  {entry['host']}"), button))
+            identifier = entry["id"]
+            buttons = [
+                Button("Auf", on_click=lambda value=identifier: self.control(value, "open")),
+                Button("Zu", on_click=lambda value=identifier: self.control(value, "close")),
+                Button("Ein", on_click=lambda value=identifier: self.control(value, "on")),
+                Button("Aus", on_click=lambda value=identifier: self.control(value, "off")),
+                Button("Entfernen", on_click=lambda value=identifier: self.remove_device(value)),
+            ]
+            self.saved.add(HStack(Label(f"{entry['name']}  [{entry['kind']}]  {entry['host']}"), *buttons))
         if not self.registry.devices:
             self.saved.add(Label("Noch nichts gespeichert."))
         return self
+
+    def control(self, identifier, action):
+        methods = {"open": "open_cover", "close": "close_cover",
+                   "on": "on", "off": "off"}
+        try:
+            adapter = self.registry.adapter(identifier)
+            result = getattr(adapter, methods[action])()
+        except Exception as error:
+            self.status.text = f"Fehler: {error}"
+            return None
+        self.status.text = "Befehl gesendet."
+        return result
 
     def remove_device(self, identifier):
         entry = self.registry.remove(identifier)

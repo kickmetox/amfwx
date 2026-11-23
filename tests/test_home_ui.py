@@ -42,6 +42,21 @@ class PanelTests(unittest.TestCase):
         panel.remove_device(entry["id"])
         self.assertNotIn(entry["id"], registry.devices)
 
+    def test_control(self):
+        class Adapter:
+            called = None
+
+            def open_cover(self):
+                Adapter.called = "open"
+                return True
+
+        registry = HomeRegistry()
+        item = registry.add(Device())
+        registry.adapter = lambda _identifier: Adapter()
+        panel = HomeDevicesPanel(registry)
+        self.assertTrue(panel.control(item["id"], "open"))
+        self.assertEqual(Adapter.called, "open")
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

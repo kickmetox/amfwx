@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 3.94.0 - 2026-11-23
+
+Geraesteuerung im Discovery-Fenster.
+
+### UI
+
+* Auf/Zu/Ein/Aus.
+* Fehlerstatus.
+* 348 Tests.
+
 ## 3.93.2 - 2026-11-23
 
 Single-Instance-Freigabe im CLI.
