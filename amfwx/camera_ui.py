@@ -17,6 +17,7 @@ class CameraWindow(Window):
     def __init__(self):
         super().__init__("AMFWX Kamera", 760, 460)
         self.index = LineEdit("0")
+        self.url = LineEdit("", placeholder="rtsp://...")
         self.width = LineEdit("1280")
         self.height = LineEdit("720")
         self.folder = LineEdit(str(default_scan_dir()))
@@ -33,6 +34,7 @@ class CameraWindow(Window):
         self.layout.items.clear()
         rows = [
             HStack(Label("Index"), self.index),
+            HStack(Label("IP/RTSP"), self.url),
             HStack(Label("Breite"), self.width),
             HStack(Label("Höhe"), self.height),
             HStack(Label("Ordner"), self.folder),
@@ -50,6 +52,11 @@ class CameraWindow(Window):
         self.invalidate()
 
     def _camera(self):
+        if self.url.text().strip():
+            from .ipcam import IpCamera
+            return IpCamera(self.url.text().strip(),
+                            width=int(self.width.text() or "1280"),
+                            height=int(self.height.text() or "720"))
         return Webcam(int(self.index.text() or "0"),
                       width=int(self.width.text() or "1280"),
                       height=int(self.height.text() or "720"))
@@ -79,6 +86,7 @@ class CameraWindow(Window):
         self.invalidate()
         try:
             index = int(self.index.text() or "0")
+            url = self.url.text().strip()
             width = int(self.width.text() or "1280")
             height = int(self.height.text() or "720")
             folder = self.folder.text().strip() or str(default_scan_dir())
@@ -93,7 +101,11 @@ class CameraWindow(Window):
 
         def work():
             try:
-                camera = Webcam(index, width=width, height=height)
+                if url:
+                    from .ipcam import IpCamera
+                    camera = IpCamera(url, width=width, height=height)
+                else:
+                    camera = Webcam(index, width=width, height=height)
                 try:
                     files = camera.tether(folder, count=count,
                                           interval=interval,

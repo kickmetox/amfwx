@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 5.20.0 - 2026-11-24
+
+IP-/ONVIF-Kameras.
+
+### Cameras
+
+* WS-Discovery.
+* RTSP/HTTP-Capture.
+* Snapshot/Record.
+* CameraWindow URL.
+* 404 Tests.
+
 ## 5.19.0 - 2026-11-24
 
 Windows Kopien/Duplex.

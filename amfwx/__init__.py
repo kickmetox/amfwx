@@ -94,6 +94,8 @@ from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
                   ocr_image, ocr_pdf)
 from .mtp import MtpError, download_images, list_mtp_devices
+from .onvif import OnvifError, discover as onvif_discover, parse_response as onvif_parse
+from .ipcam import IpCamera, IpCameraError
 from .camera import (CameraInfo, Webcam, WebcamError, list_cameras,
                      list_pnp_cameras)
 from .gopro import GoProCamera, GoProError
@@ -157,7 +159,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.19.0"
+__version__ = "5.20.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -178,7 +180,8 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
     "transfer_files", "scan_to_folder", "images_to_pdf",
-    "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
+    "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "IpCameraError", "OnvifError",
+    "onvif_discover", "onvif_parse", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
     "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "MatterController", "MatterError", "matter_available",
     "find_chip_tool", "BeckerStick", "BeckerError", "becker_available",

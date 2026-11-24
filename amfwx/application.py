@@ -35,7 +35,9 @@ class AppConfig:
                  becker_action=None, becker_unit="1737B", list_becker=False,
                  ipp_host=None, ipp_port=631, ipp_path="/ipp/print",
                  ipp_print=None, ipp_copies=1, ipp_duplex=False,
-                 matter_code=None, matter_node=1, matter_action=None):
+                 matter_code=None, matter_node=1, matter_action=None,
+                 onvif_seconds=None, ip_camera=None, ip_snapshot=None,
+                 ip_record=None, ip_seconds=5.0):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -113,6 +115,11 @@ class AppConfig:
         self.matter_code = matter_code
         self.matter_node = int(matter_node)
         self.matter_action = matter_action
+        self.onvif_seconds = onvif_seconds
+        self.ip_camera = ip_camera
+        self.ip_snapshot = ip_snapshot
+        self.ip_record = ip_record
+        self.ip_seconds = float(ip_seconds)
 
     @classmethod
     def parse(cls, argv=None):
@@ -317,6 +324,21 @@ class AppConfig:
             elif value == "--matter-action" and index + 1 < len(args):
                 index += 1
                 config.matter_action = args[index]
+            elif value == "--onvif-discover" and index + 1 < len(args):
+                index += 1
+                config.onvif_seconds = float(args[index])
+            elif value == "--ip-camera" and index + 1 < len(args):
+                index += 1
+                config.ip_camera = args[index]
+            elif value == "--ip-snapshot" and index + 1 < len(args):
+                index += 1
+                config.ip_snapshot = args[index]
+            elif value == "--ip-record" and index + 1 < len(args):
+                index += 1
+                config.ip_record = args[index]
+            elif value == "--ip-seconds" and index + 1 < len(args):
+                index += 1
+                config.ip_seconds = float(args[index])
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -397,6 +419,10 @@ class AppConfig:
                 "  --matter-code C    Matter Setup-Code\n"
                 "  --matter-node ID   Matter Node-ID\n"
                 "  --matter-action A  commission/on/off/toggle\n"
+                "  --onvif-discover S ONVIF-Kameras suchen\n"
+                "  --ip-camera URL    IP/RTSP-Kamera\n"
+                "  --ip-snapshot PATH Einzelbild\n"
+                "  --ip-record PATH   Videoaufnahme\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -624,6 +650,27 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.onvif_seconds is not None:
+            from .onvif import discover
+            for camera in discover(self.config.onvif_seconds):
+                print(camera)
+            return 0
+        if self.config.ip_camera:
+            from .ipcam import IpCamera
+            try:
+                with IpCamera(self.config.ip_camera) as camera:
+                    if self.config.ip_snapshot:
+                        camera.read().save(self.config.ip_snapshot)
+                        print(self.config.ip_snapshot)
+                    elif self.config.ip_record:
+                        print(camera.record(self.config.ip_record,
+                                            self.config.ip_seconds))
+                    else:
+                        print(camera.width, camera.height)
+            except Exception as error:
+                print(f"IP-Kamera fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.matter_code or self.config.matter_action:

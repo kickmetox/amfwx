@@ -39,6 +39,7 @@ AMFWX_NAPS2
 | Punkt | Status |
 |---|---|
 | PnP-Inventar | ✅ |
+| ONVIF/RTSP | ✅ |
 | UVC-Webcam | ✅ optional OpenCV |
 | Kamera-Steuerung | ✅ soweit Treiber Eigenschaften anbietet |
 | Tethering | ✅ UVC/GoPro/gPhoto2 |
@@ -92,7 +93,7 @@ AMFWX_NAPS2
 
 | Punkt | Status |
 |---|---|
-| Tests | 400 |
+| Tests | 404 |
 | CI | grün |
 | Code-Signatur | ❌ bewusst nicht |
 | 32-Bit-Python | ✅ im App-/Portable-Paket |
