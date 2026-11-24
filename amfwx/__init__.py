@@ -67,6 +67,8 @@ from .single_instance import SingleInstance, SingleInstanceError
 from .icons import default_icon_path, load_icon, set_window_icon
 from .home_ui import HomeDevicesPanel, HomeDevicesWindow
 from .tuya_local import TuyaLocal, TuyaLocalError
+from .tuya34 import TuyaLocal34, Tuya34Error
+from .tuya35 import TuyaLocal35, Tuya35Error
 from .tahoma import Tahoma, TahomaError
 from .becker import BeckerCentral, BeckerError
 from .homepilot import HomePilot, HomePilotError
@@ -83,6 +85,7 @@ from .diagnostics import diagnostics, format_diagnostics
 from .ipp import IppError, IppPrinter
 from .winprint import PrinterInfo, list_printers, print_file, print_raw
 from .camera_ui import CameraWindow
+from .rf import RfError, available as rf_available, discover as rf_discover, jarolift_devices
 from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
                   ocr_image, ocr_pdf)
@@ -150,7 +153,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.11.0"
+__version__ = "5.13.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -173,7 +176,8 @@ __all__ = [
     "transfer_files", "scan_to_folder", "images_to_pdf",
     "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
-    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "ocr_available",
+    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "rf_available", "rf_discover",
+    "jarolift_devices", "ocr_available",
     "ocr_image", "ocr_pdf", "make_searchable_pdf",
     "download_images",
     "chroma_key", "composite", "save_chroma", "PrinterInfo", "list_printers", "print_raw", "print_file", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
@@ -181,7 +185,7 @@ __all__ = [
     "HomeDevicesWindow", "CredentialsDialog", "HomePilot",
     "HomePilotError", "MqttClient",
     "MqttError", "DiscoveredDevice", "discover_home", "probe_http",
-    "TuyaCloud", "TuyaError", "DeconzClient", "ZigbeeError",
+    "TuyaCloud", "TuyaError", "TuyaLocal34", "Tuya34Error", "TuyaLocal35", "Tuya35Error", "DeconzClient", "ZigbeeError",
     "WlanController", "WlanControlError", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",
     "discover_network_devices", "probe_escl", "DicomFile", "MedicalError",
     "parse_dicom", "parse_fhir", "parse_hl7", "TwainSource",

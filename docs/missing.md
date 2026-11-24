@@ -92,7 +92,7 @@ AMFWX_NAPS2
 
 | Punkt | Status |
 |---|---|
-| Tests | 385 |
+| Tests | 389 |
 | CI | grün |
 | Code-Signatur | ❌ bewusst nicht |
 | 32-Bit-Python | ✅ im App-/Portable-Paket |

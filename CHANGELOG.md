@@ -1,5 +1,27 @@
 ﻿# Changelog
 
+## 5.13.0 - 2026-11-24
+
+Tuya LAN 3.5.
+
+### IoT
+
+* AES-GCM.
+* Session-Key.
+* CLI.
+* 391 Tests.
+
+## 5.12.0 - 2026-11-24
+
+Tuya LAN 3.4.
+
+### IoT
+
+* Session-Key-Handshake.
+* HMAC-SHA256.
+* CLI.
+* 389 Tests.
+
 ## 5.11.0 - 2026-11-24
 
 Scanner-Fenster.

@@ -28,7 +28,9 @@ class AppConfig:
                  zigbee_devices=False, zigbee_set=None, zigbee_permit=None,
                  list_scanners=False, scan_wia=None, scan_twain32=None,
                  scan_naps2=None, scan_dpi=300, scan_adf=False,
-                 scanner_ui=False):
+                 scanner_ui=False, tuya34_host=None, tuya34_device=None,
+                 tuya34_key=None, tuya34_action=None, tuya35_host=None,
+                 tuya35_device=None, tuya35_key=None, tuya35_action=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -83,6 +85,14 @@ class AppConfig:
         self.scan_dpi = int(scan_dpi)
         self.scan_adf = bool(scan_adf)
         self.scanner_ui = bool(scanner_ui)
+        self.tuya34_host = tuya34_host
+        self.tuya34_device = tuya34_device
+        self.tuya34_key = tuya34_key
+        self.tuya34_action = tuya34_action
+        self.tuya35_host = tuya35_host
+        self.tuya35_device = tuya35_device
+        self.tuya35_key = tuya35_key
+        self.tuya35_action = tuya35_action
 
     @classmethod
     def parse(cls, argv=None):
@@ -220,6 +230,30 @@ class AppConfig:
                 config.scan_adf = True
             elif value == "--scanner-ui":
                 config.scanner_ui = True
+            elif value == "--tuya34-host" and index + 1 < len(args):
+                index += 1
+                config.tuya34_host = args[index]
+            elif value == "--tuya34-device" and index + 1 < len(args):
+                index += 1
+                config.tuya34_device = args[index]
+            elif value == "--tuya34-key" and index + 1 < len(args):
+                index += 1
+                config.tuya34_key = args[index]
+            elif value == "--tuya34-action" and index + 1 < len(args):
+                index += 1
+                config.tuya34_action = args[index]
+            elif value == "--tuya35-host" and index + 1 < len(args):
+                index += 1
+                config.tuya35_host = args[index]
+            elif value == "--tuya35-device" and index + 1 < len(args):
+                index += 1
+                config.tuya35_device = args[index]
+            elif value == "--tuya35-key" and index + 1 < len(args):
+                index += 1
+                config.tuya35_key = args[index]
+            elif value == "--tuya35-action" and index + 1 < len(args):
+                index += 1
+                config.tuya35_action = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -280,6 +314,14 @@ class AppConfig:
                 "  --scan-dpi N       Aufloesung\n"
                 "  --scan-adf         Einzug\n"
                 "  --scanner-ui       Scanner-Fenster WIA/TWAIN32/NAPS2\n"
+                "  --tuya34-host H    Tuya LAN 3.4\n"
+                "  --tuya34-device ID Tuya-Geraet\n"
+                "  --tuya34-key KEY   Local Key\n"
+                "  --tuya34-action A  status/on/off\n"
+                "  --tuya35-host H    Tuya LAN 3.5\n"
+                "  --tuya35-device ID Tuya-Geraet\n"
+                "  --tuya35-key KEY   Local Key\n"
+                "  --tuya35-action A  status/on/off\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -489,6 +531,40 @@ class Application:
                 print(f"Scan fehlgeschlagen: {error}")
                 return 1
             print(output)
+            return 0
+        if self.config.tuya34_host:
+            from .tuya34 import TuyaLocal34
+            try:
+                with TuyaLocal34(self.config.tuya34_host,
+                                 self.config.tuya34_device,
+                                 self.config.tuya34_key) as device:
+                    action = (self.config.tuya34_action or "status").lower()
+                    if action == "on":
+                        print(device.switch(True))
+                    elif action == "off":
+                        print(device.switch(False))
+                    else:
+                        print(device.status())
+            except Exception as error:
+                print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.tuya35_host:
+            from .tuya35 import TuyaLocal35
+            try:
+                with TuyaLocal35(self.config.tuya35_host,
+                                 self.config.tuya35_device,
+                                 self.config.tuya35_key) as device:
+                    action = (self.config.tuya35_action or "status").lower()
+                    if action == "on":
+                        print(device.switch(True))
+                    elif action == "off":
+                        print(device.switch(False))
+                    else:
+                        print(device.status())
+            except Exception as error:
+                print(f"Tuya 3.5 fehlgeschlagen: {error}")
+                return 1
             return 0
         if self.config.zigbee_host:
             from .zigbee2mqtt import Zigbee2Mqtt
