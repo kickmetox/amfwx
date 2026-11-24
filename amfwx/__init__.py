@@ -36,6 +36,8 @@ from .midi import MidiFile, MidiNote, MidiPlayer
 from .resources import ResourcePack
 from .crash import CrashLogger
 from .security import SecurityError, safe_resource_name, verify_native_dlls
+from .ai import (list_providers, load_provider_plugins, register_provider,
+                  unregister_provider)
 from .ai import (AIError, AIProvider, EchoProvider, OllamaProvider,
                  OpenAICompatibleProvider, provider_from_name)
 from .llm_tools import TOOL_SPECS, UiSession, call_tool
@@ -170,7 +172,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.38.0"
+__version__ = "5.39.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -181,7 +183,8 @@ __all__ = [
     "SortFilterModel", "QuickView", "State", "ListState", "Stack", "VStack", "HStack",
     "ForEach", "Text", "TextField", "Animation", "Timeline",
     "AnimatedValue", "linear", "ease_in", "ease_out", "ease_in_out",
-    "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "SecurityError", "AIError", "AIProvider", "EchoProvider",
+    "cubic_bezier", "MidiFile", "MidiNote", "MidiPlayer", "ResourcePack", "CrashLogger", "SecurityError", "AIError", "list_providers", "register_provider",
+    "unregister_provider", "load_provider_plugins", "AIProvider", "EchoProvider",
     "OllamaProvider", "OpenAICompatibleProvider", "provider_from_name",
     "TOOL_SPECS", "UiSession", "call_tool", "LLMAgent", "SDK", "create_sdk", "Conversation", "canvas_to_pdf", "Database", "HttpClient", "NetworkError", "DesignerItem", "DesignerDocument",
     "DesignerCanvas", "DesignerWindow", "Project", "ProjectError", "Studio",

@@ -11,7 +11,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import EchoProvider, OllamaProvider, OpenAICompatibleProvider
+from amfwx import (EchoProvider, OllamaProvider, OpenAICompatibleProvider,
+                   register_provider, unregister_provider)
+from amfwx.ai import provider_from_name
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -94,6 +96,17 @@ class AITests(unittest.TestCase):
         result = asyncio.run(provider.async_chat(
             [{"role": "user", "content": "hallo"}]))
         self.assertIn("hallo", result["content"])
+
+    def test_provider_plugin(self):
+        class Custom(EchoProvider):
+            name = "custom"
+        register_provider("custom", lambda **kw: Custom(**kw))
+        try:
+            self.assertEqual(provider_from_name("custom").name, "custom")
+            with self.assertRaises(Exception):
+                register_provider("custom", lambda **kw: Custom(**kw))
+        finally:
+            unregister_provider("custom")
 
 
 if __name__ == "__main__":

@@ -4,18 +4,15 @@ from __future__ import annotations
 
 from .agent import LLMAgent
 from .ai import (AIError, EchoProvider, OllamaProvider,
-                 OpenAICompatibleProvider, provider_from_name)
+                 OpenAICompatibleProvider, list_providers,
+                 provider_from_name, register_provider)
 from .llm_tools import TOOL_SPECS, UiSession, call_tool
 
 
 class SDK:
     def __init__(self, theme="dark"):
         self.ui = UiSession(theme=theme)
-        self.providers = {
-            "ollama": OllamaProvider,
-            "openai": OpenAICompatibleProvider,
-            "echo": EchoProvider,
-        }
+        self.providers = {name: name for name in list_providers()}
 
     def provider(self, name="ollama", **kwargs):
         return provider_from_name(name, **kwargs)
@@ -30,6 +27,11 @@ class SDK:
 
     def add_widget(self, *args, **kwargs):
         return self.ui.add_widget(*args, **kwargs)
+
+    def register_provider(self, name, factory, replace=False):
+        result = register_provider(name, factory, replace)
+        self.providers[name.lower()] = name.lower()
+        return result
 
     def tools(self):
         return list(TOOL_SPECS)

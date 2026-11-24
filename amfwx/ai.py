@@ -273,6 +273,44 @@ class EchoProvider(AIProvider):
         return {"content": f"echo: {last}", "tool_calls": [], "raw": {}}
 
 
+_PROVIDER_FACTORIES = {}
+
+
+def register_provider(name, factory, replace=False):
+    key = str(name).lower()
+    if not key:
+        raise AIError("Provider-Name fehlt")
+    if key in _PROVIDER_FACTORIES and not replace:
+        raise AIError(f"Provider bereits registriert: {key}")
+    _PROVIDER_FACTORIES[key] = factory
+    return factory
+
+
+def unregister_provider(name):
+    return _PROVIDER_FACTORIES.pop(str(name).lower(), None)
+
+
+def load_provider_plugins():
+    import importlib.metadata
+    try:
+        entries = importlib.metadata.entry_points(group="amfwx.providers")
+    except TypeError:
+        entries = importlib.metadata.entry_points().get("amfwx.providers", [])
+    for entry in entries:
+        if entry.name.lower() not in _PROVIDER_FACTORIES:
+            try:
+                register_provider(entry.name, entry.load())
+            except Exception:
+                continue
+    return list_providers()
+
+
+def list_providers():
+    return sorted(set(_PROVIDER_FACTORIES) |
+                  {"ollama", "openai", "lmstudio", "llama.cpp", "vllm",
+                   "echo"})
+
+
 def provider_from_name(name, **kwargs):
     key = str(name).lower()
     if key == "ollama":
@@ -284,4 +322,9 @@ def provider_from_name(name, **kwargs):
         return OpenAICompatibleProvider(**{**defaults, **kwargs})
     if key == "echo":
         return EchoProvider(**kwargs)
+    if key in _PROVIDER_FACTORIES:
+        return _PROVIDER_FACTORIES[key](**kwargs)
+    load_provider_plugins()
+    if key in _PROVIDER_FACTORIES:
+        return _PROVIDER_FACTORIES[key](**kwargs)
     raise AIError(f"unbekannter Provider: {name}")

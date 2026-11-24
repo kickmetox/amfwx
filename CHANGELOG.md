@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.39.0 - 2026-11-25
+
+Provider-Plugins.
+
+### SDK
+
+* Registry.
+* Entry-Points.
+* 426 Tests.
+
 ## 5.38.0 - 2026-11-25
 
 Async-SDK.
