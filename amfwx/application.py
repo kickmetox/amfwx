@@ -48,7 +48,8 @@ class AppConfig:
                  jarolift_channel=1, jarolift_action=None,
                  jarolift_position=None, tuya_discover=None,
                  install_naps2=None, check_update=False,
-                 download_update=None, dashboard=False):
+                 download_update=None, dashboard=False,
+                 llm_tools=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -155,6 +156,7 @@ class AppConfig:
         self.check_update = bool(check_update)
         self.download_update = download_update
         self.dashboard = bool(dashboard)
+        self.llm_tools = bool(llm_tools)
 
     @classmethod
     def parse(cls, argv=None):
@@ -441,6 +443,8 @@ class AppConfig:
                 config.download_update = args[index]
             elif value == "--dashboard":
                 config.dashboard = True
+            elif value == "--llm-tools":
+                config.llm_tools = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -548,6 +552,7 @@ class AppConfig:
                 "  --check-update     GitHub-Release pruefen\n"
                 "  --download-update DIR Installer laden\n"
                 "  --dashboard       Geraete-Zentrale\n"
+                "  --llm-tools       LLM-Tool-Schemas ausgeben\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -778,6 +783,11 @@ class Application:
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
                 return 1
+            return 0
+        if self.config.llm_tools:
+            import json
+            from .llm_tools import TOOL_SPECS
+            print(json.dumps(TOOL_SPECS, indent=2, ensure_ascii=False))
             return 0
         if self.config.dashboard:
             from .dashboard import DashboardWindow

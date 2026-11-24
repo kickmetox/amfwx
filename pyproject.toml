@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "amfwx"
-version = "5.34.0"
+version = "5.35.0"
 description = "AMFWX - an independent self-contained GUI framework experiment"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,8 +12,11 @@ license = { text = "MIT" }
 authors = [{ name = "Andreas Meyer" }]
 dependencies = []
 
+[project.scripts]
+amfwx-sdk = "amfwx.sdk:main"
+
 [tool.setuptools.packages.find]
 include = ["amfwx*"]
 
 [tool.setuptools.package-data]
-amfwx = ["bin/*.dll", "bin/*.txt", "bin/*.ico"]
+amfwx = ["bin/*.dll", "bin/*.txt", "bin/*.ico", "py.typed"]

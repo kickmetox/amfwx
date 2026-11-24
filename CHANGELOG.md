@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 5.35.0 - 2026-11-24
+
+SDK-Paket.
+
+### SDK
+
+* py.typed.
+* amfwx-sdk.
+* Tool-Schema-Export.
+* Windows-Wheel.
+* 421 Tests.
+
 ## 5.34.0 - 2026-11-24
 
 Scan-Nachbearbeitung + Zentrale.

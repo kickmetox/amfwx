@@ -1,6 +1,6 @@
 # AMFWX SDK and LLM integration
 
-AMFWX 3.0 includes a unified SDK for:
+AMFWX 5.35 includes a unified SDK for:
 
 - UI sessions
 - AMFW bridges
@@ -135,11 +135,22 @@ agent.run("Beschreibe das Bild", image="shot.png")
 
 - vision via Ollama `images` and OpenAI `image_url` blocks
 - tool calling depends on the model
-- no automatic retry/backoff
-- no conversation persistence
+- retry/backoff is implemented
+- Conversation persistence exists
 - UI created by the model still needs human review
 
 ## Package
 
 All of this ships in the `amfwx` wheel. AMFW remains optional for the
 bridges, so there is one SDK package and no second runtime.
+
+## Packaging
+
+```powershell
+pip install amfwx-5.35.0-py3-none-win_amd64.whl
+amfwx-sdk --tools
+python -m amfwx --llm-tools
+```
+
+The wheel contains the SDK, LLM providers, LLM tools and native DLLs. It does
+not contain `vendor/python32` or external LLM/tool runtimes.
