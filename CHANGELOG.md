@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.42.0 - 2026-11-25
+
+Druckvorschau.
+
+### Printing
+
+* Fenster.
+* Papier/Kopien/Duplex/Querformat.
+* 429 Tests.
+
 ## 5.41.0 - 2026-11-25
 
 SDK mit 32-Bit-Runtime.

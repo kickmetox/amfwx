@@ -49,7 +49,7 @@ class AppConfig:
                  jarolift_position=None, tuya_discover=None,
                  install_naps2=None, check_update=False,
                  download_update=None, dashboard=False,
-                 llm_tools=False):
+                 llm_tools=False, print_preview=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -157,6 +157,7 @@ class AppConfig:
         self.download_update = download_update
         self.dashboard = bool(dashboard)
         self.llm_tools = bool(llm_tools)
+        self.print_preview = print_preview
 
     @classmethod
     def parse(cls, argv=None):
@@ -445,6 +446,9 @@ class AppConfig:
                 config.dashboard = True
             elif value == "--llm-tools":
                 config.llm_tools = True
+            elif value == "--print-preview" and index + 1 < len(args):
+                index += 1
+                config.print_preview = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -553,6 +557,7 @@ class AppConfig:
                 "  --download-update DIR Installer laden\n"
                 "  --dashboard       Geraete-Zentrale\n"
                 "  --llm-tools       LLM-Tool-Schemas ausgeben\n"
+                "  --print-preview F Druckvorschau\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -784,6 +789,11 @@ class Application:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
                 return 1
             return 0
+        if self.config.print_preview:
+            from .print_ui import PrintPreviewWindow
+            self.window = PrintPreviewWindow(self.config.print_preview,
+                                             self.config.printer)
+            return self.window.run()
         if self.config.llm_tools:
             import json
             from .llm_tools import TOOL_SPECS

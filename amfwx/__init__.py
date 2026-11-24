@@ -115,6 +115,7 @@ from .scanner_ui import ScannerWindow
 from .scan_ui import ScanWindow
 from .scan_post import (PostProcessError, crop_white, deskew, estimate_skew,
                         is_blank, postprocess, postprocess_pages)
+from .print_ui import PrintPreviewWindow
 from .dashboard import DashboardWindow
 from .scan_pdf import images_to_pdf, scan_to_pdf
 from .scan_transfer import default_scan_dir, scan_to_folder, transfer_files
@@ -172,7 +173,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.41.0"
+__version__ = "5.42.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -195,7 +196,7 @@ __all__ = [
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
     "transfer_files", "scan_to_folder", "images_to_pdf",
     "scan_to_pdf", "PostProcessError", "crop_white", "deskew",
-    "estimate_skew", "is_blank", "postprocess", "postprocess_pages", "ScanWindow", "DashboardWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "IpCameraError", "OnvifError", "JaroliftController", "JaroliftError",
+    "estimate_skew", "is_blank", "postprocess", "postprocess_pages", "ScanWindow", "DashboardWindow", "PrintPreviewWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "IpCameraError", "OnvifError", "JaroliftController", "JaroliftError",
     "onvif_discover", "onvif_parse", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
     "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "UpdateError", "check_update", "download_update",

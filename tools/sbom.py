@@ -30,7 +30,7 @@ def build():
         "specVersion": "1.0",
         "metadata": {
             "component": "amfwx",
-            "version": "5.41.0",
+            "version": "5.42.0",
             "platform": platform.platform(),
             "python": sys.version.split()[0],
         },
