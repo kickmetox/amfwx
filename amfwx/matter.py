@@ -53,3 +53,14 @@ class MatterController:
     def read_onoff(self, node_id, endpoint=1):
         return self._run(["onoff", "read", "on-off", str(int(node_id)),
                           str(int(endpoint))])
+
+    def level(self, node_id, percent, endpoint=1):
+        value = max(0, min(254, int(round(int(percent) * 254 / 100))))
+        return self._run(["levelcontrol", "move-to-level", str(value),
+                          "0", "0", "0", str(int(node_id)),
+                          str(int(endpoint))])
+
+    def color_temperature(self, node_id, mireds, endpoint=1):
+        return self._run(["colorcontrol", "move-to-color-temperature",
+                          str(int(mireds)), "0", "0", "0",
+                          str(int(node_id)), str(int(endpoint))])

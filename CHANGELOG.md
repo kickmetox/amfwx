@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.32.0 - 2026-11-24
+
+Matter Dimmen/Farbe.
+
+### IoT
+
+* Level.
+* Farbtemperatur.
+* 414 Tests.
+
 ## 5.31.1 - 2026-11-24
 
 CI-TWAIN-Test optional.

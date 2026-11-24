@@ -38,6 +38,7 @@ class AppConfig:
                  ipp_host=None, ipp_port=631, ipp_path="/ipp/print",
                  ipp_print=None, ipp_copies=1, ipp_duplex=False,
                  matter_code=None, matter_node=1, matter_action=None,
+                 matter_level=None, matter_temperature=None,
                  onvif_seconds=None, ip_camera=None, ip_snapshot=None,
                  ip_record=None, ip_seconds=5.0, gopro_host="10.5.5.9",
                  gopro_download=None, pdf_merge=None, pdf_inputs=None,
@@ -128,6 +129,8 @@ class AppConfig:
         self.matter_code = matter_code
         self.matter_node = int(matter_node)
         self.matter_action = matter_action
+        self.matter_level = matter_level
+        self.matter_temperature = matter_temperature
         self.onvif_seconds = onvif_seconds
         self.ip_camera = ip_camera
         self.ip_snapshot = ip_snapshot
@@ -362,6 +365,12 @@ class AppConfig:
             elif value == "--matter-action" and index + 1 < len(args):
                 index += 1
                 config.matter_action = args[index]
+            elif value == "--matter-level" and index + 1 < len(args):
+                index += 1
+                config.matter_level = int(args[index])
+            elif value == "--matter-temperature" and index + 1 < len(args):
+                index += 1
+                config.matter_temperature = int(args[index])
             elif value == "--onvif-discover" and index + 1 < len(args):
                 index += 1
                 config.onvif_seconds = float(args[index])
@@ -505,6 +514,8 @@ class AppConfig:
                 "  --matter-code C    Matter Setup-Code\n"
                 "  --matter-node ID   Matter Node-ID\n"
                 "  --matter-action A  commission/on/off/toggle\n"
+                "  --matter-level N   Helligkeit 0-100\n"
+                "  --matter-temperature M Mireds\n"
                 "  --onvif-discover S ONVIF-Kameras suchen\n"
                 "  --ip-camera URL    IP/RTSP-Kamera\n"
                 "  --ip-snapshot PATH Einzelbild\n"
@@ -848,12 +859,21 @@ class Application:
                 print(f"IP-Kamera fehlgeschlagen: {error}")
                 return 1
             return 0
-        if self.config.matter_code or self.config.matter_action:
+        if (self.config.matter_code or self.config.matter_action
+                or self.config.matter_level is not None
+                or self.config.matter_temperature is not None):
             from .matter import MatterController
             try:
                 controller = MatterController()
                 action = (self.config.matter_action or "commission").lower()
-                if action == "commission":
+                if self.config.matter_level is not None:
+                    print(controller.level(self.config.matter_node,
+                                           self.config.matter_level))
+                elif self.config.matter_temperature is not None:
+                    print(controller.color_temperature(
+                        self.config.matter_node,
+                        self.config.matter_temperature))
+                elif action == "commission":
                     print(controller.commission(self.config.matter_node,
                                                 self.config.matter_code))
                 elif action == "on":

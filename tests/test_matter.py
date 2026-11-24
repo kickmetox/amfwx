@@ -16,6 +16,10 @@ class MatterTests(unittest.TestCase):
         controller.commission(7,"1234")
         controller.on(7)
         self.assertIn("pairing", calls[0]); self.assertIn("onoff", calls[1])
+        controller.level(7, 50)
+        controller.color_temperature(7, 370)
+        self.assertIn("levelcontrol", calls[2])
+        self.assertIn("colorcontrol", calls[3])
     def test_cli(self):
         config=AppConfig.parse(["--matter-code","1234","--matter-node","7"])
         self.assertEqual(config.matter_node,7)
