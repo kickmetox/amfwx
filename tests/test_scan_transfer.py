@@ -45,6 +45,9 @@ class ScanTransferTests(unittest.TestCase):
         ])
         self.assertEqual(config.scan_print, "ECOSYS M5521cdn")
 
+    def test_scan_ocr_parse(self):
+        self.assertTrue(AppConfig.parse(["--scan-ocr"]).scan_ocr)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.6.0 - 2026-11-24
+
+Scan plus OCR.
+
+### Document
+
+* `--scan-ocr`.
+* 380 Tests.
+
 ## 5.5.0 - 2026-11-24
 
 Durchsuchbares PDF.

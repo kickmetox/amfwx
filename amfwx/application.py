@@ -22,7 +22,8 @@ class AppConfig:
                  camera_interval=1.0, camera_settings=False,
                  camera_chroma=False, camera_ui=False, list_mtp=False,
                  mtp_download=None, mtp_device=None, ocr_image=None,
-                 ocr_pdf=None, ocr_language=None, ocr_searchable=None):
+                 ocr_pdf=None, ocr_language=None, ocr_searchable=None,
+                 scan_ocr=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -64,6 +65,7 @@ class AppConfig:
         self.ocr_pdf = ocr_pdf
         self.ocr_language = ocr_language
         self.ocr_searchable = ocr_searchable
+        self.scan_ocr = bool(scan_ocr)
 
     @classmethod
     def parse(cls, argv=None):
@@ -167,6 +169,8 @@ class AppConfig:
             elif (value == "--ocr-searchable" and index + 2 < len(args)):
                 config.ocr_searchable = [args[index + 1], args[index + 2]]
                 index += 2
+            elif value == "--scan-ocr":
+                config.scan_ocr = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -215,6 +219,7 @@ class AppConfig:
                 "  --ocr-pdf PATH    OCR fuer PDF\n"
                 "  --ocr-language L  z.B. de-DE\n"
                 "  --ocr-searchable IN OUT  durchsuchbares PDF\n"
+                "  --scan-ocr       Scan als durchsuchbares PDF\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -283,11 +288,27 @@ class Application:
                 print(filename)
                 print(f"Druckauftrag gesendet: {job}")
                 return 0
-            if self.config.scan_pdf:
+            if self.config.scan_pdf or self.config.scan_ocr:
                 from .scan_pdf import scan_to_pdf
-                filename = scan_to_pdf(scanner, self.config.scan_pdf,
+                target = self.config.scan_pdf
+                if not target:
+                    from .scan_transfer import default_scan_dir
+                    import time
+                    target = str(default_scan_dir() /
+                                 f"scan_{time.strftime('%Y%m%d_%H%M%S')}.pdf")
+                filename = scan_to_pdf(scanner, target,
                                        source=self.config.scan_source,
                                        max_pages=self.config.scan_pages)
+                if self.config.scan_ocr:
+                    from .ocr import make_searchable_pdf
+                    searchable = filename[:-4] + "_searchable.pdf"
+                    filename = make_searchable_pdf(filename, searchable,
+                                                   self.config.ocr_language)
+                if self.config.scan_print:
+                    from .winprint import print_file
+                    job = print_file(filename, self.config.scan_print,
+                                     "AMFWX Scan")
+                    print(f"Druckauftrag gesendet: {job}")
                 print(filename)
                 return 0
             from .scan_transfer import scan_to_folder

@@ -29,3 +29,11 @@ A Windows OCR language pack must be installed.
 - no searchable PDF text layer yet
 - no OCR during scan automatically
 - layout/tables are flattened to text
+
+## Scan directly to searchable PDF
+
+```powershell
+python -m amfwx --scan-host 192.168.178.93 --scan-source Feeder --scan-pages 5 --scan-ocr --ocr-language de-DE
+```
+
+Output: `*_searchable.pdf` next to the raw PDF.
