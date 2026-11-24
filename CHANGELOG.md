@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.14.1 - 2026-11-24
+
+CI ohne cryptography.
+
+### Fix
+
+* optionaler 3.5-Testimport.
+* 393 Tests.
+
 ## 5.14.0 - 2026-11-24
 
 RF-Discovery.

@@ -13,7 +13,10 @@ import threading
 import unittest
 from pathlib import Path
 
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+try:
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except ImportError:  # optional
+    AESGCM = None
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
