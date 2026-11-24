@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.41.0 - 2026-11-25
+
+SDK mit 32-Bit-Runtime.
+
+### Packaging
+
+* vendor/python32 im Wheel.
+* build_sdk.py.
+* 427 Tests.
+
 ## 5.40.0 - 2026-11-25
 
 MCP-Ressourcen/Prompts.

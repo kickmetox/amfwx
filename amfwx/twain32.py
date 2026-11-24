@@ -32,6 +32,8 @@ def python32_path():
         os.environ.get("AMFWX_PYTHON32", ""),
         str(Path(__file__).resolve().parent.parent / "vendor" / "python32" /
             "python.exe"),
+        str(Path(__file__).resolve().parent / "vendor" / "python32" /
+            "python.exe"),
         r"C:\Python312-32\python.exe",
         r"C:\Python311-32\python.exe",
         r"C:\Python310-32\python.exe",
