@@ -44,7 +44,8 @@ class AppConfig:
                  pdf_split=None, pdf_dir=None, jarolift_host=None,
                  jarolift_topic="ESP32-Jarolift-Controller",
                  jarolift_channel=1, jarolift_action=None,
-                 jarolift_position=None, tuya_discover=None):
+                 jarolift_position=None, tuya_discover=None,
+                 install_naps2=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -143,6 +144,7 @@ class AppConfig:
         self.jarolift_action = jarolift_action
         self.jarolift_position = jarolift_position
         self.tuya_discover = tuya_discover
+        self.install_naps2 = install_naps2
 
     @classmethod
     def parse(cls, argv=None):
@@ -408,6 +410,9 @@ class AppConfig:
             elif value == "--tuya-discover" and index + 1 < len(args):
                 index += 1
                 config.tuya_discover = float(args[index])
+            elif value == "--install-naps2" and index + 1 < len(args):
+                index += 1
+                config.install_naps2 = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -507,6 +512,7 @@ class AppConfig:
                 "  --jarolift-action A UP/DOWN/STOP/SHADE\n"
                 "  --jarolift-position P 0-100\n"
                 "  --tuya-discover S  Tuya 3.3-3.5 suchen\n"
+                "  --install-naps2 DIR NAPS2 portable laden\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -734,6 +740,14 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.install_naps2:
+            from .naps2 import download_portable
+            try:
+                print(download_portable(self.config.install_naps2))
+            except Exception as error:
+                print(f"NAPS2-Installation fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.tuya_discover is not None:

@@ -131,3 +131,35 @@ def list_sources():
         return Naps2Scanner().list_sources()
     except Naps2Error:
         return []
+
+def pick_asset(assets):
+    for asset in assets:
+        name = str(asset.get("name", ""))
+        if name.startswith("naps2-") and name.endswith("win-x64.zip"):
+            return asset.get("browser_download_url", "")
+    return ""
+
+
+def download_portable(target=None):
+    import json
+    import urllib.request
+    import zipfile
+    from pathlib import Path
+    api = "https://api.github.com/repos/cyanfish/naps2/releases/latest"
+    with urllib.request.urlopen(api, timeout=30) as response:
+        release = json.loads(response.read().decode("utf-8"))
+    url = pick_asset(release.get("assets", []))
+    if not url:
+        raise Naps2Error("kein NAPS2-Portable-Asset gefunden")
+    destination = Path(target or Path(__file__).resolve().parent.parent /
+                       "vendor" / "naps2")
+    destination.mkdir(parents=True, exist_ok=True)
+    archive = destination / "naps2-portable.zip"
+    urllib.request.urlretrieve(url, archive)
+    with zipfile.ZipFile(archive) as payload:
+        payload.extractall(destination)
+    archive.unlink(missing_ok=True)
+    for candidate in destination.rglob("NAPS2.Console.exe"):
+        return str(candidate)
+    raise Naps2Error("NAPS2.Console.exe nicht im Archiv")
+

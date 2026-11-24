@@ -10,7 +10,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import Naps2Scanner
+from amfwx import AppConfig, Naps2Scanner
+from amfwx.naps2 import pick_asset
 
 
 class Result:
@@ -69,6 +70,12 @@ class Naps2Tests(unittest.TestCase):
             pages = scanner.scan_batch("twain:CanoScan", folder, dpi=200)
             self.assertEqual(len(pages), 2)
             self.assertTrue(all(Path(page).is_file() for page in pages))
+
+    def test_install_helpers(self):
+        asset = pick_asset([{"name": "naps2-8.6.1-win-x64.zip",
+                            "browser_download_url": "https://example/x.zip"}])
+        self.assertEqual(asset, "https://example/x.zip")
+        self.assertEqual(AppConfig.parse(["--install-naps2", "x"]).install_naps2, "x")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.29.0 - 2026-11-24
+
+NAPS2-Installer.
+
+### Scanners
+
+* Portables NAPS2 laden.
+* 414 Tests.
+
 ## 5.28.0 - 2026-11-24
 
 Tuya-Discovery.
