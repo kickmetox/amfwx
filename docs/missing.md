@@ -1,6 +1,6 @@
 # Was noch fehlt
 
-Stand: AMFWX 5.3.0
+Stand: AMFWX 5.20.0
 
 ## Scanner
 
@@ -8,53 +8,45 @@ Stand: AMFWX 5.3.0
 |---|---|
 | WIA | ✅ |
 | TWAIN 64-bit Enumeration | ✅ |
-| TWAIN 32-bit via eigener Python32-Brücke | ✅ real |
-| Scanner-CLI fuer WIA/TWAIN32/NAPS2 | ✅ |
-| TWAIN/WIA 32-bit via NAPS2 | ✅ Adapter, NAPS2 muss installiert sein |
+| TWAIN 32-bit Python-Brücke | ✅ real am Canon |
+| Scanner-CLI WIA/TWAIN32/NAPS2 | ✅ |
+| Scanner-Fenster WIA/TWAIN32/NAPS2 | ✅ |
+| NAPS2-Adapter + ADF-Batch | ✅ |
 | eSCL HTTP/HTTPS | ✅ |
-| Kyocera ADF + Weck-Scan | ✅ real getestet |
-| NAPS2 bündeln | ❌ GPL, nicht im MIT-Paket |
-| echtes 32-bit-Treiberpaket bündeln | ❌ Treiber bleiben Herstellersache |
-
-### NAPS2
-
-```powershell
-# NAPS2 installieren, dann:
-python -c "from amfwx import naps2_available; print(naps2_available())"
-```
-
-Gesucht wird unter:
-
-```text
-PATH
-Program Files\NAPS2
-Program Files (x86)\NAPS2
-%LOCALAPPDATA%\Programs\NAPS2
-vendor\naps2
-AMFWX_NAPS2
-```
+| Kyocera ADF + Weck-Scan | ✅ real |
+| NAPS2 installiert/getestet | ❌ nicht installiert |
+| NAPS2 bündeln | ❌ GPL |
+| Treiberpakete bündeln | ❌ Herstellersache |
+| WIA/TWAIN32-Mehrseiten im Treiber | ⚠️ treiberabhängig |
+| Scan-Profile/Deskew/Crop | ❌ |
 
 ## Kameras
 
 | Punkt | Status |
 |---|---|
 | PnP-Inventar | ✅ |
-| ONVIF/RTSP | ✅ |
-| UVC-Webcam | ✅ optional OpenCV |
-| Kamera-Steuerung | ✅ soweit Treiber Eigenschaften anbietet |
-| Tethering | ✅ UVC/GoPro/gPhoto2 |
+| UVC/Webcam | ✅ optional OpenCV |
+| ONVIF/WS-Discovery | ✅ |
+| RTSP/HTTP | ✅ |
+| Snapshot | ✅ |
+| IP-Videoaufnahme | ✅ |
+| UVC-Videoaufnahme | ❌ |
+| Live-Vorschau im Fenster | ❌ |
+| Kamera-Steuerung | ⚠️ nur API/Treiber |
+| Tethering | ✅ UVC/IP/GoPro/gPhoto2 |
 | Chroma Key | ✅ |
-| GoPro HTTP | ✅ |
-| gPhoto2 DSLR | ✅ optional |
-| MTP/PTP-Download | ✅ Shell-Adapter |
-| Canon EDSDK | ❌ nicht gebündelt |
+| GoPro HTTP | ⚠️ Status/Foto, kein Medien-Download |
+| gPhoto2-DSLR | ⚠️ CLI-Adapter, keine Live-View |
+| MTP/PTP-Download | ✅ |
+| Canon EDSDK | ❌ |
 | Nikon SDK | ❌ |
 | Sony Camera Remote SDK | ❌ |
 | Fuji/Olympus/Leica native SDK | ❌ |
-| DJI UVC | ⚠️ nur im Webcam-Modus |
-| DJI MTP | ⚠️ nur wenn gemountet |
+| DJI UVC | ⚠️ nur Webcam-Modus |
+| DJI MTP | ⚠️ nur gemountet |
+| DJI native Steuerung | ❌ |
 
-## Fernzugriff / IoT
+## IoT / Fernzugriff
 
 | Punkt | Status |
 |---|---|
@@ -64,11 +56,18 @@ AMFWX_NAPS2
 | HomePilot | ✅ |
 | Becker CC51 | ✅ |
 | TaHoma | ✅ |
-| Matter/Thread-Steuerung | ✅ ueber chip-tool |
-| Tuya LAN 3.4/3.5 | ❌ nur 3.3 |
-| Zigbee2MQTT | ✅ MQTT-Client |
-| Jarolift/Becker RF-Discovery | ✅ rtl_433 optional |
-| Becker Centronic USB | ✅ serielles Protokoll |
+| Tuya LAN 3.3/3.4/3.5 | ✅ |
+| Zigbee2MQTT | ✅ |
+| Matter über chip-tool | ✅ optional |
+| Becker Centronic USB | ✅ Protokoll |
+| Jarolift/Becker RF-Discovery | ✅ optional rtl_433 |
+| Jarolift-Steuerung | ❌ |
+| Becker-Rückkanal | ❌ |
+| Matter ohne chip-tool | ❌ |
+| Thread-Border-Router | ❌ |
+| Tuya-Geräte-Onboarding | ⚠️ Local Key nötig |
+| MQTT TLS | ❌ |
+| echte Hardwaretests | ❌ |
 
 ## Drucken
 
@@ -76,18 +75,28 @@ AMFWX_NAPS2
 |---|---|
 | Windows-Queue | ✅ |
 | GDI-DIB | ✅ |
-| Kyocera TCP/IP 9100 | ✅ real bestätigt |
-| IPP | ❌ Gerät bietet keinen passenden Endpunkt |
-| Duplex/Kopien | ✅ IPP-CLI |
+| Kyocera TCP/IP 9100 | ✅ real |
+| Kopien/Duplex (Windows) | ✅ DEVMODE |
+| IPP Print-Job | ✅ Client |
+| IPP Kopien/Duplex | ✅ |
+| Kyocera-IPP-Endpunkt | ❌ Gerät bietet keinen |
+| Papierformat/Orientierung | ❌ CLI |
+| Finishing/Stapling | ❌ |
+| IPP Digest/TLS-Auth | ⚠️ Basic/TLS |
 
-## Medien / Dokumente
+## Dokumente
 
 | Punkt | Status |
 |---|---|
 | Scan → JPEG/PDF | ✅ |
 | OCR | ✅ Windows.Media.Ocr |
-| PDF-Textsuche | ✅ unsichtbarer OCR-Textlayer |
-| PDF-Rendering zum Druck | ✅ PyMuPDF optional |
+| Durchsuchbares PDF | ✅ real |
+| Scan → OCR | ✅ real |
+| OCR im Scan-Fenster | ✅ |
+| OCR-Sprachpakete | ⚠️ Systemabhängig |
+| PDF zusammenführen/teilen | ❌ |
+| PDF-Text extrahieren als Datei | ⚠️ CLI-Ausgabe |
+| Tesseract | ❌ nicht gebündelt |
 
 ## Infrastruktur
 
@@ -95,14 +104,31 @@ AMFWX_NAPS2
 |---|---|
 | Tests | 404 |
 | CI | grün |
-| Code-Signatur | ❌ bewusst nicht |
-| 32-Bit-Python | ✅ im App-/Portable-Paket |
-| NAPS2 | optional, nicht gebündelt |
+| 32-Bit-Python im Release | ✅ |
+| 32-Bit-Python im CI-Artefakt | ❌ gitignored |
+| NAPS2 | optional |
+| Code-Signatur | ❌ bewusst |
+| Auto-Update | ❌ |
+| Einheitliches Geräte-Dashboard | ❌ |
+| Persistente Einstellungen | ⚠️ teilweise |
 
-## Nächste sinnvolle Blöcke
+## Die größten echten Lücken
 
-1. NAPS2 portable freiwillig installieren und 32-Bit-TWAIN real testen
-2. OCR über Tesseract optional anbinden
-3. Matter/Thread-Commissioning
-4. Tuya 3.4/3.5
-5. echte Hardware für HomePilot/Becker/TaHoma
+1. **Hardware-Verifikation**: Tuya 3.4/3.5, Matter, Becker und Jarolift sind nur gegen Fakes/Adapter getestet.
+2. **Vendor-SDKs**: Canon EDSDK, Nikon SDK, Sony Camera Remote SDK, Fuji/Olympus/Leica fehlen.
+3. **DJI**: keine native Steuerung, nur MTP/UVC.
+4. **Kamera-Livebild**: kein Preview im Kamera-Fenster.
+5. **NAPS2**: nicht installiert, daher kein echter 32-Bit-NAPS2-Test.
+6. **IPP**: Kyocera stellt keinen nutzbaren IPP-Endpunkt bereit.
+7. **Matter**: nur mit externem chip-tool.
+8. **Jarolift**: Discovery, aber keine Steuerung.
+
+## Nächste sinnvolle Reihenfolge
+
+1. Kamera-Livevorschau und UVC-Videoaufnahme
+2. GoPro-Medien-Download
+3. PDF merge/split
+4. NAPS2 installieren und real testen
+5. Matter/Thread mit echter Hardware
+6. Tuya 3.4/3.5 mit echtem Gerät
+7. echte Becker/Jarolift-Hardware
