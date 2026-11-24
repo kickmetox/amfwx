@@ -84,7 +84,7 @@ AMFWX_NAPS2
 |---|---|
 | Scan → JPEG/PDF | ✅ |
 | OCR | ❌ kein Tesseract/WinRT-OCR verfügbar |
-| PDF-Textsuche | ⚠️ Text vorhanden, kein PDF-Textlayer |
+| PDF-Textsuche | ✅ unsichtbarer OCR-Textlayer |
 | PDF-Rendering zum Druck | ✅ PyMuPDF optional |
 
 ## Infrastruktur

@@ -22,7 +22,7 @@ class AppConfig:
                  camera_interval=1.0, camera_settings=False,
                  camera_chroma=False, camera_ui=False, list_mtp=False,
                  mtp_download=None, mtp_device=None, ocr_image=None,
-                 ocr_pdf=None, ocr_language=None):
+                 ocr_pdf=None, ocr_language=None, ocr_searchable=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -63,6 +63,7 @@ class AppConfig:
         self.ocr_image = ocr_image
         self.ocr_pdf = ocr_pdf
         self.ocr_language = ocr_language
+        self.ocr_searchable = ocr_searchable
 
     @classmethod
     def parse(cls, argv=None):
@@ -163,6 +164,9 @@ class AppConfig:
             elif value == "--ocr-language" and index + 1 < len(args):
                 index += 1
                 config.ocr_language = args[index]
+            elif (value == "--ocr-searchable" and index + 2 < len(args)):
+                config.ocr_searchable = [args[index + 1], args[index + 2]]
+                index += 2
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -210,6 +214,7 @@ class AppConfig:
                 "  --ocr-image PATH  OCR fuer Bild\n"
                 "  --ocr-pdf PATH    OCR fuer PDF\n"
                 "  --ocr-language L  z.B. de-DE\n"
+                "  --ocr-searchable IN OUT  durchsuchbares PDF\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -339,6 +344,16 @@ class Application:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
             print(f"Druckjob {job}")
+            return 0
+        if self.config.ocr_searchable:
+            from .ocr import make_searchable_pdf
+            try:
+                print(make_searchable_pdf(self.config.ocr_searchable[0],
+                                          self.config.ocr_searchable[1],
+                                          self.config.ocr_language))
+            except Exception as error:
+                print(f"OCR-PDF fehlgeschlagen: {error}")
+                return 1
             return 0
         if self.config.ocr_image or self.config.ocr_pdf:
             from .ocr import ocr_image, ocr_pdf

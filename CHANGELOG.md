@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.5.0 - 2026-11-24
+
+Durchsuchbares PDF.
+
+### Document
+
+* OCR-Textlayer.
+* `--ocr-searchable`.
+* 379 Tests.
+
 ## 5.4.0 - 2026-11-24
 
 OCR.
