@@ -40,9 +40,11 @@ class PdfPrintTests(unittest.TestCase):
             self.assertGreater(pages[0].width, 0)
 
     def test_devmode(self):
-        devmode = _devmode('ECOSYS M5521cdn', 2, True)
+        devmode = _devmode('ECOSYS M5521cdn', 2, True, 'a4', True)
         self.assertIsNotNone(devmode)
         self.assertEqual(devmode.contents.dmCopies, 2)
+        self.assertEqual(devmode.contents.dmPaperSize, 9)
+        self.assertEqual(devmode.contents.dmOrientation, 2)
 
 
 if __name__ == "__main__":

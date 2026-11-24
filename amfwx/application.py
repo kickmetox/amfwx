@@ -38,7 +38,8 @@ class AppConfig:
                  ipp_host=None, ipp_port=631, ipp_path="/ipp/print",
                  ipp_print=None, ipp_copies=1, ipp_duplex=False,
                  matter_code=None, matter_node=1, matter_action=None,
-                 matter_level=None, matter_temperature=None,
+                 matter_level=None, matter_temperature=None, paper=None,
+                 landscape=False,
                  onvif_seconds=None, ip_camera=None, ip_snapshot=None,
                  ip_record=None, ip_seconds=5.0, gopro_host="10.5.5.9",
                  gopro_download=None, pdf_merge=None, pdf_inputs=None,
@@ -131,6 +132,8 @@ class AppConfig:
         self.matter_action = matter_action
         self.matter_level = matter_level
         self.matter_temperature = matter_temperature
+        self.paper = paper
+        self.landscape = bool(landscape)
         self.onvif_seconds = onvif_seconds
         self.ip_camera = ip_camera
         self.ip_snapshot = ip_snapshot
@@ -371,6 +374,11 @@ class AppConfig:
             elif value == "--matter-temperature" and index + 1 < len(args):
                 index += 1
                 config.matter_temperature = int(args[index])
+            elif value == "--paper" and index + 1 < len(args):
+                index += 1
+                config.paper = args[index]
+            elif value == "--landscape":
+                config.landscape = True
             elif value == "--onvif-discover" and index + 1 < len(args):
                 index += 1
                 config.onvif_seconds = float(args[index])
@@ -511,6 +519,8 @@ class AppConfig:
                 "  --ipp-print PATH   IPP-Druckjob\n"
                 "  --copies N         Kopien\n"
                 "  --duplex           beidseitig\n"
+                "  --paper P          A4/A5/A3/Letter/Legal\n"
+                "  --landscape        Querformat\n"
                 "  --matter-code C    Matter Setup-Code\n"
                 "  --matter-node ID   Matter Node-ID\n"
                 "  --matter-action A  commission/on/off/toggle\n"
@@ -676,7 +686,9 @@ class Application:
             try:
                 job = print_file(self.config.print_file, self.config.printer,
                                  copies=self.config.ipp_copies,
-                                 duplex=self.config.ipp_duplex)
+                                 duplex=self.config.ipp_duplex,
+                                 paper=self.config.paper,
+                                 landscape=self.config.landscape)
             except Exception as error:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1

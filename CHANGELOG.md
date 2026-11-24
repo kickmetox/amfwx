@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.33.0 - 2026-11-24
+
+Papierformat/Querformat.
+
+### Printing
+
+* DEVMODE Papier.
+* Orientation.
+* 414 Tests.
+
 ## 5.32.0 - 2026-11-24
 
 Matter Dimmen/Farbe.

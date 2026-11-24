@@ -269,10 +269,15 @@ class PRINTER_INFO_2W(ctypes.Structure):
 
 DM_COPIES = 0x0100
 DM_DUPLEX = 0x1000
+DM_ORIENTATION = 0x0001
+DM_PAPERSIZE = 0x0002
+DM_ORIENTATION_LANDSCAPE = 2
+DM_PAPERS = {"letter": 1, "legal": 5, "a4": 9, "a5": 11, "a3": 8}
 
 
-def _devmode(printer_name, copies=1, duplex=False):
-    if int(copies) <= 1 and not duplex:
+def _devmode(printer_name, copies=1, duplex=False, paper=None,
+             landscape=False):
+    if int(copies) <= 1 and not duplex and not paper and not landscape:
         return None
     winspool.OpenPrinterW.argtypes = [wintypes.LPCWSTR,
                                       ctypes.POINTER(wintypes.HANDLE),
@@ -307,6 +312,13 @@ def _devmode(printer_name, copies=1, duplex=False):
         devmode = ctypes.cast(buffer, ctypes.POINTER(DEVMODEW))
         fields = devmode.contents.dmFields | DM_COPIES
         devmode.contents.dmCopies = max(1, int(copies))
+        paper_id = DM_PAPERS.get(str(paper or "").lower())
+        if paper_id:
+            devmode.contents.dmPaperSize = paper_id
+            fields |= DM_PAPERSIZE
+        if landscape:
+            devmode.contents.dmOrientation = DM_ORIENTATION_LANDSCAPE
+            fields |= DM_ORIENTATION
         if duplex:
             devmode.contents.dmDuplex = 2
             fields |= DM_DUPLEX
@@ -360,11 +372,15 @@ DM_OUT_BUFFER = 2
 DM_IN_BUFFER = 8
 DM_COPIES = 0x0100
 DM_DUPLEX = 0x1000
+DM_ORIENTATION = 0x0001
+DM_PAPERSIZE = 0x0002
+DM_ORIENTATION_LANDSCAPE = 2
+DM_PAPERS = {"letter": 1, "legal": 5, "a4": 9, "a5": 11, "a3": 8}
 
 
 def print_images(images, printer_name, document_name="AMFWX", output_file=None,
-                 copies=1, duplex=False):
-    devmode = _devmode(printer_name, copies, duplex)
+                 copies=1, duplex=False, paper=None, landscape=False):
+    devmode = _devmode(printer_name, copies, duplex, paper, landscape)
     hdc = gdi32.CreateDCW("WINSPOOL", printer_name, None,
                           ctypes.byref(devmode) if devmode else None)
     if not hdc:
@@ -385,6 +401,8 @@ def print_images(images, printer_name, document_name="AMFWX", output_file=None,
     return True
 
 
-def print_pdf(path, printer_name, dpi=150, copies=1, duplex=False):
+def print_pdf(path, printer_name, dpi=150, copies=1, duplex=False,
+              paper=None, landscape=False):
     return print_images(render_pdf(path, dpi), printer_name,
-                        Path(path).name, copies=copies, duplex=duplex)
+                        Path(path).name, copies=copies, duplex=duplex,
+                        paper=paper, landscape=landscape)
