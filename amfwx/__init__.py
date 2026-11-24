@@ -55,6 +55,8 @@ from .enip import (EnipDevice, EnipError, discover as discover_enip,
                    list_identity as list_enip_identity,
                    parse_response as parse_enip_response)
 from .can import CanError, CanFrame, PcanBus
+from .naps2 import Naps2Error, Naps2Scanner, Naps2Source, available as naps2_available
+from .naps2 import list_sources as list_naps2_sources
 from .twain32 import Twain32Error, Twain32Source, scan as scan_twain32, list_sources as list_twain32_sources
 from .twain import (TwainSource, dsm_available, dsm_path,
                     list_sources as list_twain_sources)
@@ -144,7 +146,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.2.0"
+__version__ = "5.3.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -178,7 +180,8 @@ __all__ = [
     "WlanController", "WlanControlError", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",
     "discover_network_devices", "probe_escl", "DicomFile", "MedicalError",
     "parse_dicom", "parse_fhir", "parse_hl7", "TwainSource",
-    "list_twain_sources", "dsm_available", "dsm_path", "Twain32Source", "Twain32Error",
+    "list_twain_sources", "dsm_available", "dsm_path", "Twain32Source", "Twain32Error", "Naps2Source", "Naps2Scanner",
+    "Naps2Error", "list_naps2_sources", "naps2_available",
     "list_twain32_sources", "scan_twain32", "WiaDevice", "WiaError", "WiaScanner", "list_wia_devices", "EnipDevice", "EnipError", "discover_enip",
     "list_enip_identity", "parse_enip_response", "decode_name", "encode_name",
     "WlanError", "WlanInterface",

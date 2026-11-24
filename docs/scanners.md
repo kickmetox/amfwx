@@ -123,3 +123,13 @@ python -m amfwx --scan-ui
 ```
 
 Host, port, source, pages, target folder, JPEG/PDF.
+
+## NAPS2 / 32-bit drivers
+
+NAPS2.Console.exe handles 32-bit TWAIN and WIA drivers without a separate Python 32-bit runtime:
+
+```powershell
+python -c "from amfwx import naps2_available, list_naps2_sources; print(naps2_available(), list_naps2_sources())"
+```
+
+Install NAPS2 or set `AMFWX_NAPS2` to `NAPS2.Console.exe`. The adapter is optional; NAPS2 is GPL and is not bundled.

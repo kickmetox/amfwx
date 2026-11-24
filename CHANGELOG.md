@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.3.0 - 2026-11-24
+
+NAPS2-Adapter.
+
+### Scanners
+
+* 32-Bit TWAIN/WIA ueber NAPS2.
+* DeviceManager.
+* 376 Tests.
+
 ## 5.2.0 - 2026-11-24
 
 MTP/PTP-Kameras.

@@ -9,6 +9,7 @@ from .usb import list_hid_devices
 from .usb_raw import list_usb_devices
 from .wlan import list_interfaces as list_wlan_interfaces
 from .twain import list_sources as list_twain_sources
+from .naps2 import list_sources as list_naps2_sources
 from .wia import list_wia_devices
 from .network_scan import discover_network_devices
 
@@ -33,7 +34,8 @@ class DeviceManager:
             "wlan": _safe(list_wlan_interfaces),
             "displays": _safe(list_monitors),
             "scanners": (_safe(list_wia_devices) +
-                         _safe(list_twain_sources)),
+                         _safe(list_twain_sources) +
+                         _safe(list_naps2_sources)),
             "network": _safe(lambda: discover_network_devices(timeout=0.2)),
         }
         return self
