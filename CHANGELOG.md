@@ -1,5 +1,26 @@
 ﻿# Changelog
 
+## 5.17.0 - 2026-11-24
+
+Matter ueber chip-tool.
+
+### IoT
+
+* Commissioning.
+* On/Off/Toggle.
+* 400 Tests.
+
+## 5.16.0 - 2026-11-24
+
+IPP Kopien/Duplex.
+
+### Printing
+
+* `--ipp-*`.
+* `--copies`.
+* `--duplex`.
+* 398 Tests.
+
 ## 5.15.0 - 2026-11-24
 
 Becker Centronic USB.

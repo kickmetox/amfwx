@@ -32,7 +32,10 @@ class AppConfig:
                  tuya34_key=None, tuya34_action=None, tuya35_host=None,
                  tuya35_device=None, tuya35_key=None, tuya35_action=None,
                  rf_discovery=None, becker_port=None, becker_channel=1,
-                 becker_action=None, becker_unit="1737B", list_becker=False):
+                 becker_action=None, becker_unit="1737B", list_becker=False,
+                 ipp_host=None, ipp_port=631, ipp_path="/ipp/print",
+                 ipp_print=None, ipp_copies=1, ipp_duplex=False,
+                 matter_code=None, matter_node=1, matter_action=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -101,6 +104,15 @@ class AppConfig:
         self.becker_action = becker_action
         self.becker_unit = becker_unit
         self.list_becker = bool(list_becker)
+        self.ipp_host = ipp_host
+        self.ipp_port = int(ipp_port)
+        self.ipp_path = ipp_path
+        self.ipp_print = ipp_print
+        self.ipp_copies = int(ipp_copies)
+        self.ipp_duplex = bool(ipp_duplex)
+        self.matter_code = matter_code
+        self.matter_node = int(matter_node)
+        self.matter_action = matter_action
 
     @classmethod
     def parse(cls, argv=None):
@@ -279,6 +291,32 @@ class AppConfig:
                 config.becker_unit = args[index]
             elif value == "--list-becker":
                 config.list_becker = True
+            elif value == "--ipp-host" and index + 1 < len(args):
+                index += 1
+                config.ipp_host = args[index]
+            elif value == "--ipp-port" and index + 1 < len(args):
+                index += 1
+                config.ipp_port = int(args[index])
+            elif value == "--ipp-path" and index + 1 < len(args):
+                index += 1
+                config.ipp_path = args[index]
+            elif value == "--ipp-print" and index + 1 < len(args):
+                index += 1
+                config.ipp_print = args[index]
+            elif value == "--copies" and index + 1 < len(args):
+                index += 1
+                config.ipp_copies = int(args[index])
+            elif value == "--duplex":
+                config.ipp_duplex = True
+            elif value == "--matter-code" and index + 1 < len(args):
+                index += 1
+                config.matter_code = args[index]
+            elif value == "--matter-node" and index + 1 < len(args):
+                index += 1
+                config.matter_node = int(args[index])
+            elif value == "--matter-action" and index + 1 < len(args):
+                index += 1
+                config.matter_action = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -352,6 +390,13 @@ class AppConfig:
                 "  --becker-port COM  Becker-USB\n"
                 "  --becker-channel N Kanal\n"
                 "  --becker-action A  up/down/stop/pair\n"
+                "  --ipp-host H       IPP-Drucker\n"
+                "  --ipp-print PATH   IPP-Druckjob\n"
+                "  --copies N         Kopien\n"
+                "  --duplex           beidseitig\n"
+                "  --matter-code C    Matter Setup-Code\n"
+                "  --matter-node ID   Matter Node-ID\n"
+                "  --matter-action A  commission/on/off/toggle\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -577,6 +622,37 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.matter_code or self.config.matter_action:
+            from .matter import MatterController
+            try:
+                controller = MatterController()
+                action = (self.config.matter_action or "commission").lower()
+                if action == "commission":
+                    print(controller.commission(self.config.matter_node,
+                                                self.config.matter_code))
+                elif action == "on":
+                    print(controller.on(self.config.matter_node))
+                elif action == "off":
+                    print(controller.off(self.config.matter_node))
+                else:
+                    print(controller.toggle(self.config.matter_node))
+            except Exception as error:
+                print(f"Matter fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.ipp_host and self.config.ipp_print:
+            from .ipp import IppPrinter
+            try:
+                printer = IppPrinter(self.config.ipp_host,
+                                     self.config.ipp_port,
+                                     self.config.ipp_path)
+                print(printer.print_file(self.config.ipp_print,
+                                         copies=self.config.ipp_copies,
+                                         duplex=self.config.ipp_duplex))
+            except Exception as error:
+                print(f"IPP-Druck fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.list_becker:

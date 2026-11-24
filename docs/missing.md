@@ -63,7 +63,7 @@ AMFWX_NAPS2
 | HomePilot | ✅ |
 | Becker CC51 | ✅ |
 | TaHoma | ✅ |
-| Matter/Thread-Steuerung | ❌ nur Discovery |
+| Matter/Thread-Steuerung | ✅ ueber chip-tool |
 | Tuya LAN 3.4/3.5 | ❌ nur 3.3 |
 | Zigbee2MQTT | ✅ MQTT-Client |
 | Jarolift/Becker RF-Discovery | ✅ rtl_433 optional |
@@ -77,7 +77,7 @@ AMFWX_NAPS2
 | GDI-DIB | ✅ |
 | Kyocera TCP/IP 9100 | ✅ real bestätigt |
 | IPP | ❌ Gerät bietet keinen passenden Endpunkt |
-| Duplex/Kopien | ❌ nicht in der CLI |
+| Duplex/Kopien | ✅ IPP-CLI |
 
 ## Medien / Dokumente
 
@@ -92,7 +92,7 @@ AMFWX_NAPS2
 
 | Punkt | Status |
 |---|---|
-| Tests | 389 |
+| Tests | 400 |
 | CI | grün |
 | Code-Signatur | ❌ bewusst nicht |
 | 32-Bit-Python | ✅ im App-/Portable-Paket |

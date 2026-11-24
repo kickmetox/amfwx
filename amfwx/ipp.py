@@ -22,7 +22,7 @@ def _attribute(tag, name, value, value_tag=0x42):
 
 
 def build_print_job(printer_uri, job_name, user, document_format,
-                    document):
+                    document, copies=1, sides="one-sided"):
     payload = bytearray()
     payload.extend(b"\x02\x00")             # IPP 2.0
     payload.extend(b"\x00\x02")             # Print-Job
@@ -36,6 +36,10 @@ def build_print_job(printer_uri, job_name, user, document_format,
     payload.extend(_attribute(0x42, "job-name", job_name))
     payload.extend(_attribute(0x49, "document-format", document_format,
                               0x49))
+    if int(copies) > 1:
+        payload.extend(_attribute(0x21, "copies", int(copies), 0x21))
+    if sides and sides != "one-sided":
+        payload.extend(_attribute(0x44, "sides", sides, 0x44))
     payload.append(0x03)                    # end of attributes
     payload.extend(bytes(document))
     return bytes(payload)
@@ -224,16 +228,19 @@ class IppPrinter:
         return response
 
     def print_job(self, document, document_format="application/pdf",
-                  job_name="AMFWX"):
+                  job_name="AMFWX", copies=1, duplex=False):
+        sides = "two-sided-long-edge" if duplex else "one-sided"
         payload = build_print_job(self.uri, job_name, self.user,
-                                  document_format, document)
+                                  document_format, document,
+                                  copies=copies, sides=sides)
         response = self._request(payload)
         result = parse_response(response["body"])
         if result["status"] != 0:
             raise IppError(f"IPP-Status {result['status']:#06x}")
         return result
 
-    def print_file(self, path, document_format=None, job_name=None):
+    def print_file(self, path, document_format=None, job_name=None,
+                   copies=1, duplex=False):
         path = Path(path)
         if document_format is None:
             document_format = {
@@ -244,4 +251,5 @@ class IppPrinter:
                 ".txt": "text/plain",
             }.get(path.suffix.lower(), "application/octet-stream")
         return self.print_job(path.read_bytes(), document_format,
-                              job_name or path.name)
+                              job_name or path.name, copies=copies,
+                              duplex=duplex)

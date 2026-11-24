@@ -12,7 +12,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import IppPrinter
+from amfwx import AppConfig, IppPrinter
 from amfwx.ipp import parse_attributes
 
 
@@ -183,6 +183,21 @@ class IppTests(unittest.TestCase):
         finally:
             server.shutdown()
             server.server_close()
+
+    def test_copies_and_duplex(self):
+        from amfwx.ipp import build_print_job
+        payload = build_print_job("ipp://x/ipp/print", "job", "u",
+                                  "application/pdf", b"%PDF",
+                                  copies=3, sides="two-sided-long-edge")
+        self.assertIn(b"copies", payload)
+        self.assertIn(b"two-sided-long-edge", payload)
+
+    def test_cli(self):
+        config = AppConfig.parse(["--ipp-host", "h",
+                                  "--ipp-print", "a.pdf",
+                                  "--copies", "2", "--duplex"])
+        self.assertEqual(config.ipp_copies, 2)
+        self.assertTrue(config.ipp_duplex)
 
 
 if __name__ == "__main__":
