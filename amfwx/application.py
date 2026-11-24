@@ -45,7 +45,8 @@ class AppConfig:
                  jarolift_topic="ESP32-Jarolift-Controller",
                  jarolift_channel=1, jarolift_action=None,
                  jarolift_position=None, tuya_discover=None,
-                 install_naps2=None):
+                 install_naps2=None, check_update=False,
+                 download_update=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -145,6 +146,8 @@ class AppConfig:
         self.jarolift_position = jarolift_position
         self.tuya_discover = tuya_discover
         self.install_naps2 = install_naps2
+        self.check_update = bool(check_update)
+        self.download_update = download_update
 
     @classmethod
     def parse(cls, argv=None):
@@ -413,6 +416,11 @@ class AppConfig:
             elif value == "--install-naps2" and index + 1 < len(args):
                 index += 1
                 config.install_naps2 = args[index]
+            elif value == "--check-update":
+                config.check_update = True
+            elif value == "--download-update" and index + 1 < len(args):
+                index += 1
+                config.download_update = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -513,6 +521,8 @@ class AppConfig:
                 "  --jarolift-position P 0-100\n"
                 "  --tuya-discover S  Tuya 3.3-3.5 suchen\n"
                 "  --install-naps2 DIR NAPS2 portable laden\n"
+                "  --check-update     GitHub-Release pruefen\n"
+                "  --download-update DIR Installer laden\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -740,6 +750,22 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.check_update or self.config.download_update:
+            from .update import check, download_update, pick_installer
+            from . import __version__
+            try:
+                info = check(__version__)
+                print(info["tag"], "newer" if info["newer"] else "aktuell",
+                      info["url"])
+                if self.config.download_update:
+                    url = pick_installer(info["assets"])
+                    if not url:
+                        raise RuntimeError("kein Installer-Asset gefunden")
+                    print(download_update(url, self.config.download_update))
+            except Exception as error:
+                print(f"Update-Pruefung fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.install_naps2:

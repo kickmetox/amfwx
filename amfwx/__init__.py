@@ -96,6 +96,8 @@ from .becker_usb import (BeckerError, BeckerStick, available as becker_available
 from .rf import RfError, available as rf_available, discover as rf_discover, jarolift_devices
 from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
 from .pdf_tools import PdfToolError, merge as merge_pdfs, split as split_pdf
+from .update import (UpdateError, check as check_update, download_update,
+                     is_newer, pick_installer)
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
                   ocr_image, ocr_pdf)
 from .mtp import MtpError, download_images, list_mtp_devices
@@ -165,7 +167,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.29.0"
+__version__ = "5.30.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -189,7 +191,8 @@ __all__ = [
     "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "IpCameraError", "OnvifError", "JaroliftController", "JaroliftError",
     "onvif_discover", "onvif_parse", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
-    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "MatterController", "MatterError", "matter_available",
+    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "UpdateError", "check_update", "download_update",
+    "is_newer", "pick_installer", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "MatterController", "MatterError", "matter_available",
     "find_chip_tool", "BeckerStick", "BeckerError", "becker_available",
     "becker_code", "list_sticks", "becker_parse", "rf_available", "rf_discover",
     "jarolift_devices", "ocr_available",

@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.30.0 - 2026-11-24
+
+Update-Pruefung.
+
+### Infra
+
+* GitHub-Release.
+* Installer-Download.
+* 414 Tests.
+
 ## 5.29.0 - 2026-11-24
 
 NAPS2-Installer.
