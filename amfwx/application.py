@@ -40,7 +40,10 @@ class AppConfig:
                  onvif_seconds=None, ip_camera=None, ip_snapshot=None,
                  ip_record=None, ip_seconds=5.0, gopro_host="10.5.5.9",
                  gopro_download=None, pdf_merge=None, pdf_inputs=None,
-                 pdf_split=None, pdf_dir=None):
+                 pdf_split=None, pdf_dir=None, jarolift_host=None,
+                 jarolift_topic="ESP32-Jarolift-Controller",
+                 jarolift_channel=1, jarolift_action=None,
+                 jarolift_position=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -132,6 +135,11 @@ class AppConfig:
         self.pdf_inputs = list(pdf_inputs or [])
         self.pdf_split = pdf_split
         self.pdf_dir = pdf_dir
+        self.jarolift_host = jarolift_host
+        self.jarolift_topic = jarolift_topic
+        self.jarolift_channel = int(jarolift_channel)
+        self.jarolift_action = jarolift_action
+        self.jarolift_position = jarolift_position
 
     @classmethod
     def parse(cls, argv=None):
@@ -376,6 +384,21 @@ class AppConfig:
             elif value == "--pdf-dir" and index + 1 < len(args):
                 index += 1
                 config.pdf_dir = args[index]
+            elif value == "--jarolift-host" and index + 1 < len(args):
+                index += 1
+                config.jarolift_host = args[index]
+            elif value == "--jarolift-topic" and index + 1 < len(args):
+                index += 1
+                config.jarolift_topic = args[index]
+            elif value == "--jarolift-channel" and index + 1 < len(args):
+                index += 1
+                config.jarolift_channel = int(args[index])
+            elif value == "--jarolift-action" and index + 1 < len(args):
+                index += 1
+                config.jarolift_action = args[index]
+            elif value == "--jarolift-position" and index + 1 < len(args):
+                index += 1
+                config.jarolift_position = int(args[index])
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -469,6 +492,10 @@ class AppConfig:
                 "  --pdf-input IN     PDF-Eingabe (mehrfach)\n"
                 "  --pdf-split IN     PDF teilen\n"
                 "  --pdf-dir DIR      Zielordner\n"
+                "  --jarolift-host H  ESP32-Jarolift MQTT\n"
+                "  --jarolift-channel N Kanal 1-16\n"
+                "  --jarolift-action A UP/DOWN/STOP/SHADE\n"
+                "  --jarolift-position P 0-100\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -696,6 +723,23 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.jarolift_host:
+            from .jarolift import JaroliftController
+            try:
+                controller = JaroliftController(
+                    self.config.jarolift_host,
+                    base_topic=self.config.jarolift_topic)
+                if self.config.jarolift_position is not None:
+                    print(controller.position(self.config.jarolift_channel,
+                                              self.config.jarolift_position))
+                else:
+                    print(controller.command(
+                        self.config.jarolift_channel,
+                        self.config.jarolift_action or "STOP"))
+            except Exception as error:
+                print(f"Jarolift fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.pdf_merge:

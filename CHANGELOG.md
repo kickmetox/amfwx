@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.26.0 - 2026-11-24
+
+Jarolift-Steuerung.
+
+### IoT
+
+* ESP32-MQTT-Controller.
+* UP/DOWN/STOP/SHADE.
+* Position 0-100.
+* 409 Tests.
+
 ## 5.25.0 - 2026-11-24
 
 MQTT TLS.
