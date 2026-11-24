@@ -96,6 +96,36 @@ class Naps2Scanner:
         return str(target)
 
 
+    def scan_batch(self, source, directory, dpi=300,
+                   paper_source="Feeder", prefix="scan"):
+        if isinstance(source, Naps2Source):
+            driver, name = source.driver, source.name
+        else:
+            driver, _, name = str(source).partition(":")
+        folder = Path(directory)
+        folder.mkdir(parents=True, exist_ok=True)
+        combined = folder / "_naps2_batch.tiff"
+        process = self._run([
+            "-o", str(combined), "--driver", driver, "--device", name,
+            "--dpi", str(int(dpi)), "--source", str(paper_source),
+        ])
+        if process.returncode != 0 or not combined.is_file():
+            raise Naps2Error((process.stderr or "").strip() or
+                             "NAPS2-ADF-Scan fehlgeschlagen")
+        from PIL import Image, ImageSequence
+        pages = []
+        with Image.open(combined) as image:
+            for number, frame in enumerate(ImageSequence.Iterator(image), 1):
+                target = folder / f"{prefix}_{number:03d}.jpg"
+                frame.convert("RGB").save(target, "JPEG", quality=92)
+                pages.append(str(target))
+        try:
+            combined.unlink()
+        except OSError:
+            pass
+        return pages
+
+
 def list_sources():
     try:
         return Naps2Scanner().list_sources()

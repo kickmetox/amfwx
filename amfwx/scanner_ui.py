@@ -125,9 +125,13 @@ class ScannerWindow(Window):
                         result = scan(source, raw + ".png")
                     else:
                         from .naps2 import Naps2Scanner
-                        result = Naps2Scanner().scan(
-                            source, raw + ".pdf" if use_pdf else raw + ".jpg",
-                            dpi=dpi, paper_source="Feeder" if adf else "Glass")
+                        scanner = Naps2Scanner()
+                        if adf:
+                            result = scanner.scan_batch(source, temp, dpi=dpi)
+                        else:
+                            result = scanner.scan(
+                                source, raw + ".jpg", dpi=dpi,
+                                paper_source="Glass")
                     images = result if isinstance(result, list) else [result]
                     from PIL import Image
                     jpgs = []

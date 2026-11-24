@@ -50,6 +50,26 @@ class Naps2Tests(unittest.TestCase):
             self.assertIn("--dpi", command)
             self.assertIn("300", command)
 
+    def test_batch(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest("Pillow fehlt")
+
+        def runner(command, **kwargs):
+            target = Path(command[command.index("-o") + 1])
+            first = Image.new("RGB", (60, 80), "white")
+            second = Image.new("RGB", (60, 80), "gray")
+            first.save(target, "TIFF", save_all=True,
+                       append_images=[second])
+            return Result()
+
+        with tempfile.TemporaryDirectory() as folder:
+            scanner = Naps2Scanner(exe="fake.exe", runner=runner)
+            pages = scanner.scan_batch("twain:CanoScan", folder, dpi=200)
+            self.assertEqual(len(pages), 2)
+            self.assertTrue(all(Path(page).is_file() for page in pages))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

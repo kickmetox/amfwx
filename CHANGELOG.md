@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.18.0 - 2026-11-24
+
+NAPS2-ADF.
+
+### Scanners
+
+* Mehrseiten-TIFF.
+* Scanner-Fenster ADF.
+* 401 Tests.
+
 ## 5.17.0 - 2026-11-24
 
 Matter ueber chip-tool.
