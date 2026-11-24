@@ -21,7 +21,8 @@ class AppConfig:
                  camera_tether=None, camera_frames=1,
                  camera_interval=1.0, camera_settings=False,
                  camera_chroma=False, camera_ui=False, list_mtp=False,
-                 mtp_download=None, mtp_device=None):
+                 mtp_download=None, mtp_device=None, ocr_image=None,
+                 ocr_pdf=None, ocr_language=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -59,6 +60,9 @@ class AppConfig:
         self.list_mtp = bool(list_mtp)
         self.mtp_download = mtp_download
         self.mtp_device = mtp_device
+        self.ocr_image = ocr_image
+        self.ocr_pdf = ocr_pdf
+        self.ocr_language = ocr_language
 
     @classmethod
     def parse(cls, argv=None):
@@ -150,6 +154,15 @@ class AppConfig:
             elif value == "--mtp-device" and index + 1 < len(args):
                 index += 1
                 config.mtp_device = args[index]
+            elif value == "--ocr-image" and index + 1 < len(args):
+                index += 1
+                config.ocr_image = args[index]
+            elif value == "--ocr-pdf" and index + 1 < len(args):
+                index += 1
+                config.ocr_pdf = args[index]
+            elif value == "--ocr-language" and index + 1 < len(args):
+                index += 1
+                config.ocr_language = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -194,6 +207,9 @@ class AppConfig:
                 "  --list-mtp        MTP/PTP-Kameras anzeigen\n"
                 "  --mtp-download DIR Fotos von MTP-Kamera kopieren\n"
                 "  --mtp-device NAME MTP-Geraet\n"
+                "  --ocr-image PATH  OCR fuer Bild\n"
+                "  --ocr-pdf PATH    OCR fuer PDF\n"
+                "  --ocr-language L  z.B. de-DE\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -323,6 +339,17 @@ class Application:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
             print(f"Druckjob {job}")
+            return 0
+        if self.config.ocr_image or self.config.ocr_pdf:
+            from .ocr import ocr_image, ocr_pdf
+            try:
+                if self.config.ocr_image:
+                    print(ocr_image(self.config.ocr_image, self.config.ocr_language))
+                else:
+                    print(ocr_pdf(self.config.ocr_pdf, self.config.ocr_language))
+            except Exception as error:
+                print(f"OCR fehlgeschlagen: {error}")
+                return 1
             return 0
         if self.config.list_mtp:
             from .mtp import list_mtp_devices

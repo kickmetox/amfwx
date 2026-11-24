@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.4.0 - 2026-11-24
+
+OCR.
+
+### Document
+
+* Windows.Media.Ocr.
+* `ocr_image`.
+* `ocr_pdf`.
+* 378 Tests.
+
 ## 5.3.0 - 2026-11-24
 
 NAPS2-Adapter.

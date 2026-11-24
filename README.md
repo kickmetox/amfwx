@@ -6,10 +6,10 @@
 using `ctypes`. It is not a Qt/GTK/wx/Tkinter wrapper and does not embed a
 browser engine.
 
-**Version:** 5.3.0  
+**Version:** 5.4.0  
 **License:** MIT  
 **Platform:** Windows 10/11, x86-64  
-**Tests:** 376 passing
+**Tests:** 378 passing
 
 ## Features
 
@@ -151,6 +151,7 @@ Build instructions:
 - [Was noch fehlt](docs/missing.md)
 - [Network printers/scanners](docs/network_scan.md)
 - [Cameras](docs/cameras.md)
+- [OCR](docs/ocr.md)
 - [Remote/IoT control](docs/remote.md)
 - [Home automation](docs/home.md)
 - [eSCL scan](docs/escl.md)
