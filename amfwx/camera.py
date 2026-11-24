@@ -143,6 +143,25 @@ class Webcam:
                 time.sleep(max(0.0, float(interval)))
         return saved
 
+
+    def record(self, path, seconds=5.0, fps=25.0):
+        if self.width <= 0 or self.height <= 0:
+            raise WebcamError("ungueltige Bildgroesse")
+        writer = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"MJPG"),
+                                 float(fps), (self.width, self.height))
+        if not writer.isOpened():
+            raise WebcamError("VideoWriter konnte nicht geoeffnet werden")
+        deadline = time.monotonic() + float(seconds)
+        try:
+            while time.monotonic() < deadline:
+                ok, frame = self.capture.read()
+                if not ok or frame is None:
+                    break
+                writer.write(frame)
+        finally:
+            writer.release()
+        return str(path)
+
     def close(self):
         self.capture.release()
         return self

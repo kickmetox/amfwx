@@ -17,6 +17,8 @@ class CameraUiTests(unittest.TestCase):
         try:
             self.assertEqual(window.index.text(), "0")
             self.assertEqual(window.width.text(), "1280")
+            self.assertEqual(window.preview_button.text, "Vorschau")
+            self.assertEqual(window.seconds.text(), "5")
         finally:
             window.close()
 

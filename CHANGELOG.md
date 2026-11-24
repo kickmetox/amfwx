@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.21.0 - 2026-11-24
+
+Kamera-Vorschau.
+
+### Cameras
+
+* Live-Vorschau.
+* UVC-Videoaufnahme.
+* 404 Tests.
+
 ## 5.20.0 - 2026-11-24
 
 IP-/ONVIF-Kameras.
