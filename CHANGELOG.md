@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.40.0 - 2026-11-25
+
+MCP-Ressourcen/Prompts.
+
+### SDK
+
+* resources/list/read.
+* prompts/list/get.
+* 427 Tests.
+
 ## 5.39.0 - 2026-11-25
 
 Provider-Plugins.

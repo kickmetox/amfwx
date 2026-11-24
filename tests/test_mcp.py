@@ -45,6 +45,25 @@ class MCPTests(unittest.TestCase):
         finally:
             client.close()
 
+    def test_resources_and_prompts(self):
+        server = MCPServer()
+        resources = server.handle({"jsonrpc": "2.0", "id": 4,
+                                   "method": "resources/list"})
+        self.assertTrue(resources["result"]["resources"])
+        version = server.handle({"jsonrpc": "2.0", "id": 5,
+                                 "method": "resources/read",
+                                 "params": {"uri": "amfwx://version"}})
+        self.assertTrue(version["result"]["contents"][0]["text"])
+        prompts = server.handle({"jsonrpc": "2.0", "id": 6,
+                                 "method": "prompts/list"})
+        self.assertEqual(prompts["result"]["prompts"][0]["name"], "build_ui")
+        prompt = server.handle({"jsonrpc": "2.0", "id": 7,
+                                "method": "prompts/get",
+                                "params": {"name": "build_ui",
+                                           "arguments": {"request": "Test"}}})
+        self.assertTrue(prompt["result"]["messages"])
+        server.session.close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

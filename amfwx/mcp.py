@@ -8,6 +8,20 @@ import sys
 
 from .llm_tools import TOOL_SPECS, UiSession, call_tool
 
+RESOURCES = [
+    {"uri": "amfwx://version", "name": "AMFWX version",
+     "mimeType": "text/plain"},
+    {"uri": "amfwx://tools", "name": "LLM tool schemas",
+     "mimeType": "application/json"},
+    {"uri": "amfwx://ui/widgets", "name": "Current widgets",
+     "mimeType": "application/json"},
+]
+
+PROMPTS = [
+    {"name": "build_ui", "description": "Build an AMFWX window",
+     "arguments": [{"name": "request", "required": True}]},
+]
+
 
 class MCPError(RuntimeError):
     pass
@@ -49,11 +63,25 @@ class MCPClient:
         result = self.request("initialize", {
             "protocolVersion": "2024-11-05",
             "capabilities": {},
-            "clientInfo": {"name": "amfwx", "version": "3.15.0"},
+            "clientInfo": {"name": "amfwx",
+                          "version": __import__("amfwx").__version__},
         })
         self._send({"jsonrpc": "2.0", "method": "notifications/initialized",
                     "params": {}})
         return result
+
+    def list_resources(self):
+        return self.request("resources/list").get("resources", [])
+
+    def read_resource(self, uri):
+        return self.request("resources/read", {"uri": uri})
+
+    def list_prompts(self):
+        return self.request("prompts/list").get("prompts", [])
+
+    def get_prompt(self, name, arguments=None):
+        return self.request("prompts/get", {"name": name,
+                                              "arguments": arguments or {}})
 
     def list_tools(self):
         return self.request("tools/list").get("tools", [])
@@ -94,12 +122,48 @@ class MCPServer:
             self.initialized = True
             return {"jsonrpc": "2.0", "id": request_id, "result": {
                 "protocolVersion": "2024-11-05",
-                "capabilities": {"tools": {}},
+                "capabilities": {"tools": {}, "resources": {},
+                                "prompts": {}},
                 "serverInfo": {"name": "amfwx",
                                "version": __import__("amfwx").__version__},
             }}
         if method == "notifications/initialized":
             return None
+        if method == "resources/list":
+            return {"jsonrpc": "2.0", "id": request_id,
+                    "result": {"resources": RESOURCES}}
+        if method == "resources/read":
+            uri = str((request.get("params") or {}).get("uri", ""))
+            if uri == "amfwx://version":
+                text = __import__("amfwx").__version__
+                mime = "text/plain"
+            elif uri == "amfwx://tools":
+                text = json.dumps(TOOL_SPECS, ensure_ascii=False)
+                mime = "application/json"
+            elif uri == "amfwx://ui/widgets":
+                text = json.dumps(self.session.list_widgets(),
+                                  ensure_ascii=False)
+                mime = "application/json"
+            else:
+                return {"jsonrpc": "2.0", "id": request_id, "error": {
+                    "code": -32602, "message": f"unknown resource: {uri}"}}
+            return {"jsonrpc": "2.0", "id": request_id, "result": {
+                "contents": [{"uri": uri, "mimeType": mime, "text": text}]}}
+        if method == "prompts/list":
+            return {"jsonrpc": "2.0", "id": request_id,
+                    "result": {"prompts": PROMPTS}}
+        if method == "prompts/get":
+            params = request.get("params") or {}
+            if params.get("name") != "build_ui":
+                return {"jsonrpc": "2.0", "id": request_id, "error": {
+                    "code": -32602, "message": "unknown prompt"}}
+            request_text = str((params.get("arguments") or {}).get(
+                "request", ""))
+            return {"jsonrpc": "2.0", "id": request_id, "result": {
+                "description": "AMFWX UI builder",
+                "messages": [{"role": "user", "content": {
+                    "type": "text",
+                    "text": f"Baue eine AMFWX-UI: {request_text}"}}]}}
         if method == "tools/list":
             return {"jsonrpc": "2.0", "id": request_id,
                     "result": {"tools": list(TOOL_SPECS)}}
