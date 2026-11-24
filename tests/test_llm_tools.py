@@ -94,6 +94,17 @@ class AgentTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertIn("deaktiviert", result["error"])
 
+    def test_streaming(self):
+        class Provider:
+            def chat(self, messages, tools=None):
+                return {"content": "done", "tool_calls": []}
+            def stream_chat(self, messages, tools=None):
+                yield {"content": "Hal"}
+                yield {"content": "lo"}
+        agent = LLMAgent(Provider(), session=UiSession())
+        self.assertEqual("".join(agent.run_stream("hi")), "Hallo")
+        agent.close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

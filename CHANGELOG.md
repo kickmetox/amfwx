@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.37.0 - 2026-11-25
+
+Agent-Streaming.
+
+### SDK
+
+* `run_stream`.
+* `cancel`.
+* 423 Tests.
+
 ## 5.36.0 - 2026-11-24
 
 MCP-Server + App-Tools.

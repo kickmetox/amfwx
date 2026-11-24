@@ -170,7 +170,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.36.0"
+__version__ = "5.37.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
