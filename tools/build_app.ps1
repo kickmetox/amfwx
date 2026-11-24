@@ -14,9 +14,11 @@ if (Test-Path $manifest) { $extra += @("--manifest", $manifest) }
 if (Test-Path $version) { $extra += @("--version-file", $version) }
 $data = @(
     "--add-data", "$Root\amfwx\bin;amfwx/bin",
-    "--add-data", "$Root\amfwx\twain32_helper.py;amfwx",
-    "--add-data", "$Root\vendor\python32;vendor/python32"
+    "--add-data", "$Root\amfwx\twain32_helper.py;amfwx"
 )
+if (Test-Path "$Root\vendor\python32") {
+    $data += @("--add-data", "$Root\vendor\python32;vendor/python32")
+}
 python -m PyInstaller --noconfirm --clean --windowed --name $Name @extra @data tools\amfwx_app.py
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller fehlgeschlagen" }
 Write-Host "dist\$Name\$Name.exe"

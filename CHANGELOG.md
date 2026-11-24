@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.8.1 - 2026-11-24
+
+CI ohne 32-Bit-Runtime.
+
+### Packaging
+
+* Optionales vendor/python32.
+* Release-Assets enthalten 32 Bit.
+* 381 Tests.
+
 ## 5.8.0 - 2026-11-24
 
 32-Bit-Runtime im Paket.
