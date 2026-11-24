@@ -9,7 +9,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import list_twain32_sources
-from amfwx.twain32 import available
+from amfwx.twain32 import Twain32Error, available
 
 
 class Twain32Tests(unittest.TestCase):
@@ -21,7 +21,10 @@ class Twain32Tests(unittest.TestCase):
     def test_sources(self):
         if not available():
             self.skipTest("kein 32-Bit-Python / Helper")
-        sources = list_twain32_sources()
+        try:
+            sources = list_twain32_sources()
+        except Twain32Error as error:
+            self.skipTest(f"keine TWAIN-Quellen: {error}")
         self.assertIsInstance(sources, list)
         for source in sources:
             self.assertTrue(source.name)

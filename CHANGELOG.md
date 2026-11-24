@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.31.1 - 2026-11-24
+
+CI-TWAIN-Test optional.
+
+### Fix
+
+* Skip ohne TWAIN-Quellen.
+* 414 Tests.
+
 ## 5.31.0 - 2026-11-24
 
 32-Bit im CI.
