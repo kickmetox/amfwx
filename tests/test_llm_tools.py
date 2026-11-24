@@ -88,6 +88,12 @@ class AgentTests(unittest.TestCase):
         finally:
             agent.close()
 
+    def test_app_tools_disabled(self):
+        session = UiSession()
+        result = call_tool(session, "list_devices", {})
+        self.assertFalse(result["ok"])
+        self.assertIn("deaktiviert", result["error"])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

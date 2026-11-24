@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.36.0 - 2026-11-24
+
+MCP-Server + App-Tools.
+
+### SDK
+
+* `amfwx-mcp`.
+* App-Tools mit Opt-in.
+* 422 Tests.
+
 ## 5.35.0 - 2026-11-24
 
 SDK-Paket.

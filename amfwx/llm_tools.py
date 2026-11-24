@@ -37,6 +37,7 @@ class UiSession:
         self.window = None
         self.widgets = {}
         self._next_id = 1
+        self.allow_app_actions = False
 
     def create_window(self, title="AMFWX", width=640, height=480,
                       theme=None):
@@ -45,6 +46,7 @@ class UiSession:
                              theme=theme or self.theme)
         self.widgets = {}
         self._next_id = 1
+        self.allow_app_actions = False
         self.window._layout_root()
         return {"ok": True, "window": str(title),
                 "width": int(width), "height": int(height)}
@@ -173,7 +175,22 @@ def _tool(name, description, properties, required=()):
     }
 
 
-TOOL_SPECS = [
+APP_TOOL_SPECS = [
+    _tool("list_devices", "List scanners, printers, cameras and interfaces.", {}),
+    _tool("scan_document", "Scan via eSCL to a PDF.",
+          {"host": {"type": "string"}, "source": {"type": "string"},
+           "pages": {"type": "integer"}, "output": {"type": "string"}},
+          ["host", "output"]),
+    _tool("print_file", "Print a file through the Windows queue.",
+          {"path": {"type": "string"}, "printer": {"type": "string"},
+           "copies": {"type": "integer"}, "duplex": {"type": "boolean"}},
+          ["path", "printer"]),
+    _tool("camera_snapshot", "Capture one webcam/IP camera frame.",
+          {"path": {"type": "string"}, "index": {"type": "integer"},
+           "url": {"type": "string"}}, ["path"]),
+]
+
+TOOL_SPECS = APP_TOOL_SPECS + [
     _tool("create_window", "Create or replace the application window.",
           {"title": {"type": "string"},
            "width": {"type": "integer"},
@@ -215,6 +232,39 @@ def call_tool(session, name, arguments):
             return {"ok": True, "widgets": session.list_widgets()}
         if name == "snapshot":
             return session.snapshot(arguments.get("path"))
+        if name in ("list_devices", "scan_document", "print_file",
+                    "camera_snapshot"):
+            if not getattr(session, "allow_app_actions", False):
+                return {"ok": False,
+                        "error": "App-Aktionen sind deaktiviert"}
+            if name == "list_devices":
+                from .devices import DeviceManager
+                return {"ok": True, "devices": DeviceManager().refresh().summary()}
+            if name == "scan_document":
+                from .escl import EsclScanner
+                from .scan_pdf import scan_to_pdf
+                scanner = EsclScanner(arguments["host"])
+                return {"ok": True, "path": scan_to_pdf(
+                    scanner, arguments["output"],
+                    source=arguments.get("source", "Platen"),
+                    max_pages=int(arguments.get("pages", 1)))}
+            if name == "print_file":
+                from .winprint import print_file
+                return {"ok": True, "job": print_file(
+                    arguments["path"], arguments["printer"],
+                    copies=int(arguments.get("copies", 1)),
+                    duplex=bool(arguments.get("duplex", False)))}
+            if name == "camera_snapshot":
+                from .camera import Webcam
+                from .ipcam import IpCamera
+                camera = (IpCamera(arguments["url"])
+                          if arguments.get("url") else
+                          Webcam(int(arguments.get("index", 0))))
+                try:
+                    camera.read().save(arguments["path"])
+                finally:
+                    camera.close()
+                return {"ok": True, "path": arguments["path"]}
         if name == "snapshot_base64":
             return session.snapshot_base64()
         return {"ok": False, "error": f"unbekanntes Tool: {name}"}

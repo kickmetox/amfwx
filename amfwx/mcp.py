@@ -95,7 +95,8 @@ class MCPServer:
             return {"jsonrpc": "2.0", "id": request_id, "result": {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {"tools": {}},
-                "serverInfo": {"name": "amfwx", "version": "3.15.0"},
+                "serverInfo": {"name": "amfwx",
+                               "version": __import__("amfwx").__version__},
             }}
         if method == "notifications/initialized":
             return None
