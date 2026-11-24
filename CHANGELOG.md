@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.28.0 - 2026-11-24
+
+Tuya-Discovery.
+
+### IoT
+
+* 3.3/3.4 55AA.
+* 3.5 GCM 6699.
+* CLI.
+* 413 Tests.
+
 ## 5.27.0 - 2026-11-24
 
 Becker-Rueckkanal.

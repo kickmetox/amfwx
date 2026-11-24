@@ -44,7 +44,7 @@ class AppConfig:
                  pdf_split=None, pdf_dir=None, jarolift_host=None,
                  jarolift_topic="ESP32-Jarolift-Controller",
                  jarolift_channel=1, jarolift_action=None,
-                 jarolift_position=None):
+                 jarolift_position=None, tuya_discover=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -142,6 +142,7 @@ class AppConfig:
         self.jarolift_channel = int(jarolift_channel)
         self.jarolift_action = jarolift_action
         self.jarolift_position = jarolift_position
+        self.tuya_discover = tuya_discover
 
     @classmethod
     def parse(cls, argv=None):
@@ -404,6 +405,9 @@ class AppConfig:
             elif value == "--jarolift-position" and index + 1 < len(args):
                 index += 1
                 config.jarolift_position = int(args[index])
+            elif value == "--tuya-discover" and index + 1 < len(args):
+                index += 1
+                config.tuya_discover = float(args[index])
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -502,6 +506,7 @@ class AppConfig:
                 "  --jarolift-channel N Kanal 1-16\n"
                 "  --jarolift-action A UP/DOWN/STOP/SHADE\n"
                 "  --jarolift-position P 0-100\n"
+                "  --tuya-discover S  Tuya 3.3-3.5 suchen\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -730,6 +735,11 @@ class Application:
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
                 return 1
+            return 0
+        if self.config.tuya_discover is not None:
+            from .tuya_discovery import discover
+            for device in discover(self.config.tuya_discover):
+                print(device)
             return 0
         if self.config.jarolift_host:
             from .jarolift import JaroliftController

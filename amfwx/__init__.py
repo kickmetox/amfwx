@@ -78,6 +78,8 @@ from .home import (FibaroHomeCenter, GenericHttpDevice, HomeError,
 from .home_discovery import DiscoveredDevice, discover_home, probe_http
 from .mqtt import MqttClient, MqttError
 from .fritz import FritzBox, FritzError
+from .tuya_discovery import (TuyaDiscoveryError, discover as tuya_discover,
+                              parse_packet as tuya_discovery_parse)
 from .tuya import TuyaCloud, TuyaError
 from .zigbee import DeconzClient, ZigbeeError
 from .wlan_control import WlanController, WlanControlError
@@ -162,7 +164,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.27.0"
+__version__ = "5.28.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -198,6 +200,7 @@ __all__ = [
     "HomeDevicesWindow", "CredentialsDialog", "HomePilot",
     "HomePilotError", "MqttClient",
     "MqttError", "DiscoveredDevice", "discover_home", "probe_http",
+    "TuyaDiscoveryError", "tuya_discover", "tuya_discovery_parse",
     "TuyaCloud", "TuyaError", "TuyaLocal34", "Tuya34Error", "TuyaLocal35", "Tuya35Error", "DeconzClient", "ZigbeeError",
     "WlanController", "WlanControlError", "default_icon_path", "SingleInstance", "SingleInstanceError", "AppConfig", "Application", "load_icon", "set_window_icon",
     "discover_network_devices", "probe_escl", "DicomFile", "MedicalError",
