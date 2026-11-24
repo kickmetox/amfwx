@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 
 from .single_instance import SingleInstance
 from .window import Window
@@ -24,7 +25,9 @@ class AppConfig:
                  mtp_download=None, mtp_device=None, ocr_image=None,
                  ocr_pdf=None, ocr_language=None, ocr_searchable=None,
                  scan_ocr=False, zigbee_host=None, zigbee_port=1883,
-                 zigbee_devices=False, zigbee_set=None, zigbee_permit=None):
+                 zigbee_devices=False, zigbee_set=None, zigbee_permit=None,
+                 list_scanners=False, scan_wia=None, scan_twain32=None,
+                 scan_naps2=None, scan_dpi=300, scan_adf=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -72,6 +75,12 @@ class AppConfig:
         self.zigbee_devices = bool(zigbee_devices)
         self.zigbee_set = zigbee_set
         self.zigbee_permit = zigbee_permit
+        self.list_scanners = bool(list_scanners)
+        self.scan_wia = scan_wia
+        self.scan_twain32 = scan_twain32
+        self.scan_naps2 = scan_naps2
+        self.scan_dpi = int(scan_dpi)
+        self.scan_adf = bool(scan_adf)
 
     @classmethod
     def parse(cls, argv=None):
@@ -191,6 +200,22 @@ class AppConfig:
             elif value == "--zigbee-permit" and index + 1 < len(args):
                 index += 1
                 config.zigbee_permit = int(args[index])
+            elif value == "--list-scanners":
+                config.list_scanners = True
+            elif value == "--scan-wia" and index + 1 < len(args):
+                index += 1
+                config.scan_wia = args[index]
+            elif value == "--scan-twain32" and index + 1 < len(args):
+                index += 1
+                config.scan_twain32 = args[index]
+            elif value == "--scan-naps2" and index + 1 < len(args):
+                index += 1
+                config.scan_naps2 = args[index]
+            elif value == "--scan-dpi" and index + 1 < len(args):
+                index += 1
+                config.scan_dpi = int(args[index])
+            elif value == "--scan-adf":
+                config.scan_adf = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -244,6 +269,12 @@ class AppConfig:
                 "  --zigbee-devices Geraete anzeigen\n"
                 "  --zigbee-set N=JSON Geraet setzen\n"
                 "  --zigbee-permit S Join fuer S Sekunden\n"
+                "  --list-scanners    WIA/TWAIN/NAPS2 anzeigen\n"
+                "  --scan-wia ID      WIA-Scan\n"
+                "  --scan-twain32 SRC 32-Bit-TWAIN-Scan\n"
+                "  --scan-naps2 SRC   NAPS2-Scan\n"
+                "  --scan-dpi N       Aufloesung\n"
+                "  --scan-adf         Einzug\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -389,6 +420,70 @@ class Application:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
             print(f"Druckjob {job}")
+            return 0
+        if self.config.list_scanners:
+            from .wia import list_wia_devices
+            from .twain import list_sources as list_twain
+            from .twain32 import list_sources as list_twain32
+            from .naps2 import list_sources as list_naps2
+            print("WIA:")
+            for device in list_wia_devices():
+                print(f"  {device.device_id}  {device.name}")
+            print("TWAIN:")
+            for source in list_twain():
+                print(f"  {source.id}  {source.product_name}")
+            print("TWAIN32:")
+            for source in list_twain32():
+                print(f"  {source.id}  {source.product_name}")
+            print("NAPS2:")
+            for source in list_naps2():
+                print(f"  {source.id}")
+            return 0
+        if self.config.scan_wia or self.config.scan_twain32 or self.config.scan_naps2:
+            import tempfile
+            from .scan_pdf import images_to_pdf
+            from .scan_transfer import default_scan_dir
+            output = self.config.scan_pdf
+            if not output:
+                import time
+                output = str(default_scan_dir() /
+                             f"scan_{time.strftime('%Y%m%d_%H%M%S')}.pdf")
+            try:
+                with tempfile.TemporaryDirectory(prefix="amfwx_devscan_") as folder:
+                    image = str(Path(folder) / "page.png")
+                    if self.config.scan_wia:
+                        from .wia import WiaScanner
+                        result = WiaScanner(device_id=self.config.scan_wia).acquire(
+                            image, dpi=self.config.scan_dpi,
+                            adf=self.config.scan_adf)
+                    elif self.config.scan_twain32:
+                        from .twain32 import list_sources, scan
+                        sources = list_sources()
+                        source = next((item for item in sources
+                                       if str(item.id) == self.config.scan_twain32
+                                       or item.name == self.config.scan_twain32),
+                                      None)
+                        if source is None:
+                            raise RuntimeError("TWAIN32-Quelle nicht gefunden")
+                        result = scan(source.name, image)
+                    else:
+                        from .naps2 import Naps2Scanner
+                        result = Naps2Scanner().scan(
+                            self.config.scan_naps2, image,
+                            dpi=self.config.scan_dpi, paper_source="Feeder"
+                            if self.config.scan_adf else "Glass")
+                    images = result if isinstance(result, list) else [result]
+                    from PIL import Image
+                    jpgs = []
+                    for number, item in enumerate(images, 1):
+                        jpg = Path(folder) / f"page_{number:03d}.jpg"
+                        Image.open(item).convert("RGB").save(jpg, "JPEG", quality=92)
+                        jpgs.append(jpg)
+                    images_to_pdf(jpgs, output)
+            except Exception as error:
+                print(f"Scan fehlgeschlagen: {error}")
+                return 1
+            print(output)
             return 0
         if self.config.zigbee_host:
             from .zigbee2mqtt import Zigbee2Mqtt

@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.10.0 - 2026-11-24
+
+Scanner-CLI.
+
+### Scanners
+
+* `--list-scanners`.
+* WIA/TWAIN32/NAPS2.
+* Echter Canon-TWAIN32-Scan.
+* 385 Tests.
+
 ## 5.9.0 - 2026-11-24
 
 Zigbee2MQTT.

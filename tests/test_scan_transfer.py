@@ -48,6 +48,12 @@ class ScanTransferTests(unittest.TestCase):
     def test_scan_ocr_parse(self):
         self.assertTrue(AppConfig.parse(["--scan-ocr"]).scan_ocr)
 
+    def test_scanner_cli_parse(self):
+        config = AppConfig.parse(["--scan-twain32", "CanoScan LiDE 210",
+                                  "--scan-pdf", "out.pdf"])
+        self.assertEqual(config.scan_twain32, "CanoScan LiDE 210")
+        self.assertTrue(AppConfig.parse(["--list-scanners"]).list_scanners)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

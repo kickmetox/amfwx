@@ -8,7 +8,8 @@ Stand: AMFWX 5.3.0
 |---|---|
 | WIA | ✅ |
 | TWAIN 64-bit Enumeration | ✅ |
-| TWAIN 32-bit via eigener Python32-Brücke | ✅ |
+| TWAIN 32-bit via eigener Python32-Brücke | ✅ real |
+| Scanner-CLI fuer WIA/TWAIN32/NAPS2 | ✅ |
 | TWAIN/WIA 32-bit via NAPS2 | ✅ Adapter, NAPS2 muss installiert sein |
 | eSCL HTTP/HTTPS | ✅ |
 | Kyocera ADF + Weck-Scan | ✅ real getestet |
@@ -83,7 +84,7 @@ AMFWX_NAPS2
 | Punkt | Status |
 |---|---|
 | Scan → JPEG/PDF | ✅ |
-| OCR | ❌ kein Tesseract/WinRT-OCR verfügbar |
+| OCR | ✅ Windows.Media.Ocr |
 | PDF-Textsuche | ✅ unsichtbarer OCR-Textlayer |
 | PDF-Rendering zum Druck | ✅ PyMuPDF optional |
 
@@ -91,7 +92,7 @@ AMFWX_NAPS2
 
 | Punkt | Status |
 |---|---|
-| Tests | 376 |
+| Tests | 385 |
 | CI | grün |
 | Code-Signatur | ❌ bewusst nicht |
 | 32-Bit-Python | ✅ im App-/Portable-Paket |
