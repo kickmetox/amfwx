@@ -37,7 +37,8 @@ class AppConfig:
                  ipp_print=None, ipp_copies=1, ipp_duplex=False,
                  matter_code=None, matter_node=1, matter_action=None,
                  onvif_seconds=None, ip_camera=None, ip_snapshot=None,
-                 ip_record=None, ip_seconds=5.0):
+                 ip_record=None, ip_seconds=5.0, gopro_host="10.5.5.9",
+                 gopro_download=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -120,6 +121,8 @@ class AppConfig:
         self.ip_snapshot = ip_snapshot
         self.ip_record = ip_record
         self.ip_seconds = float(ip_seconds)
+        self.gopro_host = gopro_host
+        self.gopro_download = gopro_download
 
     @classmethod
     def parse(cls, argv=None):
@@ -339,6 +342,12 @@ class AppConfig:
             elif value == "--ip-seconds" and index + 1 < len(args):
                 index += 1
                 config.ip_seconds = float(args[index])
+            elif value == "--gopro-host" and index + 1 < len(args):
+                index += 1
+                config.gopro_host = args[index]
+            elif value == "--gopro-download" and index + 1 < len(args):
+                index += 1
+                config.gopro_download = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -423,6 +432,8 @@ class AppConfig:
                 "  --ip-camera URL    IP/RTSP-Kamera\n"
                 "  --ip-snapshot PATH Einzelbild\n"
                 "  --ip-record PATH   Videoaufnahme\n"
+                "  --gopro-host H     GoPro-IP\n"
+                "  --gopro-download DIR Medien laden\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -650,6 +661,17 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.gopro_download:
+            from .gopro import GoProCamera
+            try:
+                camera = GoProCamera(self.config.gopro_host)
+                for filename in camera.download_media(
+                        self.config.gopro_download):
+                    print(filename)
+            except Exception as error:
+                print(f"GoPro-Download fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.onvif_seconds is not None:

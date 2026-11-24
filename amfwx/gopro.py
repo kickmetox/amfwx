@@ -34,7 +34,47 @@ class GoProCamera:
         return self._get(f"/gp/gpControl/command/mode?p={int(value)}")
 
     def media_list(self):
-        return self._get("/gpMediaList")
+        try:
+            return self._get("/gp/gpMediaList")
+        except GoProError:
+            return self._get("/gpMediaList")
+
+    def media_entries(self):
+        data = self.media_list()
+        entries = []
+        for folder in data.get("media", []):
+            directory = folder.get("d", "")
+            for item in folder.get("fs", []):
+                name = item.get("n", "")
+                if name:
+                    entries.append({"directory": directory,
+                                    "name": name,
+                                    "size": item.get("s", ""),
+                                    "path": f"/videos/DCIM/{directory}/{name}"})
+        return entries
+
+    def download_media(self, directory, kind="all"):
+        from pathlib import Path
+        from urllib.parse import quote
+        folder = Path(directory)
+        folder.mkdir(parents=True, exist_ok=True)
+        saved = []
+        for entry in self.media_entries():
+            name = entry["name"]
+            suffix = Path(name).suffix.lower()
+            if kind == "photo" and suffix not in (".jpg", ".jpeg", ".png"):
+                continue
+            if kind == "video" and suffix not in (".mp4", ".mov"):
+                continue
+            path = quote(entry["path"], safe="/")
+            try:
+                response = self.client.request(path)
+            except NetworkError as error:
+                raise GoProError(str(error)) from error
+            target = folder / name
+            target.write_bytes(response["body"])
+            saved.append(str(target))
+        return saved
 
     def tether(self, directory, count=1, interval=2.0):
         import time

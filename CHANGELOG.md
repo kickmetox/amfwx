@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.22.0 - 2026-11-24
+
+GoPro-Download.
+
+### Cameras
+
+* Medienliste.
+* Download.
+* 405 Tests.
+
 ## 5.21.0 - 2026-11-24
 
 Kamera-Vorschau.
