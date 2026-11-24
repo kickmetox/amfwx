@@ -30,7 +30,8 @@ class AppConfig:
                  scan_naps2=None, scan_dpi=300, scan_adf=False,
                  scanner_ui=False, tuya34_host=None, tuya34_device=None,
                  tuya34_key=None, tuya34_action=None, tuya35_host=None,
-                 tuya35_device=None, tuya35_key=None, tuya35_action=None):
+                 tuya35_device=None, tuya35_key=None, tuya35_action=None,
+                 rf_discovery=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -93,6 +94,7 @@ class AppConfig:
         self.tuya35_device = tuya35_device
         self.tuya35_key = tuya35_key
         self.tuya35_action = tuya35_action
+        self.rf_discovery = rf_discovery
 
     @classmethod
     def parse(cls, argv=None):
@@ -254,6 +256,9 @@ class AppConfig:
             elif value == "--tuya35-action" and index + 1 < len(args):
                 index += 1
                 config.tuya35_action = args[index]
+            elif value == "--rf-discovery" and index + 1 < len(args):
+                index += 1
+                config.rf_discovery = int(args[index])
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -322,6 +327,7 @@ class AppConfig:
                 "  --tuya35-device ID Tuya-Geraet\n"
                 "  --tuya35-key KEY   Local Key\n"
                 "  --tuya35-action A  status/on/off\n"
+                "  --rf-discovery S   Jarolift/Becker ueber rtl_433\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -547,6 +553,15 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.rf_discovery:
+            from .rf import jarolift_devices, summary
+            try:
+                for device in jarolift_devices(self.config.rf_discovery):
+                    print(summary(device))
+            except Exception as error:
+                print(f"RF-Discovery fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.tuya35_host:

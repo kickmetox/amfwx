@@ -82,6 +82,8 @@ class Device:
                                     self.session))
 
 
+@unittest.skipUnless(__import__('importlib').util.find_spec('cryptography'),
+                     'cryptography fehlt')
 class Tuya35Tests(unittest.TestCase):
     def test_handshake_and_status(self):
         key = "0123456789abcdef"

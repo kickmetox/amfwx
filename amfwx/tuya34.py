@@ -10,7 +10,11 @@ import socket
 import struct
 import time
 
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+try:
+    from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms,
+                                                        modes)
+except ImportError:  # optional dependency
+    Cipher = None
 
 PREFIX = 0x000055AA
 SUFFIX = 0x0000AA55
@@ -77,6 +81,8 @@ def _parse_frame(data):
 
 class TuyaLocal34:
     def __init__(self, host, device_id, local_key, port=6668, timeout=4.0):
+        if Cipher is None:
+            raise Tuya34Error("cryptography fehlt: pip install cryptography")
         self.host = str(host)
         self.port = int(port)
         self.device_id = str(device_id)

@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.14.0 - 2026-11-24
+
+RF-Discovery.
+
+### IoT
+
+* rtl_433-Adapter.
+* Jarolift/Becker-Filter.
+* cryptography optional.
+* 393 Tests.
+
 ## 5.13.0 - 2026-11-24
 
 Tuya LAN 3.5.

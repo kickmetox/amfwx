@@ -10,7 +10,10 @@ import socket
 import struct
 import time
 
-from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+try:
+    from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+except ImportError:  # optional dependency
+    AESGCM = None
 
 PREFIX = 0x00006699
 SUFFIX = 0x00009966
@@ -38,6 +41,8 @@ def _read_exact(sock, size):
 
 class TuyaLocal35:
     def __init__(self, host, device_id, local_key, port=6668, timeout=4.0):
+        if AESGCM is None:
+            raise Tuya35Error("cryptography fehlt: pip install cryptography")
         self.host = str(host)
         self.port = int(port)
         self.device_id = str(device_id)
