@@ -66,8 +66,8 @@ AMFWX_NAPS2
 | Matter/Thread-Steuerung | ❌ nur Discovery |
 | Tuya LAN 3.4/3.5 | ❌ nur 3.3 |
 | Zigbee2MQTT | ✅ MQTT-Client |
-| Jarolift-Discovery | ❌ |
-| Becker Centronic USB | ❌ |
+| Jarolift/Becker RF-Discovery | ✅ rtl_433 optional |
+| Becker Centronic USB | ✅ serielles Protokoll |
 
 ## Drucken
 

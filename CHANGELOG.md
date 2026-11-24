@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.15.0 - 2026-11-24
+
+Becker Centronic USB.
+
+### IoT
+
+* Serielles 868-MHz-Protokoll.
+* Code/Checksumme.
+* COM-Port-Erkennung.
+* 396 Tests.
+
 ## 5.14.1 - 2026-11-24
 
 CI ohne cryptography.

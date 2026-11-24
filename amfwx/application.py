@@ -31,7 +31,8 @@ class AppConfig:
                  scanner_ui=False, tuya34_host=None, tuya34_device=None,
                  tuya34_key=None, tuya34_action=None, tuya35_host=None,
                  tuya35_device=None, tuya35_key=None, tuya35_action=None,
-                 rf_discovery=None):
+                 rf_discovery=None, becker_port=None, becker_channel=1,
+                 becker_action=None, becker_unit="1737B", list_becker=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -95,6 +96,11 @@ class AppConfig:
         self.tuya35_key = tuya35_key
         self.tuya35_action = tuya35_action
         self.rf_discovery = rf_discovery
+        self.becker_port = becker_port
+        self.becker_channel = int(becker_channel)
+        self.becker_action = becker_action
+        self.becker_unit = becker_unit
+        self.list_becker = bool(list_becker)
 
     @classmethod
     def parse(cls, argv=None):
@@ -259,6 +265,20 @@ class AppConfig:
             elif value == "--rf-discovery" and index + 1 < len(args):
                 index += 1
                 config.rf_discovery = int(args[index])
+            elif value == "--becker-port" and index + 1 < len(args):
+                index += 1
+                config.becker_port = args[index]
+            elif value == "--becker-channel" and index + 1 < len(args):
+                index += 1
+                config.becker_channel = int(args[index])
+            elif value == "--becker-action" and index + 1 < len(args):
+                index += 1
+                config.becker_action = args[index]
+            elif value == "--becker-unit" and index + 1 < len(args):
+                index += 1
+                config.becker_unit = args[index]
+            elif value == "--list-becker":
+                config.list_becker = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -328,6 +348,10 @@ class AppConfig:
                 "  --tuya35-key KEY   Local Key\n"
                 "  --tuya35-action A  status/on/off\n"
                 "  --rf-discovery S   Jarolift/Becker ueber rtl_433\n"
+                "  --list-becker      Becker-USB-Sticks\n"
+                "  --becker-port COM  Becker-USB\n"
+                "  --becker-channel N Kanal\n"
+                "  --becker-action A  up/down/stop/pair\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -553,6 +577,23 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.list_becker:
+            from .becker_usb import list_sticks
+            for stick in list_sticks():
+                print(stick)
+            return 0
+        if self.config.becker_port:
+            from .becker_usb import BeckerStick
+            try:
+                with BeckerStick(self.config.becker_port,
+                                 self.config.becker_unit) as stick:
+                    action = self.config.becker_action or "stop"
+                    result = stick.command(self.config.becker_channel, action)
+                    print(result)
+            except Exception as error:
+                print(f"Becker fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.rf_discovery:

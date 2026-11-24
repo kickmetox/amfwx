@@ -85,6 +85,8 @@ from .diagnostics import diagnostics, format_diagnostics
 from .ipp import IppError, IppPrinter
 from .winprint import PrinterInfo, list_printers, print_file, print_raw
 from .camera_ui import CameraWindow
+from .becker_usb import (BeckerError, BeckerStick, available as becker_available,
+                        generate_code as becker_code, list_sticks)
 from .rf import RfError, available as rf_available, discover as rf_discover, jarolift_devices
 from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
@@ -153,7 +155,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.14.1"
+__version__ = "5.15.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -176,7 +178,8 @@ __all__ = [
     "transfer_files", "scan_to_folder", "images_to_pdf",
     "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
-    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "rf_available", "rf_discover",
+    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "RfError", "BeckerStick", "BeckerError", "becker_available",
+    "becker_code", "list_sticks", "rf_available", "rf_discover",
     "jarolift_devices", "ocr_available",
     "ocr_image", "ocr_pdf", "make_searchable_pdf",
     "download_images",
