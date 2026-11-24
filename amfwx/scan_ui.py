@@ -26,6 +26,9 @@ class ScanWindow(Window):
         self.ocr = CheckBox("Durchsuchbares PDF (OCR)", checked=False)
         self.language = LineEdit("de-DE")
         self.http = CheckBox("HTTP statt HTTPS", checked=False)
+        self.deskew = CheckBox("Geraderichten", checked=True)
+        self.crop = CheckBox("Zuschneiden", checked=True)
+        self.drop_blank = CheckBox("Leere Seiten entfernen", checked=False)
         self.status = Label("Bereit.")
         self.scan_button = Button("Scannen", on_click=self.scan,
                                   variant="primary")
@@ -43,6 +46,9 @@ class ScanWindow(Window):
             self.ocr,
             HStack(Label("OCR-Sprache"), self.language),
             self.http,
+            self.deskew,
+            self.crop,
+            self.drop_blank,
             self.status,
             HStack(self.scan_button, self.close_button),
         ]
@@ -66,6 +72,11 @@ class ScanWindow(Window):
             language = self.language.text().strip() or None
             use_pdf = self.pdf.checked or use_ocr
             secure = not self.http.checked
+            postprocess_options = {
+                "deskew_enabled": self.deskew.checked,
+                "crop_enabled": self.crop.checked,
+                "drop_blank": self.drop_blank.checked,
+            }
         except ValueError as error:
             self.status.text = f"Eingabefehler: {error}"
             self.scan_button.enabled = True
@@ -84,7 +95,8 @@ class ScanWindow(Window):
                 if use_pdf:
                     target = folder / f"scan_{time.strftime('%Y%m%d_%H%M%S')}.pdf"
                     files = [scan_to_pdf(scanner, target, source=source,
-                                         max_pages=pages)]
+                                         max_pages=pages,
+                                         postprocess_options=postprocess_options)]
                     if use_ocr:
                         from .ocr import make_searchable_pdf
                         searchable = target.with_name(target.stem +

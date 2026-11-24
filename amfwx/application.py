@@ -48,7 +48,7 @@ class AppConfig:
                  jarolift_channel=1, jarolift_action=None,
                  jarolift_position=None, tuya_discover=None,
                  install_naps2=None, check_update=False,
-                 download_update=None):
+                 download_update=None, dashboard=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -154,6 +154,7 @@ class AppConfig:
         self.install_naps2 = install_naps2
         self.check_update = bool(check_update)
         self.download_update = download_update
+        self.dashboard = bool(dashboard)
 
     @classmethod
     def parse(cls, argv=None):
@@ -438,6 +439,8 @@ class AppConfig:
             elif value == "--download-update" and index + 1 < len(args):
                 index += 1
                 config.download_update = args[index]
+            elif value == "--dashboard":
+                config.dashboard = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -544,6 +547,7 @@ class AppConfig:
                 "  --install-naps2 DIR NAPS2 portable laden\n"
                 "  --check-update     GitHub-Release pruefen\n"
                 "  --download-update DIR Installer laden\n"
+                "  --dashboard       Geraete-Zentrale\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -775,6 +779,10 @@ class Application:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
                 return 1
             return 0
+        if self.config.dashboard:
+            from .dashboard import DashboardWindow
+            self.window = DashboardWindow()
+            return self.window.run()
         if self.config.check_update or self.config.download_update:
             from .update import check, download_update, pick_installer
             from . import __version__

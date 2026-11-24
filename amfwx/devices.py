@@ -12,6 +12,8 @@ from .twain import list_sources as list_twain_sources
 from .naps2 import list_sources as list_naps2_sources
 from .wia import list_wia_devices
 from .network_scan import discover_network_devices
+from .winprint import list_printers
+from .camera import list_cameras, list_pnp_cameras
 
 
 def _safe(collector):
@@ -36,6 +38,8 @@ class DeviceManager:
             "scanners": (_safe(list_wia_devices) +
                          _safe(list_twain_sources) +
                          _safe(list_naps2_sources)),
+            "printers": _safe(list_printers),
+            "cameras": (_safe(list_cameras) + _safe(list_pnp_cameras)),
             "network": _safe(lambda: discover_network_devices(timeout=0.2)),
         }
         return self

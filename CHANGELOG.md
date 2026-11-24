@@ -1,5 +1,20 @@
 ﻿# Changelog
 
+## 5.34.0 - 2026-11-24
+
+Scan-Nachbearbeitung + Zentrale.
+
+### Scanner
+
+* Deskew.
+* Crop.
+* Blank-Pages.
+
+### UI
+
+* Dashboard.
+* 419 Tests.
+
 ## 5.33.0 - 2026-11-24
 
 Papierformat/Querformat.

@@ -82,7 +82,8 @@ def images_to_pdf(paths, output):
     return str(target)
 
 
-def scan_to_pdf(scanner, path, source="Platen", max_pages=1, **kwargs):
+def scan_to_pdf(scanner, path, source="Platen", max_pages=1,
+                postprocess_options=None, **kwargs):
     import tempfile
     with tempfile.TemporaryDirectory(prefix="amfwx_pdf_") as folder:
         if int(max_pages) <= 1:
@@ -91,4 +92,7 @@ def scan_to_pdf(scanner, path, source="Platen", max_pages=1, **kwargs):
         else:
             pages = scanner.scan_pages(folder, prefix="page", source=source,
                                        max_pages=max_pages, **kwargs)
+        if postprocess_options:
+            from .scan_post import postprocess_pages
+            pages = postprocess_pages(pages, **postprocess_options)
         return images_to_pdf(pages, path)

@@ -25,6 +25,9 @@ class ScannerWindow(Window):
         self.ocr = CheckBox("Durchsuchbares PDF (OCR)", checked=False)
         self.language = LineEdit("de-DE")
         self.adf = CheckBox("Einzug (ADF)", checked=False)
+        self.deskew = CheckBox("Geraderichten", checked=True)
+        self.crop = CheckBox("Zuschneiden", checked=True)
+        self.drop_blank = CheckBox("Leere Seiten entfernen", checked=False)
         self.status = Label("Quellen laden...")
         self.refresh_button = Button("Quellen", on_click=self.refresh,
                                      variant="secondary")
@@ -39,7 +42,8 @@ class ScannerWindow(Window):
             HStack(Label("Quelle"), self.source),
             HStack(Label("Ordner"), self.folder),
             HStack(Label("DPI"), self.dpi),
-            self.adf, self.pdf, self.ocr,
+            self.adf, self.deskew, self.crop, self.drop_blank,
+            self.pdf, self.ocr,
             HStack(Label("OCR-Sprache"), self.language),
             self.status,
             HStack(self.scan_button, self.close_button),
@@ -104,6 +108,11 @@ class ScannerWindow(Window):
             use_pdf = self.pdf.checked or use_ocr
             language = self.language.text().strip() or None
             adf = self.adf.checked
+            postprocess_options = {
+                "deskew_enabled": self.deskew.checked,
+                "crop_enabled": self.crop.checked,
+                "drop_blank": self.drop_blank.checked,
+            }
         except Exception as error:
             self.status.text = f"Eingabefehler: {error}"
             self.scan_button.enabled = True
@@ -140,6 +149,8 @@ class ScannerWindow(Window):
                         Image.open(item).convert("RGB").save(
                             target, "JPEG", quality=92)
                         jpgs.append(target)
+                    from .scan_post import postprocess_pages
+                    jpgs = postprocess_pages(jpgs, **postprocess_options)
                     folder.mkdir(parents=True, exist_ok=True)
                     stem = f"scan_{time.strftime('%Y%m%d_%H%M%S')}"
                     if use_pdf:
