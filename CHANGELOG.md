@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.31.0 - 2026-11-24
+
+32-Bit im CI.
+
+### Packaging
+
+* Python32 im CI-Build.
+* 414 Tests.
+
 ## 5.30.0 - 2026-11-24
 
 Update-Pruefung.
