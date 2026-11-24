@@ -20,6 +20,10 @@ def main():
     try:
         shutil.copytree(ROOT / "amfwx", stage / "amfwx",
                         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+        if (ROOT / "vendor" / "python32").exists():
+            shutil.copytree(ROOT / "vendor" / "python32",
+                            stage / "vendor" / "python32",
+                            ignore=shutil.ignore_patterns("__pycache__"))
         if (ROOT / "examples").exists():
             shutil.copytree(ROOT / "examples", stage / "examples",
                             ignore=shutil.ignore_patterns("__pycache__"))

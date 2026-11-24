@@ -94,7 +94,7 @@ AMFWX_NAPS2
 | Tests | 376 |
 | CI | grün |
 | Code-Signatur | ❌ bewusst nicht |
-| 32-Bit-Python | lokal vorhanden, nicht im Repository |
+| 32-Bit-Python | ✅ im App-/Portable-Paket |
 | NAPS2 | optional, nicht gebündelt |
 
 ## Nächste sinnvolle Blöcke

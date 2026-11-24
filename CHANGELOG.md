@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.8.0 - 2026-11-24
+
+32-Bit-Runtime im Paket.
+
+### Packaging
+
+* vendor/python32.
+* TWAIN-DLLs.
+* Helper.
+* 381 Tests.
+
 ## 5.7.0 - 2026-11-24
 
 OCR im Scan-Fenster.
