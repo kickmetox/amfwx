@@ -137,3 +137,11 @@ Install NAPS2 or set `AMFWX_NAPS2` to `NAPS2.Console.exe`. The adapter is option
 ## Scan window
 
 `python -m amfwx --scan-ui` now has an OCR checkbox and language field. Output is `*_searchable.pdf`.
+
+## Device scanner window
+
+```powershell
+python -m amfwx --scanner-ui
+```
+
+WIA, TWAIN32 and NAPS2 with DPI, ADF, PDF and OCR.

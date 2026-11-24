@@ -92,6 +92,7 @@ from .camera import (CameraInfo, Webcam, WebcamError, list_cameras,
 from .gopro import GoProCamera, GoProError
 from .gphoto2 import GPhoto2Camera, GPhoto2Error
 from .chroma import chroma_key, composite, save_chroma
+from .scanner_ui import ScannerWindow
 from .scan_ui import ScanWindow
 from .scan_pdf import images_to_pdf, scan_to_pdf
 from .scan_transfer import default_scan_dir, scan_to_folder, transfer_files
@@ -149,7 +150,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.10.0"
+__version__ = "5.11.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -170,7 +171,7 @@ __all__ = [
     "list_usb_devices", "HidDeviceInfo", "UsbError", "list_hid_devices", "DnsError", "Service", "build_query", "parse_packet",
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
     "transfer_files", "scan_to_folder", "images_to_pdf",
-    "scan_to_pdf", "ScanWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
+    "scan_to_pdf", "ScanWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
     "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "ocr_available",
     "ocr_image", "ocr_pdf", "make_searchable_pdf",

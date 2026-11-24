@@ -27,7 +27,8 @@ class AppConfig:
                  scan_ocr=False, zigbee_host=None, zigbee_port=1883,
                  zigbee_devices=False, zigbee_set=None, zigbee_permit=None,
                  list_scanners=False, scan_wia=None, scan_twain32=None,
-                 scan_naps2=None, scan_dpi=300, scan_adf=False):
+                 scan_naps2=None, scan_dpi=300, scan_adf=False,
+                 scanner_ui=False):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -81,6 +82,7 @@ class AppConfig:
         self.scan_naps2 = scan_naps2
         self.scan_dpi = int(scan_dpi)
         self.scan_adf = bool(scan_adf)
+        self.scanner_ui = bool(scanner_ui)
 
     @classmethod
     def parse(cls, argv=None):
@@ -216,6 +218,8 @@ class AppConfig:
                 config.scan_dpi = int(args[index])
             elif value == "--scan-adf":
                 config.scan_adf = True
+            elif value == "--scanner-ui":
+                config.scanner_ui = True
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -275,6 +279,7 @@ class AppConfig:
                 "  --scan-naps2 SRC   NAPS2-Scan\n"
                 "  --scan-dpi N       Aufloesung\n"
                 "  --scan-adf         Einzug\n"
+                "  --scanner-ui       Scanner-Fenster WIA/TWAIN32/NAPS2\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -544,6 +549,10 @@ class Application:
                 return 1
             print(f"{count} Datei(en) kopiert")
             return 0
+        if self.config.scanner_ui:
+            from .scanner_ui import ScannerWindow
+            self.window = ScannerWindow()
+            return self.window.run()
         if self.config.camera_ui:
             from .camera_ui import CameraWindow
             self.window = CameraWindow()

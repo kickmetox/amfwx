@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.11.0 - 2026-11-24
+
+Scanner-Fenster.
+
+### UI
+
+* WIA/TWAIN32/NAPS2.
+* DPI/ADF/PDF/OCR.
+* 387 Tests.
+
 ## 5.10.0 - 2026-11-24
 
 Scanner-CLI.
