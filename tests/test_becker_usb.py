@@ -8,7 +8,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import AppConfig, BeckerStick, becker_code, list_sticks
+from amfwx import AppConfig, BeckerStick, becker_code, becker_parse, list_sticks
 
 
 class FakeSerial:
@@ -27,6 +27,9 @@ class BeckerTests(unittest.TestCase):
         code = becker_code(1, "1737B", 1, 0x20)
         self.assertEqual(len(code), 42)
         self.assertTrue(code.endswith("B3"))
+        packet = becker_parse(b"\x02" + code.encode() + b"\x03")
+        self.assertEqual(packet["channel"], 1)
+        self.assertEqual(packet["command"], "up")
 
     def test_send(self):
         serial = FakeSerial()

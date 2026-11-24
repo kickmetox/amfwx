@@ -34,6 +34,7 @@ class AppConfig:
                  tuya35_device=None, tuya35_key=None, tuya35_action=None,
                  rf_discovery=None, becker_port=None, becker_channel=1,
                  becker_action=None, becker_unit="1737B", list_becker=False,
+                 becker_listen=None,
                  ipp_host=None, ipp_port=631, ipp_path="/ipp/print",
                  ipp_print=None, ipp_copies=1, ipp_duplex=False,
                  matter_code=None, matter_node=1, matter_action=None,
@@ -115,6 +116,7 @@ class AppConfig:
         self.becker_action = becker_action
         self.becker_unit = becker_unit
         self.list_becker = bool(list_becker)
+        self.becker_listen = becker_listen
         self.ipp_host = ipp_host
         self.ipp_port = int(ipp_port)
         self.ipp_path = ipp_path
@@ -325,6 +327,9 @@ class AppConfig:
                 config.becker_unit = args[index]
             elif value == "--list-becker":
                 config.list_becker = True
+            elif value == "--becker-listen" and index + 1 < len(args):
+                index += 1
+                config.becker_listen = float(args[index])
             elif value == "--ipp-host" and index + 1 < len(args):
                 index += 1
                 config.ipp_host = args[index]
@@ -475,6 +480,7 @@ class AppConfig:
                 "  --becker-port COM  Becker-USB\n"
                 "  --becker-channel N Kanal\n"
                 "  --becker-action A  up/down/stop/pair\n"
+                "  --becker-listen S  Rueckkanal lesen\n"
                 "  --ipp-host H       IPP-Drucker\n"
                 "  --ipp-print PATH   IPP-Druckjob\n"
                 "  --copies N         Kopien\n"
@@ -827,6 +833,16 @@ class Application:
             from .becker_usb import list_sticks
             for stick in list_sticks():
                 print(stick)
+            return 0
+        if self.config.becker_listen and self.config.becker_port:
+            from .becker_usb import BeckerStick
+            try:
+                with BeckerStick(self.config.becker_port) as stick:
+                    stick.listen(lambda packet: print(packet),
+                                 self.config.becker_listen)
+            except Exception as error:
+                print(f"Becker-Rueckkanal fehlgeschlagen: {error}")
+                return 1
             return 0
         if self.config.becker_port:
             from .becker_usb import BeckerStick

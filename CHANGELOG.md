@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.27.0 - 2026-11-24
+
+Becker-Rueckkanal.
+
+### IoT
+
+* Paketparser.
+* listen().
+* 410 Tests.
+
 ## 5.26.0 - 2026-11-24
 
 Jarolift-Steuerung.

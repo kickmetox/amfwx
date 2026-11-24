@@ -66,6 +66,34 @@ def finalize(code):
     return STX + code.encode("ascii") + ETX
 
 
+COMMAND_NAMES = {
+    0x00: "release", 0x10: "stop", 0x20: "up", 0x24: "up_intermediate",
+    0x40: "down", 0x44: "down_intermediate", 0x80: "pair",
+}
+
+
+def parse_packet(data):
+    data = bytes(data)
+    start = data.find(STX)
+    end = data.find(ETX, start + 1)
+    if start < 0 or end < 0:
+        raise BeckerError("kein Becker-Rahmen")
+    code = data[start + 1:end].decode("ascii", "replace").strip()
+    if len(code) != 42:
+        raise BeckerError(f"Becker-Code ungueltig: {len(code)} Zeichen")
+    body, check = code[:40].upper(), code[40:].upper()
+    if checksum(body)[40:] != check:
+        raise BeckerError("Becker-Checksumme ungueltig")
+    return {
+        "unit": body[24:29],
+        "channel": int(body[34:36], 16),
+        "command_code": int(body[38:40], 16),
+        "command": COMMAND_NAMES.get(int(body[38:40], 16), "unknown"),
+        "increment": int(body[14:18], 16),
+        "code": code,
+    }
+
+
 def available():
     return serial is not None
 
@@ -117,6 +145,23 @@ class BeckerStick:
 
     def pair(self, channel):
         return self.command(channel, "pair")
+
+    def read_packet(self, size=256):
+        data = self.connection.read(size)
+        if not data:
+            return None
+        return parse_packet(data)
+
+    def listen(self, callback, duration=10.0):
+        import time
+        deadline = time.monotonic() + float(duration)
+        packets = []
+        while time.monotonic() < deadline:
+            packet = self.read_packet()
+            if packet is not None:
+                packets.append(packet)
+                callback(packet)
+        return packets
 
     def close(self):
         if self.connection is not None:
