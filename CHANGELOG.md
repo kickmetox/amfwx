@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 5.9.0 - 2026-11-24
+
+Zigbee2MQTT.
+
+### Home
+
+* Geraete.
+* State.
+* Set.
+* Permit Join.
+* 384 Tests.
+
 ## 5.8.1 - 2026-11-24
 
 CI ohne 32-Bit-Runtime.

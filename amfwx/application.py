@@ -23,7 +23,8 @@ class AppConfig:
                  camera_chroma=False, camera_ui=False, list_mtp=False,
                  mtp_download=None, mtp_device=None, ocr_image=None,
                  ocr_pdf=None, ocr_language=None, ocr_searchable=None,
-                 scan_ocr=False):
+                 scan_ocr=False, zigbee_host=None, zigbee_port=1883,
+                 zigbee_devices=False, zigbee_set=None, zigbee_permit=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -66,6 +67,11 @@ class AppConfig:
         self.ocr_language = ocr_language
         self.ocr_searchable = ocr_searchable
         self.scan_ocr = bool(scan_ocr)
+        self.zigbee_host = zigbee_host
+        self.zigbee_port = int(zigbee_port)
+        self.zigbee_devices = bool(zigbee_devices)
+        self.zigbee_set = zigbee_set
+        self.zigbee_permit = zigbee_permit
 
     @classmethod
     def parse(cls, argv=None):
@@ -171,6 +177,20 @@ class AppConfig:
                 index += 2
             elif value == "--scan-ocr":
                 config.scan_ocr = True
+            elif value == "--zigbee-host" and index + 1 < len(args):
+                index += 1
+                config.zigbee_host = args[index]
+            elif value == "--zigbee-port" and index + 1 < len(args):
+                index += 1
+                config.zigbee_port = int(args[index])
+            elif value == "--zigbee-devices":
+                config.zigbee_devices = True
+            elif value == "--zigbee-set" and index + 1 < len(args):
+                index += 1
+                config.zigbee_set = args[index]
+            elif value == "--zigbee-permit" and index + 1 < len(args):
+                index += 1
+                config.zigbee_permit = int(args[index])
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -220,6 +240,10 @@ class AppConfig:
                 "  --ocr-language L  z.B. de-DE\n"
                 "  --ocr-searchable IN OUT  durchsuchbares PDF\n"
                 "  --scan-ocr       Scan als durchsuchbares PDF\n"
+                "  --zigbee-host H  Zigbee2MQTT-Broker\n"
+                "  --zigbee-devices Geraete anzeigen\n"
+                "  --zigbee-set N=JSON Geraet setzen\n"
+                "  --zigbee-permit S Join fuer S Sekunden\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -366,6 +390,25 @@ class Application:
                 return 1
             print(f"Druckjob {job}")
             return 0
+        if self.config.zigbee_host:
+            from .zigbee2mqtt import Zigbee2Mqtt
+            try:
+                zigbee = Zigbee2Mqtt(self.config.zigbee_host,
+                                     self.config.zigbee_port)
+                if self.config.zigbee_devices:
+                    for device in zigbee.devices():
+                        print(device.get("friendly_name", device))
+                    return 0
+                if self.config.zigbee_set:
+                    name, _, payload = self.config.zigbee_set.partition("=")
+                    zigbee.set(name, __import__("json").loads(payload or "{}"))
+                    return 0
+                if self.config.zigbee_permit:
+                    zigbee.permit_join(self.config.zigbee_permit)
+                    return 0
+            except Exception as error:
+                print(f"Zigbee2MQTT fehlgeschlagen: {error}")
+                return 1
         if self.config.ocr_searchable:
             from .ocr import make_searchable_pdf
             try:

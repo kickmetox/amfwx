@@ -64,7 +64,7 @@ AMFWX_NAPS2
 | TaHoma | ✅ |
 | Matter/Thread-Steuerung | ❌ nur Discovery |
 | Tuya LAN 3.4/3.5 | ❌ nur 3.3 |
-| Zigbee2MQTT | ❌ |
+| Zigbee2MQTT | ✅ MQTT-Client |
 | Jarolift-Discovery | ❌ |
 | Becker Centronic USB | ❌ |
 

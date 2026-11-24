@@ -83,6 +83,7 @@ from .diagnostics import diagnostics, format_diagnostics
 from .ipp import IppError, IppPrinter
 from .winprint import PrinterInfo, list_printers, print_file, print_raw
 from .camera_ui import CameraWindow
+from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
                   ocr_image, ocr_pdf)
 from .mtp import MtpError, download_images, list_mtp_devices
@@ -148,7 +149,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.8.1"
+__version__ = "5.9.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -171,7 +172,7 @@ __all__ = [
     "transfer_files", "scan_to_folder", "images_to_pdf",
     "scan_to_pdf", "ScanWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
-    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "ocr_available",
+    "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "Zigbee2Mqtt", "Zigbee2MqttError", "ocr_available",
     "ocr_image", "ocr_pdf", "make_searchable_pdf",
     "download_images",
     "chroma_key", "composite", "save_chroma", "PrinterInfo", "list_printers", "print_raw", "print_file", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
