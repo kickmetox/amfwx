@@ -23,6 +23,8 @@ class ScanWindow(Window):
         self.pages = LineEdit("1")
         self.folder = LineEdit(str(default_scan_dir()))
         self.pdf = CheckBox("Als PDF speichern", checked=False)
+        self.ocr = CheckBox("Durchsuchbares PDF (OCR)", checked=False)
+        self.language = LineEdit("de-DE")
         self.http = CheckBox("HTTP statt HTTPS", checked=False)
         self.status = Label("Bereit.")
         self.scan_button = Button("Scannen", on_click=self.scan,
@@ -38,6 +40,8 @@ class ScanWindow(Window):
             HStack(Label("Seiten"), self.pages),
             HStack(Label("Ordner"), self.folder),
             self.pdf,
+            self.ocr,
+            HStack(Label("OCR-Sprache"), self.language),
             self.http,
             self.status,
             HStack(self.scan_button, self.close_button),
@@ -58,7 +62,9 @@ class ScanWindow(Window):
             source = self.source.text().strip() or "Platen"
             pages = max(1, int(self.pages.text() or "1"))
             folder = Path(self.folder.text().strip() or default_scan_dir())
-            use_pdf = self.pdf.checked
+            use_ocr = self.ocr.checked
+            language = self.language.text().strip() or None
+            use_pdf = self.pdf.checked or use_ocr
             secure = not self.http.checked
         except ValueError as error:
             self.status.text = f"Eingabefehler: {error}"
@@ -79,6 +85,12 @@ class ScanWindow(Window):
                     target = folder / f"scan_{time.strftime('%Y%m%d_%H%M%S')}.pdf"
                     files = [scan_to_pdf(scanner, target, source=source,
                                          max_pages=pages)]
+                    if use_ocr:
+                        from .ocr import make_searchable_pdf
+                        searchable = target.with_name(target.stem +
+                                                      "_searchable.pdf")
+                        files = [make_searchable_pdf(files[0], searchable,
+                                                     language)]
                 else:
                     target = folder / f"scan_{time.strftime('%Y%m%d_%H%M%S')}.jpg"
                     files = scan_to_folder(scanner, folder,

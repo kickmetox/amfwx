@@ -16,6 +16,8 @@ class ScanUiTests(unittest.TestCase):
         window = ScanWindow()
         try:
             self.assertEqual(window.port.text(), "9096")
+            self.assertFalse(window.ocr.checked)
+            self.assertEqual(window.language.text(), "de-DE")
             self.assertFalse(window.pdf.checked)
         finally:
             window.close()

@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.7.0 - 2026-11-24
+
+OCR im Scan-Fenster.
+
+### UI
+
+* OCR-Checkbox.
+* OCR-Sprache.
+* 381 Tests.
+
 ## 5.6.0 - 2026-11-24
 
 Scan plus OCR.

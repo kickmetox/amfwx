@@ -133,3 +133,7 @@ python -c "from amfwx import naps2_available, list_naps2_sources; print(naps2_av
 ```
 
 Install NAPS2 or set `AMFWX_NAPS2` to `NAPS2.Console.exe`. The adapter is optional; NAPS2 is GPL and is not bundled.
+
+## Scan window
+
+`python -m amfwx --scan-ui` now has an OCR checkbox and language field. Output is `*_searchable.pdf`.
