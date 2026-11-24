@@ -63,6 +63,8 @@ class ZigbeeTests(unittest.TestCase):
         config = AppConfig.parse(["--zigbee-host", "localhost",
                                   "--zigbee-devices"])
         self.assertTrue(config.zigbee_devices)
+        self.assertFalse(config.zigbee_tls)
+        self.assertTrue(AppConfig.parse(["--zigbee-tls"]).zigbee_tls)
 
 
 if __name__ == "__main__":

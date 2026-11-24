@@ -28,7 +28,15 @@ class GoProCamera:
         return self._get(f"/gp/gpControl/command/shutter?p={1 if enabled else 0}")
 
     def take_photo(self):
+        self.mode(1)
         return self.shutter(True)
+
+    def start_video(self):
+        self.mode(0)
+        return self.shutter(True)
+
+    def stop_video(self):
+        return self.shutter(False)
 
     def mode(self, value):
         return self._get(f"/gp/gpControl/command/mode?p={int(value)}")

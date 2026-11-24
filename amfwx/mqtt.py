@@ -30,18 +30,34 @@ def encode_string(value):
 
 class MqttClient:
     def __init__(self, host, port=1883, client_id="amfwx", username=None,
-                 password=None, timeout=5.0):
+                 password=None, timeout=5.0, tls=False, cafile=None,
+                 certfile=None, keyfile=None, insecure=False):
         self.host = str(host)
         self.port = int(port)
         self.client_id = str(client_id)
         self.username = username
         self.password = password
         self.timeout = float(timeout)
+        self.tls = bool(tls)
+        self.cafile = cafile
+        self.certfile = certfile
+        self.keyfile = keyfile
+        self.insecure = bool(insecure)
         self.socket = None
 
     def connect(self):
         self.socket = socket.create_connection((self.host, self.port),
                                                timeout=self.timeout)
+        if self.tls:
+            import ssl
+            context = ssl.create_default_context(cafile=self.cafile)
+            if self.certfile:
+                context.load_cert_chain(self.certfile, self.keyfile)
+            if self.insecure:
+                context.check_hostname = False
+                context.verify_mode = ssl.CERT_NONE
+            self.socket = context.wrap_socket(self.socket,
+                                              server_hostname=self.host)
         flags = 0x02
         payload = encode_string(self.client_id)
         if self.username is not None:

@@ -46,7 +46,10 @@ class GoProTests(unittest.TestCase):
             camera = GoProCamera("127.0.0.1", server.server_port)
             self.assertEqual(camera.status()["status"], 0)
             camera.take_photo()
+            camera.start_video()
+            camera.stop_video()
             self.assertIn("/gp/gpControl/command/shutter?p=1", Handler.paths)
+            self.assertIn("/gp/gpControl/command/shutter?p=0", Handler.paths)
         finally:
             server.shutdown()
             server.server_close()

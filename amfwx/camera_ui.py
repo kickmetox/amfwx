@@ -25,6 +25,10 @@ class CameraWindow(Window):
         self.frames = LineEdit("5")
         self.interval = LineEdit("2")
         self.seconds = LineEdit("5")
+        self.brightness = LineEdit("", placeholder="auto")
+        self.contrast = LineEdit("", placeholder="auto")
+        self.exposure = LineEdit("", placeholder="auto")
+        self.focus = LineEdit("", placeholder="auto")
         self.chroma = CheckBox("Chroma Key (grün)", checked=False)
         self.preview = ImageView(fit=True)
         self.status = Label("Bereit.")
@@ -32,6 +36,7 @@ class CameraWindow(Window):
                                      variant="secondary")
         self.snapshot_button = Button("Einzelbild", on_click=self.snapshot)
         self.record_button = Button("Aufnehmen", on_click=self.record)
+        self.apply_button = Button("Einstellungen", on_click=self.apply_controls)
         self.tether_button = Button("Tethering", on_click=self.tether,
                                     variant="primary")
         self.close_button = Button("Schließen", on_click=self.close)
@@ -48,10 +53,14 @@ class CameraWindow(Window):
             HStack(Label("Aufnahmen"), self.frames),
             HStack(Label("Intervall"), self.interval),
             HStack(Label("Video-Sekunden"), self.seconds),
+            HStack(Label("Helligkeit"), self.brightness),
+            HStack(Label("Kontrast"), self.contrast),
+            HStack(Label("Belichtung"), self.exposure),
+            HStack(Label("Fokus"), self.focus),
             self.chroma,
             self.status,
             HStack(self.preview_button, self.snapshot_button,
-                   self.record_button),
+                   self.record_button, self.apply_button),
             HStack(self.tether_button, self.close_button),
         ]
         for row in rows:
@@ -125,6 +134,30 @@ class CameraWindow(Window):
             self.status.text = "Vorschau gestoppt."
         else:
             self.start_preview()
+
+    def apply_controls(self):
+        values = {
+            "brightness": self.brightness.text().strip(),
+            "contrast": self.contrast.text().strip(),
+            "exposure": self.exposure.text().strip(),
+            "focus": self.focus.text().strip(),
+        }
+        try:
+            camera = self._camera()
+            try:
+                applied = []
+                for name, text in values.items():
+                    if text:
+                        camera.set_control(name, float(text))
+                        applied.append(name)
+            finally:
+                camera.close()
+        except Exception as error:
+            self.status.text = f"Einstellungsfehler: {error}"
+        else:
+            self.status.text = ("Gesetzt: " + ", ".join(applied)
+                                if applied else "Keine Werte gesetzt.")
+        self.invalidate()
 
     def snapshot(self):
         self.stop_preview()

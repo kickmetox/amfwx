@@ -26,6 +26,7 @@ class AppConfig:
                  ocr_pdf=None, ocr_language=None, ocr_searchable=None,
                  scan_ocr=False, zigbee_host=None, zigbee_port=1883,
                  zigbee_devices=False, zigbee_set=None, zigbee_permit=None,
+                 zigbee_tls=False, zigbee_cafile=None, zigbee_insecure=False,
                  list_scanners=False, scan_wia=None, scan_twain32=None,
                  scan_naps2=None, scan_dpi=300, scan_adf=False,
                  scanner_ui=False, tuya34_host=None, tuya34_device=None,
@@ -87,6 +88,9 @@ class AppConfig:
         self.zigbee_devices = bool(zigbee_devices)
         self.zigbee_set = zigbee_set
         self.zigbee_permit = zigbee_permit
+        self.zigbee_tls = bool(zigbee_tls)
+        self.zigbee_cafile = zigbee_cafile
+        self.zigbee_insecure = bool(zigbee_insecure)
         self.list_scanners = bool(list_scanners)
         self.scan_wia = scan_wia
         self.scan_twain32 = scan_twain32
@@ -247,6 +251,13 @@ class AppConfig:
             elif value == "--zigbee-permit" and index + 1 < len(args):
                 index += 1
                 config.zigbee_permit = int(args[index])
+            elif value == "--zigbee-tls":
+                config.zigbee_tls = True
+            elif value == "--zigbee-cafile" and index + 1 < len(args):
+                index += 1
+                config.zigbee_cafile = args[index]
+            elif value == "--zigbee-insecure":
+                config.zigbee_insecure = True
             elif value == "--list-scanners":
                 config.list_scanners = True
             elif value == "--scan-wia" and index + 1 < len(args):
@@ -418,6 +429,9 @@ class AppConfig:
                 "  --zigbee-devices Geraete anzeigen\n"
                 "  --zigbee-set N=JSON Geraet setzen\n"
                 "  --zigbee-permit S Join fuer S Sekunden\n"
+                "  --zigbee-tls      MQTT TLS\n"
+                "  --zigbee-cafile F CA-Datei\n"
+                "  --zigbee-insecure TLS ohne Pruefung\n"
                 "  --list-scanners    WIA/TWAIN/NAPS2 anzeigen\n"
                 "  --scan-wia ID      WIA-Scan\n"
                 "  --scan-twain32 SRC 32-Bit-TWAIN-Scan\n"
@@ -812,7 +826,10 @@ class Application:
             from .zigbee2mqtt import Zigbee2Mqtt
             try:
                 zigbee = Zigbee2Mqtt(self.config.zigbee_host,
-                                     self.config.zigbee_port)
+                                     self.config.zigbee_port,
+                                     tls=self.config.zigbee_tls,
+                                     cafile=self.config.zigbee_cafile,
+                                     insecure=self.config.zigbee_insecure)
                 if self.config.zigbee_devices:
                     for device in zigbee.devices():
                         print(device.get("friendly_name", device))

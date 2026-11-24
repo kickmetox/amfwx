@@ -1,5 +1,25 @@
 ﻿# Changelog
 
+## 5.25.0 - 2026-11-24
+
+MQTT TLS.
+
+### IoT
+
+* TLS/CA/insecure.
+* Zigbee2MQTT.
+* 407 Tests.
+
+## 5.24.0 - 2026-11-24
+
+Kamera-Steuerung.
+
+### Cameras
+
+* Helligkeit/Kontrast/Belichtung/Fokus im Fenster.
+* GoPro Video Start/Stop.
+* 407 Tests.
+
 ## 5.23.0 - 2026-11-24
 
 PDF merge/split.

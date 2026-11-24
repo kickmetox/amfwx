@@ -15,6 +15,7 @@ class Zigbee2MqttError(RuntimeError):
 class Zigbee2Mqtt:
     def __init__(self, host, port=1883, base_topic="zigbee2mqtt",
                  client_id="amfwx-z2m", username=None, password=None,
+                 tls=False, cafile=None, insecure=False,
                  client_factory=None):
         self.host = host
         self.port = int(port)
@@ -22,12 +23,16 @@ class Zigbee2Mqtt:
         self.client_id = client_id
         self.username = username
         self.password = password
+        self.tls = bool(tls)
+        self.cafile = cafile
+        self.insecure = bool(insecure)
         self.client_factory = client_factory or MqttClient
 
     def _client(self):
         return self.client_factory(
             self.host, self.port, client_id=self.client_id,
-            username=self.username, password=self.password)
+            username=self.username, password=self.password,
+            tls=self.tls, cafile=self.cafile, insecure=self.insecure)
 
     def _read_json(self, topic, timeout=5.0):
         client = self._client()

@@ -43,6 +43,31 @@ class IpCamera:
         from PIL import Image
         return Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
+    def settings(self):
+        return {
+            "width": self.width, "height": self.height,
+            "fps": float(self.capture.get(cv2.CAP_PROP_FPS)),
+            "brightness": float(self.capture.get(cv2.CAP_PROP_BRIGHTNESS)),
+            "contrast": float(self.capture.get(cv2.CAP_PROP_CONTRAST)),
+            "saturation": float(self.capture.get(cv2.CAP_PROP_SATURATION)),
+            "gain": float(self.capture.get(cv2.CAP_PROP_GAIN)),
+            "exposure": float(self.capture.get(cv2.CAP_PROP_EXPOSURE)),
+            "focus": float(self.capture.get(cv2.CAP_PROP_FOCUS)),
+        }
+
+    def set_control(self, name, value):
+        properties = {
+            "brightness": cv2.CAP_PROP_BRIGHTNESS,
+            "contrast": cv2.CAP_PROP_CONTRAST,
+            "saturation": cv2.CAP_PROP_SATURATION,
+            "gain": cv2.CAP_PROP_GAIN,
+            "exposure": cv2.CAP_PROP_EXPOSURE,
+            "focus": cv2.CAP_PROP_FOCUS,
+        }
+        if name not in properties:
+            raise IpCameraError(f"unbekannte Einstellung: {name}")
+        return bool(self.capture.set(properties[name], float(value)))
+
     def tether(self, directory, count=10, interval=1.0, prefix="ipcam",
                chroma_key=None):
         folder = Path(directory)
