@@ -1,5 +1,16 @@
 ﻿# Changelog
 
+## 5.23.0 - 2026-11-24
+
+PDF merge/split.
+
+### Document
+
+* merge.
+* split.
+* CLI.
+* 407 Tests.
+
 ## 5.22.0 - 2026-11-24
 
 GoPro-Download.

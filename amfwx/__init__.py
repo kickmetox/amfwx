@@ -91,6 +91,7 @@ from .becker_usb import (BeckerError, BeckerStick, available as becker_available
                         generate_code as becker_code, list_sticks)
 from .rf import RfError, available as rf_available, discover as rf_discover, jarolift_devices
 from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
+from .pdf_tools import PdfToolError, merge as merge_pdfs, split as split_pdf
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
                   ocr_image, ocr_pdf)
 from .mtp import MtpError, download_images, list_mtp_devices
@@ -159,7 +160,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.22.0"
+__version__ = "5.23.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -187,7 +188,8 @@ __all__ = [
     "find_chip_tool", "BeckerStick", "BeckerError", "becker_available",
     "becker_code", "list_sticks", "rf_available", "rf_discover",
     "jarolift_devices", "ocr_available",
-    "ocr_image", "ocr_pdf", "make_searchable_pdf",
+    "ocr_image", "ocr_pdf", "make_searchable_pdf", "PdfToolError", "merge_pdfs",
+    "split_pdf",
     "download_images",
     "chroma_key", "composite", "save_chroma", "PrinterInfo", "list_printers", "print_raw", "print_file", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
     "GenericHttpDevice", "JaroliftBridge", "HomeError", "HomeRegistry", "HomeDevicesPanel",

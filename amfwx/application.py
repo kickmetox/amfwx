@@ -38,7 +38,8 @@ class AppConfig:
                  matter_code=None, matter_node=1, matter_action=None,
                  onvif_seconds=None, ip_camera=None, ip_snapshot=None,
                  ip_record=None, ip_seconds=5.0, gopro_host="10.5.5.9",
-                 gopro_download=None):
+                 gopro_download=None, pdf_merge=None, pdf_inputs=None,
+                 pdf_split=None, pdf_dir=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -123,6 +124,10 @@ class AppConfig:
         self.ip_seconds = float(ip_seconds)
         self.gopro_host = gopro_host
         self.gopro_download = gopro_download
+        self.pdf_merge = pdf_merge
+        self.pdf_inputs = list(pdf_inputs or [])
+        self.pdf_split = pdf_split
+        self.pdf_dir = pdf_dir
 
     @classmethod
     def parse(cls, argv=None):
@@ -348,6 +353,18 @@ class AppConfig:
             elif value == "--gopro-download" and index + 1 < len(args):
                 index += 1
                 config.gopro_download = args[index]
+            elif value == "--pdf-merge" and index + 1 < len(args):
+                index += 1
+                config.pdf_merge = args[index]
+            elif value == "--pdf-input" and index + 1 < len(args):
+                index += 1
+                config.pdf_inputs.append(args[index])
+            elif value == "--pdf-split" and index + 1 < len(args):
+                index += 1
+                config.pdf_split = args[index]
+            elif value == "--pdf-dir" and index + 1 < len(args):
+                index += 1
+                config.pdf_dir = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -434,6 +451,10 @@ class AppConfig:
                 "  --ip-record PATH   Videoaufnahme\n"
                 "  --gopro-host H     GoPro-IP\n"
                 "  --gopro-download DIR Medien laden\n"
+                "  --pdf-merge OUT    PDFs zusammenfuehren\n"
+                "  --pdf-input IN     PDF-Eingabe (mehrfach)\n"
+                "  --pdf-split IN     PDF teilen\n"
+                "  --pdf-dir DIR      Zielordner\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -661,6 +682,24 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.pdf_merge:
+            from .pdf_tools import merge
+            try:
+                print(merge(self.config.pdf_inputs, self.config.pdf_merge))
+            except Exception as error:
+                print(f"PDF-Merge fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.pdf_split:
+            from .pdf_tools import split
+            try:
+                folder = self.config.pdf_dir or "pdf_pages"
+                for filename in split(self.config.pdf_split, folder):
+                    print(filename)
+            except Exception as error:
+                print(f"PDF-Split fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.gopro_download:
