@@ -14,8 +14,8 @@ Stand: AMFWX 5.20.0
 | NAPS2-Adapter + ADF-Batch | ✅ |
 | eSCL HTTP/HTTPS | ✅ |
 | Kyocera ADF + Weck-Scan | ✅ real |
-| NAPS2 installiert/getestet | ❌ nicht installiert |
-| NAPS2 bündeln | ❌ GPL |
+| NAPS2 installiert/getestet | ✅ portable 8.6.1, realer Canon-Scan |
+| NAPS2 bündeln | ❌ GPL, aber portable Installation getestet |
 | Treiberpakete bündeln | ❌ Herstellersache |
 | WIA/TWAIN32-Mehrseiten im Treiber | ⚠️ treiberabhängig |
 | Scan-Profile/Deskew/Crop | ❌ |
@@ -102,7 +102,7 @@ Stand: AMFWX 5.20.0
 
 | Punkt | Status |
 |---|---|
-| Tests | 404 |
+| Tests | 407 |
 | CI | grün |
 | 32-Bit-Python im Release | ✅ |
 | 32-Bit-Python im CI-Artefakt | ❌ gitignored |
