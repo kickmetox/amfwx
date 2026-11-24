@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.38.0 - 2026-11-25
+
+Async-SDK.
+
+### SDK
+
+* `async_chat`.
+* `async_run`.
+* 425 Tests.
+
 ## 5.37.0 - 2026-11-25
 
 Agent-Streaming.

@@ -105,6 +105,13 @@ class AgentTests(unittest.TestCase):
         self.assertEqual("".join(agent.run_stream("hi")), "Hallo")
         agent.close()
 
+    def test_async_run(self):
+        import asyncio
+        agent = LLMAgent(EchoProvider(), session=UiSession())
+        result = asyncio.run(agent.async_run("hallo"))
+        self.assertIn("hallo", result)
+        agent.close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

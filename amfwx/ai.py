@@ -89,6 +89,10 @@ class AIProvider:
     def chat(self, messages, tools=None, stream=False):
         raise NotImplementedError
 
+    async def async_chat(self, messages, tools=None, stream=False):
+        import asyncio
+        return await asyncio.to_thread(self.chat, messages, tools, stream)
+
 
 def _normalize_ollama(data):
     message = data.get("message") or {}

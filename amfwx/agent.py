@@ -25,6 +25,10 @@ class LLMAgent:
         self.last_tool_results = []
         self._cancelled = False
 
+    async def async_run(self, text, image=None):
+        import asyncio
+        return await asyncio.to_thread(self.run, text, image)
+
     def cancel(self):
         self._cancelled = True
 
