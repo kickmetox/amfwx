@@ -108,9 +108,10 @@ def print_raw(path, printer_name, job_name=None, datatype="RAW"):
         winspool.ClosePrinter(handle)
 
 
-def print_file(path, printer_name, job_name=None):
+def print_file(path, printer_name, job_name=None, copies=1, duplex=False):
     path = Path(path)
     if path.suffix.lower() == ".pdf":
         from .pdf_print import print_pdf
-        return print_pdf(path, printer_name)
+        return print_pdf(path, printer_name, copies=copies,
+                         duplex=duplex)
     return print_raw(path, printer_name, job_name)

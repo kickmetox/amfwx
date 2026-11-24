@@ -38,6 +38,7 @@ class BITMAPINFO(ctypes.Structure):
 
 
 gdi32 = ctypes.WinDLL("gdi32", use_last_error=True)
+winspool = ctypes.WinDLL("winspool.drv", use_last_error=True)
 gdi32.CreateDCW.argtypes = [wintypes.LPCWSTR, wintypes.LPCWSTR,
                             wintypes.LPCWSTR, ctypes.c_void_p]
 gdi32.CreateDCW.restype = wintypes.HDC
@@ -218,8 +219,154 @@ def _print_dib(images, hdc, page_width, page_height):
             gdi32.EndPage(hdc)
 
 
-def print_images(images, printer_name, document_name="AMFWX", output_file=None):
-    hdc = gdi32.CreateDCW("WINSPOOL", printer_name, None, None)
+
+class DEVMODEW(ctypes.Structure):
+    _fields_ = [
+        ("dmDeviceName", wintypes.WCHAR * 32),
+        ("dmSpecVersion", wintypes.WORD),
+        ("dmDriverVersion", wintypes.WORD),
+        ("dmSize", wintypes.WORD),
+        ("dmDriverExtra", wintypes.WORD),
+        ("dmFields", wintypes.DWORD),
+        ("dmOrientation", wintypes.SHORT),
+        ("dmPaperSize", wintypes.SHORT),
+        ("dmPaperLength", wintypes.SHORT),
+        ("dmPaperWidth", wintypes.SHORT),
+        ("dmScale", wintypes.SHORT),
+        ("dmCopies", wintypes.SHORT),
+        ("dmDefaultSource", wintypes.SHORT),
+        ("dmPrintQuality", wintypes.SHORT),
+        ("dmColor", wintypes.SHORT),
+        ("dmDuplex", wintypes.SHORT),
+    ]
+
+
+class PRINTER_INFO_2W(ctypes.Structure):
+    _fields_ = [
+        ("pServerName", wintypes.LPWSTR),
+        ("pPrinterName", wintypes.LPWSTR),
+        ("pShareName", wintypes.LPWSTR),
+        ("pPortName", wintypes.LPWSTR),
+        ("pDriverName", wintypes.LPWSTR),
+        ("pComment", wintypes.LPWSTR),
+        ("pLocation", wintypes.LPWSTR),
+        ("pDevMode", ctypes.c_void_p),
+        ("pSepFile", wintypes.LPWSTR),
+        ("pPrintProcessor", wintypes.LPWSTR),
+        ("pDatatype", wintypes.LPWSTR),
+        ("pParameters", wintypes.LPWSTR),
+        ("pSecurityDescriptor", ctypes.c_void_p),
+        ("Attributes", wintypes.DWORD),
+        ("Priority", wintypes.DWORD),
+        ("DefaultPriority", wintypes.DWORD),
+        ("StartTime", wintypes.DWORD),
+        ("UntilTime", wintypes.DWORD),
+        ("Status", wintypes.DWORD),
+        ("cJobs", wintypes.DWORD),
+        ("AveragePPM", wintypes.DWORD),
+    ]
+
+
+DM_COPIES = 0x0100
+DM_DUPLEX = 0x1000
+
+
+def _devmode(printer_name, copies=1, duplex=False):
+    if int(copies) <= 1 and not duplex:
+        return None
+    winspool.OpenPrinterW.argtypes = [wintypes.LPCWSTR,
+                                      ctypes.POINTER(wintypes.HANDLE),
+                                      ctypes.c_void_p]
+    winspool.GetPrinterW.argtypes = [wintypes.HANDLE, wintypes.DWORD,
+                                     ctypes.c_void_p, wintypes.DWORD,
+                                     ctypes.POINTER(wintypes.DWORD)]
+    winspool.ClosePrinter.argtypes = [wintypes.HANDLE]
+    handle = wintypes.HANDLE()
+    if not winspool.OpenPrinterW(printer_name, ctypes.byref(handle), None):
+        return None
+    try:
+        needed = wintypes.DWORD()
+        winspool.GetPrinterW(handle, 2, None, 0, ctypes.byref(needed))
+        if needed.value == 0:
+            return None
+        info_buffer = ctypes.create_string_buffer(needed.value)
+        if not winspool.GetPrinterW(handle, 2, info_buffer, needed.value,
+                                    ctypes.byref(needed)):
+            return None
+        info = ctypes.cast(info_buffer,
+                           ctypes.POINTER(PRINTER_INFO_2W)).contents
+        if not info.pDevMode:
+            return None
+        source = ctypes.cast(info.pDevMode,
+                             ctypes.POINTER(DEVMODEW)).contents
+        size = int(source.dmSize) + int(source.dmDriverExtra)
+        if size <= 0:
+            return None
+        buffer = ctypes.create_string_buffer(size)
+        ctypes.memmove(buffer, info.pDevMode, size)
+        devmode = ctypes.cast(buffer, ctypes.POINTER(DEVMODEW))
+        fields = devmode.contents.dmFields | DM_COPIES
+        devmode.contents.dmCopies = max(1, int(copies))
+        if duplex:
+            devmode.contents.dmDuplex = 2
+            fields |= DM_DUPLEX
+        devmode.contents.dmFields = fields
+        return devmode
+    finally:
+        winspool.ClosePrinter(handle)
+
+def _print_dib(images, hdc, page_width, page_height):
+    gdi32.SetStretchBltMode(hdc, HALFTONE)
+    for image in images:
+        width, height, buffer, info = _dib(image)
+        scale = min(page_width / max(1, width), page_height / max(1, height))
+        target_width = max(1, int(width * scale))
+        target_height = max(1, int(height * scale))
+        if not gdi32.StartPage(hdc):
+            raise PdfPrintError(f"StartPage: {ctypes.get_last_error()}")
+        try:
+            result = gdi32.StretchDIBits(
+                hdc, 0, 0, target_width, target_height, 0, 0, width, height,
+                buffer, ctypes.byref(info), DIB_RGB_COLORS, SRCCOPY)
+            if result == 0:
+                raise PdfPrintError(f"StretchDIBits: {ctypes.get_last_error()}")
+        finally:
+            gdi32.EndPage(hdc)
+
+
+
+class DEVMODEW(ctypes.Structure):
+    _fields_ = [
+        ("dmDeviceName", wintypes.WCHAR * 32),
+        ("dmSpecVersion", wintypes.WORD),
+        ("dmDriverVersion", wintypes.WORD),
+        ("dmSize", wintypes.WORD),
+        ("dmDriverExtra", wintypes.WORD),
+        ("dmFields", wintypes.DWORD),
+        ("dmOrientation", wintypes.SHORT),
+        ("dmPaperSize", wintypes.SHORT),
+        ("dmPaperLength", wintypes.SHORT),
+        ("dmPaperWidth", wintypes.SHORT),
+        ("dmScale", wintypes.SHORT),
+        ("dmCopies", wintypes.SHORT),
+        ("dmDefaultSource", wintypes.SHORT),
+        ("dmPrintQuality", wintypes.SHORT),
+        ("dmColor", wintypes.SHORT),
+        ("dmDuplex", wintypes.SHORT),
+    ]
+
+
+DM_OUT_BUFFER = 2
+DM_IN_BUFFER = 8
+DM_COPIES = 0x0100
+DM_DUPLEX = 0x1000
+
+
+def print_images(images, printer_name, document_name="AMFWX", output_file=None,
+                 copies=1, duplex=False):
+    devmode = _devmode(printer_name, copies, duplex)
+    hdc = gdi32.CreateDCW("WINSPOOL", printer_name, None,
+                          ctypes.byref(devmode) if devmode else None)
     if not hdc:
         raise PdfPrintError(f"CreateDC: {ctypes.get_last_error()}")
     document = DOCINFOW(ctypes.sizeof(DOCINFOW), document_name, output_file, None, 0)
@@ -238,6 +385,6 @@ def print_images(images, printer_name, document_name="AMFWX", output_file=None):
     return True
 
 
-def print_pdf(path, printer_name, dpi=150):
+def print_pdf(path, printer_name, dpi=150, copies=1, duplex=False):
     return print_images(render_pdf(path, dpi), printer_name,
-                        Path(path).name)
+                        Path(path).name, copies=copies, duplex=duplex)

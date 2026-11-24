@@ -1,5 +1,15 @@
 ﻿# Changelog
 
+## 5.19.0 - 2026-11-24
+
+Windows Kopien/Duplex.
+
+### Printing
+
+* DEVMODE.
+* `--copies`/`--duplex` auch Windows.
+* 402 Tests.
+
 ## 5.18.0 - 2026-11-24
 
 NAPS2-ADF.

@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from amfwx import images_to_pdf
-from amfwx.pdf_print import render_pdf
+from amfwx.pdf_print import _devmode, render_pdf
 
 
 def available():
@@ -38,6 +38,11 @@ class PdfPrintTests(unittest.TestCase):
             pages = render_pdf(pdf, dpi=72)
             self.assertEqual(len(pages), 1)
             self.assertGreater(pages[0].width, 0)
+
+    def test_devmode(self):
+        devmode = _devmode('ECOSYS M5521cdn', 2, True)
+        self.assertIsNotNone(devmode)
+        self.assertEqual(devmode.contents.dmCopies, 2)
 
 
 if __name__ == "__main__":

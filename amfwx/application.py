@@ -537,7 +537,9 @@ class Application:
                 print("--printer fehlt")
                 return 2
             try:
-                job = print_file(self.config.print_file, self.config.printer)
+                job = print_file(self.config.print_file, self.config.printer,
+                                 copies=self.config.ipp_copies,
+                                 duplex=self.config.ipp_duplex)
             except Exception as error:
                 print(f"Druck fehlgeschlagen: {error}")
                 return 1
