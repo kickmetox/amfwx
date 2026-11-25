@@ -10,6 +10,7 @@ from pathlib import Path
 from .quick import HStack
 from .scan_pdf import images_to_pdf
 from .scan_transfer import default_scan_dir
+from .profiles import ProfileStore
 from .widgets import BoxLayout, Button, CheckBox, ComboBox, Label, LineEdit
 from .window import Window
 
@@ -18,6 +19,13 @@ class ScannerWindow(Window):
     def __init__(self):
         super().__init__("AMFWX Scanner", 760, 480)
         self.backend = ComboBox(["WIA", "TWAIN32", "NAPS2"], 0)
+        self.profile = ComboBox([], 0)
+        self.profile_name = LineEdit("", placeholder="Profilname")
+        self.profile_store = ProfileStore()
+        self.save_profile_button = Button("Profil speichern",
+                                          on_click=self.save_profile)
+        self.load_profile_button = Button("Profil laden",
+                                          on_click=self.load_profile)
         self.source = ComboBox([], 0)
         self.folder = LineEdit(str(default_scan_dir()))
         self.dpi = LineEdit("300")
@@ -38,6 +46,8 @@ class ScannerWindow(Window):
         self.root.children.clear()
         self.layout.items.clear()
         for row in [
+            HStack(Label("Profil"), self.profile, self.profile_name,
+                   self.save_profile_button, self.load_profile_button),
             HStack(Label("Backend"), self.backend, self.refresh_button),
             HStack(Label("Quelle"), self.source),
             HStack(Label("Ordner"), self.folder),
@@ -52,7 +62,64 @@ class ScannerWindow(Window):
             self.layout.add(row)
         self._layout_root()
         self.invalidate()
+        self._refresh_profiles()
         self.refresh()
+
+    def _refresh_profiles(self):
+        self.profile.items = self.profile_store.names("scanner")
+        if self.profile.items:
+            self.profile.current_index = 0
+
+    def _profile_values(self):
+        return {
+            "backend": self.backend.current_text(),
+            "source": self.source.current_text(),
+            "folder": self.folder.text(),
+            "dpi": self.dpi.text(),
+            "pdf": self.pdf.checked,
+            "ocr": self.ocr.checked,
+            "language": self.language.text(),
+            "adf": self.adf.checked,
+            "deskew": self.deskew.checked,
+            "crop": self.crop.checked,
+            "drop_blank": self.drop_blank.checked,
+        }
+
+    def save_profile(self):
+        name = (self.profile_name.text().strip() or
+                self.profile.current_text())
+        if not name:
+            self.status.text = "Kein Profilname vorhanden."
+            self.invalidate()
+            return
+        self.profile_store.save("scanner", name, self._profile_values())
+        self.profile_name.set_text(name)
+        self._refresh_profiles()
+        self.status.text = f"Profil gespeichert: {name}"
+        self.invalidate()
+
+    def load_profile(self):
+        name = (self.profile_name.text().strip() or
+                self.profile.current_text())
+        if not name:
+            return
+        try:
+            values = self.profile_store.load("scanner", name)
+        except Exception as error:
+            self.status.text = f"Profilfehler: {error}"
+            self.invalidate()
+            return
+        self.folder.set_text(values.get("folder", self.folder.text()))
+        self.dpi.set_text(values.get("dpi", self.dpi.text()))
+        self.language.set_text(values.get("language", self.language.text()))
+        for widget, key in ((self.pdf, "pdf"), (self.ocr, "ocr"),
+                            (self.adf, "adf"), (self.deskew, "deskew"),
+                            (self.crop, "crop"),
+                            (self.drop_blank, "drop_blank")):
+            if hasattr(widget, "checked"):
+                widget.checked = bool(values.get(key, widget.checked))
+        self.status.text = f"Profil geladen: {name}"
+        self.invalidate()
 
     def _backend(self):
         return self.backend.current_text().lower()

@@ -28,6 +28,7 @@ from .text import draw_text, measure_text
 from .textedit import TextEdit
 from .arabic import arabic_shape
 from .audio import AudioPlayer, AudioQueuePlayer, Wav, decode_wav
+from .profiles import ProfileError, ProfileStore
 from .settings import Settings, default_path
 from .models import ListModel, Model, SortFilterModel, TableModel
 from .quick import (ForEach, HStack, ListState, QuickView, Stack, State,
@@ -173,14 +174,14 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.42.0"
+__version__ = "5.43.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
     "ProgressBar", "ColorPicker", "FilePicker",
     "ScrollBar", "MenuBar", "RadioButton", "SpinBox", "ListBox", "TableView", "TreeView", "TreeItem",
     "BoxLayout", "GridLayout",
-    "FormLayout", "Dialog", "MessageBox", "FindReplaceDialog", "ColorDialog", "ColorSwatch", "FontDialog", "Settings", "default_path", "Model", "ListModel", "TableModel",
+    "FormLayout", "Dialog", "MessageBox", "FindReplaceDialog", "ColorDialog", "ColorSwatch", "FontDialog", "Settings", "ProfileStore", "ProfileError", "default_path", "Model", "ListModel", "TableModel",
     "SortFilterModel", "QuickView", "State", "ListState", "Stack", "VStack", "HStack",
     "ForEach", "Text", "TextField", "Animation", "Timeline",
     "AnimatedValue", "linear", "ease_in", "ease_out", "ease_in_out",

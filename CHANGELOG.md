@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.43.0 - 2026-11-25
+
+Scanner-Profile.
+
+### Scanner
+
+* Profile speichern/laden.
+* 431 Tests.
+
 ## 5.42.0 - 2026-11-25
 
 Druckvorschau.
