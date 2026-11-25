@@ -1,5 +1,20 @@
 ﻿# Changelog
 
+## 5.45.0 - 2026-11-25
+
+Hardwarefreier Block.
+
+### Cameras
+
+* Plugin-Registry.
+
+### UI
+
+* Dashboard-Aktionen.
+* Druck-Profile.
+* PDF-Text.
+* 433 Tests.
+
 ## 5.44.1 - 2026-11-25
 
 TWAIN-Test robust.

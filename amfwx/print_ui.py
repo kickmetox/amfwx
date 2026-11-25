@@ -8,6 +8,7 @@ from .advanced import ImageView
 from .pdf_print import print_pdf, render_pdf
 from .quick import HStack
 from .widgets import BoxLayout, Button, CheckBox, ComboBox, Label, LineEdit
+from .profiles import ProfileStore
 from .window import Window
 
 
@@ -17,6 +18,13 @@ class PrintPreviewWindow(Window):
         self.pdf_path = str(pdf_path or "")
         self.printer_name = str(printer_name or "")
         self.preview = ImageView(fit=True)
+        self.profile = ComboBox([], 0)
+        self.profile_name = LineEdit("", placeholder="Profilname")
+        self.profile_store = ProfileStore()
+        self.save_profile_button = Button("Profil speichern",
+                                          on_click=self.save_profile)
+        self.load_profile_button = Button("Profil laden",
+                                          on_click=self.load_profile)
         self.paper = ComboBox(["A4", "A5", "A3", "Letter", "Legal"], 0)
         self.copies = LineEdit("1")
         self.duplex = CheckBox("Duplex", checked=False)
@@ -29,6 +37,8 @@ class PrintPreviewWindow(Window):
         self.root.children.clear()
         self.layout.items.clear()
         for row in [
+            HStack(Label("Profil"), self.profile, self.profile_name,
+                   self.save_profile_button, self.load_profile_button),
             self.preview,
             HStack(Label("Papier"), self.paper),
             HStack(Label("Kopien"), self.copies),
@@ -40,7 +50,52 @@ class PrintPreviewWindow(Window):
             self.layout.add(row)
         self._layout_root()
         self.invalidate()
+        self._refresh_profiles()
         self._load_preview()
+
+    def _refresh_profiles(self):
+        self.profile.items = self.profile_store.names("print")
+        if self.profile.items:
+            self.profile.current_index = 0
+
+    def _values(self):
+        return {"paper": self.paper.current_text(),
+                "copies": self.copies.text(),
+                "duplex": self.duplex.checked,
+                "landscape": self.landscape.checked}
+
+    def save_profile(self):
+        name = (self.profile_name.text().strip() or
+                self.profile.current_text())
+        if not name:
+            self.status.text = "Kein Profilname vorhanden."
+            self.invalidate()
+            return
+        self.profile_store.save("print", name, self._values())
+        self.profile_name.set_text(name)
+        self._refresh_profiles()
+        self.status.text = f"Profil gespeichert: {name}"
+        self.invalidate()
+
+    def load_profile(self):
+        name = self.profile.current_text()
+        if not name:
+            return
+        try:
+            values = self.profile_store.load("print", name)
+        except Exception as error:
+            self.status.text = f"Profilfehler: {error}"
+            self.invalidate()
+            return
+        self.copies.set_text(values.get("copies", self.copies.text()))
+        self.duplex.checked = bool(values.get("duplex", self.duplex.checked))
+        self.landscape.checked = bool(values.get("landscape",
+                                                 self.landscape.checked))
+        paper = values.get("paper", self.paper.current_text())
+        if paper in self.paper.items:
+            self.paper.current_index = self.paper.items.index(paper)
+        self.status.text = f"Profil geladen: {name}"
+        self.invalidate()
 
     def _load_preview(self):
         if not self.pdf_path:

@@ -69,3 +69,18 @@ def page_count(path):
         return document.page_count
     finally:
         document.close()
+
+
+def extract_text(path, pages=None):
+    module = _pymupdf()
+    source = module.open(str(path))
+    try:
+        indexes = (range(source.page_count) if pages is None else
+                   [int(page) - 1 for page in pages])
+        texts = []
+        for index in indexes:
+            if 0 <= index < source.page_count:
+                texts.append(source[index].get_text())
+    finally:
+        source.close()
+    return "\n\n".join(texts)

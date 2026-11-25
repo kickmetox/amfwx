@@ -98,7 +98,8 @@ from .becker_usb import (BeckerError, BeckerStick, available as becker_available
                         parse_packet as becker_parse)
 from .rf import RfError, available as rf_available, discover as rf_discover, jarolift_devices
 from .zigbee2mqtt import Zigbee2Mqtt, Zigbee2MqttError
-from .pdf_tools import PdfToolError, merge as merge_pdfs, split as split_pdf
+from .pdf_tools import (PdfToolError, extract_text as pdf_extract_text,
+                        merge as merge_pdfs, split as split_pdf)
 from .update import (UpdateError, check as check_update, download_update,
                      is_newer, pick_installer)
 from .ocr import (OcrError, available as ocr_available, make_searchable_pdf,
@@ -107,6 +108,9 @@ from .mtp import MtpError, download_images, list_mtp_devices
 from .jarolift import JaroliftController, JaroliftError
 from .onvif import OnvifError, discover as onvif_discover, parse_response as onvif_parse
 from .ipcam import IpCamera, IpCameraError
+from .camera_plugins import (CameraDriver, CameraPluginError, WebcamDriver,
+                            IpCameraDriver, register_camera_driver, unregister_camera_driver,
+                            list_camera_drivers, create_camera_driver)
 from .camera import (CameraInfo, Webcam, WebcamError, list_cameras,
                      list_pnp_cameras)
 from .gopro import GoProCamera, GoProError
@@ -174,7 +178,7 @@ from .widgets import (
 )
 from .window import Window
 
-__version__ = "5.44.1"
+__version__ = "5.45.0"
 __all__ = [
     "Canvas", "Color", "Rect", "Window", "Widget", "Panel", "Label",
     "Button", "LineEdit", "CheckBox", "Slider", "ComboBox", "ScrollArea",
@@ -197,7 +201,10 @@ __all__ = [
     "discover_mdns", "CanError", "CanFrame", "PcanBus", "LinError", "LinFrame", "PcanLin", "S7Client", "S7Error", "OpcUaClient", "OpcUaError", "DeviceManager", "list_devices", "NetworkDevice", "PrinterEndpoint", "scan_network", "EsclError", "EsclScanner", "default_scan_dir",
     "transfer_files", "scan_to_folder", "images_to_pdf",
     "scan_to_pdf", "PostProcessError", "crop_white", "deskew",
-    "estimate_skew", "is_blank", "postprocess", "postprocess_pages", "ScanWindow", "DashboardWindow", "PrintPreviewWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "IpCameraError", "OnvifError", "JaroliftController", "JaroliftError",
+    "estimate_skew", "is_blank", "postprocess", "postprocess_pages", "ScanWindow", "DashboardWindow", "PrintPreviewWindow", "ScannerWindow", "CameraInfo", "CameraWindow", "Webcam", "WebcamError", "IpCamera", "CameraDriver", "CameraPluginError", "WebcamDriver",
+    "IpCameraDriver", "register_camera_driver", "unregister_camera_driver",
+    "list_camera_drivers",
+    "create_camera_driver", "IpCameraError", "OnvifError", "JaroliftController", "JaroliftError",
     "onvif_discover", "onvif_parse", "list_cameras",
     "list_pnp_cameras", "GoProCamera", "GoProError", "GPhoto2Camera",
     "GPhoto2Error", "MtpError", "list_mtp_devices", "OcrError", "UpdateError", "check_update", "download_update",
@@ -206,7 +213,7 @@ __all__ = [
     "becker_code", "list_sticks", "becker_parse", "rf_available", "rf_discover",
     "jarolift_devices", "ocr_available",
     "ocr_image", "ocr_pdf", "make_searchable_pdf", "PdfToolError", "merge_pdfs",
-    "split_pdf",
+    "split_pdf", "pdf_extract_text",
     "download_images",
     "chroma_key", "composite", "save_chroma", "PrinterInfo", "list_printers", "print_raw", "print_file", "IppError", "IppPrinter", "diagnostics", "format_diagnostics", "FritzBox", "FritzError", "ShellyDevice", "FibaroHomeCenter",
     "GenericHttpDevice", "JaroliftBridge", "HomeError", "HomeRegistry", "HomeDevicesPanel",

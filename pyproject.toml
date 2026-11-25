@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "amfwx"
-version = "5.44.1"
+version = "5.45.0"
 description = "AMFWX - an independent self-contained GUI framework experiment"
 readme = "README.md"
 requires-python = ">=3.10"

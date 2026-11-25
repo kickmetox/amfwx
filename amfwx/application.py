@@ -49,7 +49,8 @@ class AppConfig:
                  jarolift_position=None, tuya_discover=None,
                  install_naps2=None, check_update=False,
                  download_update=None, dashboard=False,
-                 llm_tools=False, print_preview=None):
+                 llm_tools=False, print_preview=None, pdf_text=None,
+                 pdf_text_out=None):
         self.title = str(title)
         self.width = int(width)
         self.height = int(height)
@@ -158,6 +159,8 @@ class AppConfig:
         self.dashboard = bool(dashboard)
         self.llm_tools = bool(llm_tools)
         self.print_preview = print_preview
+        self.pdf_text = pdf_text
+        self.pdf_text_out = pdf_text_out
 
     @classmethod
     def parse(cls, argv=None):
@@ -449,6 +452,12 @@ class AppConfig:
             elif value == "--print-preview" and index + 1 < len(args):
                 index += 1
                 config.print_preview = args[index]
+            elif value == "--pdf-text" and index + 1 < len(args):
+                index += 1
+                config.pdf_text = args[index]
+            elif value == "--pdf-text-out" and index + 1 < len(args):
+                index += 1
+                config.pdf_text_out = args[index]
             elif value == "--no-single":
                 config.single = False
             elif value == "--theme" and index + 1 < len(args):
@@ -558,6 +567,8 @@ class AppConfig:
                 "  --dashboard       Geraete-Zentrale\n"
                 "  --llm-tools       LLM-Tool-Schemas ausgeben\n"
                 "  --print-preview F Druckvorschau\n"
+                "  --pdf-text IN     PDF-Text extrahieren\n"
+                "  --pdf-text-out F  Textdatei\n"
                 "  -h, --help      Hilfe anzeigen\n")
 
 
@@ -787,6 +798,21 @@ class Application:
                         print(device.status())
             except Exception as error:
                 print(f"Tuya 3.4 fehlgeschlagen: {error}")
+                return 1
+            return 0
+        if self.config.pdf_text:
+            from .pdf_tools import extract_text
+            try:
+                text = extract_text(self.config.pdf_text)
+                if self.config.pdf_text_out:
+                    from pathlib import Path
+                    Path(self.config.pdf_text_out).write_text(
+                        text, encoding="utf-8")
+                    print(self.config.pdf_text_out)
+                else:
+                    print(text)
+            except Exception as error:
+                print(f"PDF-Text fehlgeschlagen: {error}")
                 return 1
             return 0
         if self.config.print_preview:

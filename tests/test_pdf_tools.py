@@ -10,7 +10,8 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from amfwx import AppConfig, images_to_pdf, merge_pdfs, split_pdf
+from amfwx import (AppConfig, images_to_pdf, merge_pdfs, pdf_extract_text,
+                   split_pdf)
 
 
 @unittest.skipUnless(__import__("importlib").util.find_spec("pymupdf")
@@ -37,6 +38,7 @@ class PdfToolTests(unittest.TestCase):
             pages = Path(folder) / "pages"
             outputs = split_pdf(merged, pages)
             self.assertEqual(len(outputs), 2)
+            self.assertIn("", pdf_extract_text(merged))
 
     def test_cli(self):
         config = AppConfig.parse(["--pdf-merge", "out.pdf",

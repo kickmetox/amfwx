@@ -7,7 +7,8 @@ import threading
 from .camera import list_cameras, list_pnp_cameras
 from .devices import DeviceManager
 from .quick import HStack
-from .widgets import BoxLayout, Button, ComboBox, Label, ListBox
+from .widgets import (BoxLayout, Button, ComboBox, FilePicker, Label,
+                      ListBox)
 from .window import Window
 from .winprint import list_printers
 
@@ -22,6 +23,10 @@ class DashboardWindow(Window):
         ], 6, on_change=lambda _value: self.on_category())
         self.items = ListBox()
         self.summary = Label("Lade Geräte...")
+        self.print_file = FilePicker("", filters=[("PDF", "*.pdf")])
+        self.scanner_button = Button("Scanner", on_click=self.open_scanner)
+        self.camera_button = Button("Kamera", on_click=self.open_camera)
+        self.print_button = Button("Druckvorschau", on_click=self.open_print)
         self.status = Label("Bereit.")
         self.refresh_button = Button("Aktualisieren", on_click=self.refresh,
                                      variant="primary")
@@ -31,6 +36,8 @@ class DashboardWindow(Window):
         self.layout.items.clear()
         for row in [
             HStack(Label("Kategorie"), self.category, self.refresh_button),
+            HStack(self.scanner_button, self.camera_button, self.print_button),
+            self.print_file,
             self.summary,
             self.items,
             self.status,
@@ -89,6 +96,26 @@ class DashboardWindow(Window):
                        category, category.lower())
             items = [str(value) for value in data.get(key, [])]
         self.items.set_items(items)
+
+    def open_scanner(self):
+        from .scanner_ui import ScannerWindow
+        window = ScannerWindow()
+        window.run()
+
+    def open_camera(self):
+        from .camera_ui import CameraWindow
+        window = CameraWindow()
+        window.run()
+
+    def open_print(self):
+        path = self.print_file.path
+        if not path:
+            self.status.text = "Keine PDF gewählt."
+            self.invalidate()
+            return
+        from .print_ui import PrintPreviewWindow
+        window = PrintPreviewWindow(path)
+        window.run()
 
     def on_category(self):
         self._populate()
