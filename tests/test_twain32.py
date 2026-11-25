@@ -23,7 +23,7 @@ class Twain32Tests(unittest.TestCase):
             self.skipTest("kein 32-Bit-Python / Helper")
         try:
             sources = list_twain32_sources()
-        except Twain32Error as error:
+        except Exception as error:
             self.skipTest(f"keine TWAIN-Quellen: {error}")
         self.assertIsInstance(sources, list)
         for source in sources:

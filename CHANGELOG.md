@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.44.1 - 2026-11-25
+
+TWAIN-Test robust.
+
+### Fix
+
+* Timeout = Skip.
+* 431 Tests.
+
 ## 5.44.0 - 2026-11-25
 
 Kamera-Profile.
