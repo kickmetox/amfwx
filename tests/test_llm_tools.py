@@ -112,6 +112,21 @@ class AgentTests(unittest.TestCase):
         self.assertIn("hallo", result)
         agent.close()
 
+    def test_app_tool_timeout(self):
+        import time
+        from amfwx.devices import DeviceManager
+        original = DeviceManager.refresh
+        DeviceManager.refresh = lambda self: time.sleep(0.5)
+        try:
+            session = UiSession()
+            session.allow_app_actions = True
+            session.app_tool_timeout = 0.01
+            result = call_tool(session, "list_devices", {})
+            self.assertFalse(result["ok"])
+            self.assertIn("Timeout", result["error"])
+        finally:
+            DeviceManager.refresh = original
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

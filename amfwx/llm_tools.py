@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import concurrent.futures
 import json
 import os
 import tempfile
@@ -38,6 +39,7 @@ class UiSession:
         self.widgets = {}
         self._next_id = 1
         self.allow_app_actions = False
+        self.app_tool_timeout = 30.0
 
     def create_window(self, title="AMFWX", width=640, height=480,
                       theme=None):
@@ -47,6 +49,7 @@ class UiSession:
         self.widgets = {}
         self._next_id = 1
         self.allow_app_actions = False
+        self.app_tool_timeout = 30.0
         self.window._layout_root()
         return {"ok": True, "window": str(title),
                 "width": int(width), "height": int(height)}
@@ -237,39 +240,53 @@ def call_tool(session, name, arguments):
             if not getattr(session, "allow_app_actions", False):
                 return {"ok": False,
                         "error": "App-Aktionen sind deaktiviert"}
-            if name == "list_devices":
-                from .devices import DeviceManager
-                return {"ok": True, "devices": DeviceManager().refresh().summary()}
-            if name == "scan_document":
-                from .escl import EsclScanner
-                from .scan_pdf import scan_to_pdf
-                scanner = EsclScanner(arguments["host"])
-                return {"ok": True, "path": scan_to_pdf(
-                    scanner, arguments["output"],
-                    source=arguments.get("source", "Platen"),
-                    max_pages=int(arguments.get("pages", 1)))}
-            if name == "print_file":
-                from .winprint import print_file
-                return {"ok": True, "job": print_file(
-                    arguments["path"], arguments["printer"],
-                    copies=int(arguments.get("copies", 1)),
-                    duplex=bool(arguments.get("duplex", False)))}
-            if name == "camera_snapshot":
-                from .camera import Webcam
-                from .ipcam import IpCamera
-                camera = (IpCamera(arguments["url"])
-                          if arguments.get("url") else
-                          Webcam(int(arguments.get("index", 0))))
-                try:
-                    camera.read().save(arguments["path"])
-                finally:
-                    camera.close()
-                return {"ok": True, "path": arguments["path"]}
+            timeout = float(getattr(session, "app_tool_timeout", 30.0))
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(_app_call, name, arguments)
+            try:
+                return future.result(timeout=max(0.01, timeout))
+            except concurrent.futures.TimeoutError:
+                return {"ok": False,
+                        "error": f"App-Tool-Timeout nach {timeout:g}s"}
+            finally:
+                executor.shutdown(wait=False)
         if name == "snapshot_base64":
             return session.snapshot_base64()
         return {"ok": False, "error": f"unbekanntes Tool: {name}"}
     except Exception as error:
         return {"ok": False, "error": str(error)}
+
+
+def _app_call(name, arguments):
+    if name == "list_devices":
+        from .devices import DeviceManager
+        return {"ok": True, "devices": DeviceManager().refresh().summary()}
+    if name == "scan_document":
+        from .escl import EsclScanner
+        from .scan_pdf import scan_to_pdf
+        scanner = EsclScanner(arguments["host"])
+        return {"ok": True, "path": scan_to_pdf(
+            scanner, arguments["output"],
+            source=arguments.get("source", "Platen"),
+            max_pages=int(arguments.get("pages", 1)))}
+    if name == "print_file":
+        from .winprint import print_file
+        return {"ok": True, "job": print_file(
+            arguments["path"], arguments["printer"],
+            copies=int(arguments.get("copies", 1)),
+            duplex=bool(arguments.get("duplex", False)))}
+    if name == "camera_snapshot":
+        from .camera import Webcam
+        from .ipcam import IpCamera
+        camera = (IpCamera(arguments["url"])
+                  if arguments.get("url") else
+                  Webcam(int(arguments.get("index", 0))))
+        try:
+            camera.read().save(arguments["path"])
+        finally:
+            camera.close()
+        return {"ok": True, "path": arguments["path"]}
+    return {"ok": False, "error": f"unbekanntes App-Tool: {name}"}
 
 
 def tool_result_text(result):

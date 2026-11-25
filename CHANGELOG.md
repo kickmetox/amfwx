@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.47.0 - 2026-11-25
+
+Tool-Timeouts.
+
+### SDK
+
+* App-Tool-Timeout.
+* 434 Tests.
+
 ## 5.46.0 - 2026-11-25
 
 Reifung.
