@@ -1,134 +1,108 @@
 # Was noch fehlt
 
-Stand: AMFWX 5.20.0
+Stand: AMFWX 5.46.0 – 433 Tests
+
+## Nur noch Hardware
+
+| Punkt | Status |
+|---|---|
+| UVC-Kamera real | ❌ keine Kamera verfügbar |
+| ONVIF/RTSP real | ❌ keine Kamera verfügbar |
+| Tuya 3.4/3.5 real | ❌ nur Fake-Server |
+| Matter real | ❌ nur chip-tool/Fake |
+| Becker-Stick real | ❌ nicht angeschlossen |
+| Jarolift-ESP32 real | ❌ nicht angeschlossen |
+| IPP-Drucker | ❌ Kyocera bietet keinen Endpunkt |
+| Druck-Finishing | ❌ treiberabhängig |
+
+## Kamera-SDKs
+
+| Hersteller | Status |
+|---|---|
+| Canon EDSDK | ❌ nicht gebündelt |
+| Nikon SDK | ❌ |
+| Sony Camera Remote SDK | ❌ |
+| Fuji/Olympus/Leica | ❌ |
+| DJI native | ❌ nur MTP/UVC |
+| gPhoto2 | ✅ optional extern |
+| GoPro | ✅ HTTP |
+
+Die Plugin-API ist vorhanden; die SDK-Adapter fehlen.
+
+## SDK / LLM
+
+| Punkt | Status |
+|---|---|
+| `amfwx-sdk` | ✅ |
+| `amfwx-mcp` | ✅ |
+| UI-/App-Tools | ✅ mit Opt-in |
+| MCP-Tools/Ressourcen/Prompts | ✅ |
+| Streaming/Cancel/Async | ✅ |
+| Provider-Plugins | ✅ |
+| 32-Bit-Runtime im Wheel | ✅ |
+| Home-/Tuya-/Matter-Tools für LLM | ❌ |
+| App-Tool-Timeouts | ⚠️ teilweise |
+| SDK-Beispiele im Wheel | ❌ |
 
 ## Scanner
 
 | Punkt | Status |
 |---|---|
-| WIA | ✅ |
-| TWAIN 64-bit Enumeration | ✅ |
-| TWAIN 32-bit Python-Brücke | ✅ real am Canon |
-| Scanner-CLI WIA/TWAIN32/NAPS2 | ✅ |
-| Scanner-Fenster WIA/TWAIN32/NAPS2 | ✅ |
-| NAPS2-Adapter + ADF-Batch | ✅ |
-| eSCL HTTP/HTTPS | ✅ |
-| Kyocera ADF + Weck-Scan | ✅ real |
-| NAPS2 installiert/getestet | ✅ portable 8.6.1, realer Canon-Scan |
-| NAPS2 bündeln | ❌ GPL, aber portable Installation getestet |
+| WIA/TWAIN 32/64 | ✅ |
+| NAPS2-Adapter + ADF | ✅ |
+| Scanner-Fenster + Profile | ✅ |
+| Deskew/Crop/Blank-Pages | ✅ |
+| Scan → OCR-PDF | ✅ |
+| NAPS2 real | ✅ |
 | Treiberpakete bündeln | ❌ Herstellersache |
-| WIA/TWAIN32-Mehrseiten im Treiber | ⚠️ treiberabhängig |
-| Scan-Profile/Deskew/Crop | ❌ |
-
-## Kameras
-
-| Punkt | Status |
-|---|---|
-| PnP-Inventar | ✅ |
-| UVC/Webcam | ✅ optional OpenCV |
-| ONVIF/WS-Discovery | ✅ |
-| RTSP/HTTP | ✅ |
-| Snapshot | ✅ |
-| IP-Videoaufnahme | ✅ |
-| UVC-Videoaufnahme | ❌ |
-| Live-Vorschau im Fenster | ❌ |
-| Kamera-Steuerung | ⚠️ nur API/Treiber |
-| Tethering | ✅ UVC/IP/GoPro/gPhoto2 |
-| Chroma Key | ✅ |
-| GoPro HTTP | ⚠️ Status/Foto, kein Medien-Download |
-| gPhoto2-DSLR | ⚠️ CLI-Adapter, keine Live-View |
-| MTP/PTP-Download | ✅ |
-| Canon EDSDK | ❌ |
-| Nikon SDK | ❌ |
-| Sony Camera Remote SDK | ❌ |
-| Fuji/Olympus/Leica native SDK | ❌ |
-| DJI UVC | ⚠️ nur Webcam-Modus |
-| DJI MTP | ⚠️ nur gemountet |
-| DJI native Steuerung | ❌ |
-
-## IoT / Fernzugriff
-
-| Punkt | Status |
-|---|---|
-| FRITZ!Box TR-064 | ✅ |
-| Shelly | ✅ |
-| Fibaro | ✅ |
-| HomePilot | ✅ |
-| Becker CC51 | ✅ |
-| TaHoma | ✅ |
-| Tuya LAN 3.3/3.4/3.5 | ✅ |
-| Zigbee2MQTT | ✅ |
-| Matter über chip-tool | ✅ optional |
-| Becker Centronic USB | ✅ Protokoll |
-| Jarolift/Becker RF-Discovery | ✅ optional rtl_433 |
-| Jarolift-Steuerung | ❌ |
-| Becker-Rückkanal | ❌ |
-| Matter ohne chip-tool | ❌ |
-| Thread-Border-Router | ❌ |
-| Tuya-Geräte-Onboarding | ⚠️ Local Key nötig |
-| MQTT TLS | ❌ |
-| echte Hardwaretests | ❌ |
+| Scanner-Duplex profile | ⚠️ treiberabhängig |
 
 ## Drucken
 
 | Punkt | Status |
 |---|---|
-| Windows-Queue | ✅ |
-| GDI-DIB | ✅ |
-| Kyocera TCP/IP 9100 | ✅ real |
-| Kopien/Duplex (Windows) | ✅ DEVMODE |
-| IPP Print-Job | ✅ Client |
-| IPP Kopien/Duplex | ✅ |
-| Kyocera-IPP-Endpunkt | ❌ Gerät bietet keinen |
-| Papierformat/Orientierung | ❌ CLI |
+| Windows Queue + GDI | ✅ |
+| TCP 9100 | ✅ real |
+| IPP Client | ✅ |
+| Kopien/Duplex/Papier/Querformat | ✅ |
+| Vorschau | ✅ |
+| Druck-Profile | ✅ |
 | Finishing/Stapling | ❌ |
-| IPP Digest/TLS-Auth | ⚠️ Basic/TLS |
+| Signatur | ❌ bewusst |
 
-## Dokumente
+## UI / Framework
 
 | Punkt | Status |
 |---|---|
-| Scan → JPEG/PDF | ✅ |
-| OCR | ✅ Windows.Media.Ocr |
-| Durchsuchbares PDF | ✅ real |
-| Scan → OCR | ✅ real |
-| OCR im Scan-Fenster | ✅ |
-| OCR-Sprachpakete | ⚠️ Systemabhängig |
-| PDF zusammenführen/teilen | ❌ |
-| PDF-Text extrahieren als Datei | ⚠️ CLI-Ausgabe |
-| Tesseract | ❌ nicht gebündelt |
+| Dashboard | ✅ Aktionen |
+| Scanner-/Kamera-Fenster | ✅ |
+| Druckvorschau | ✅ |
+| i18n | ❌ |
+| IME | ❌ |
+| Kalender/Datum/Zeit | ❌ |
+| Completer | ❌ |
+| Toasts/Splash | ❌ |
+| OLE-Drop | ❌ |
+| WebSocket/HTTP-Server | ❌ |
+| editierbares Model/View | ⚠️ Basis |
 
 ## Infrastruktur
 
 | Punkt | Status |
 |---|---|
-| Tests | 407 |
-| CI | grün |
-| 32-Bit-Python im Release | ✅ |
-| 32-Bit-Python im CI-Artefakt | ❌ gitignored |
-| NAPS2 | optional |
-| Code-Signatur | ❌ bewusst |
-| Auto-Update | ❌ |
-| Einheitliches Geräte-Dashboard | ❌ |
-| Persistente Einstellungen | ⚠️ teilweise |
+| 433 Tests | ✅ |
+| CI-Matrix 3.10–3.13 | ✅ |
+| 32-Bit im CI | ✅ |
+| Hardware-Smoke | ✅ `tools/hardware_smoke.py` |
+| Optionale Extras | ✅ `[scanner]`, `[camera]`, `[ocr]`, `[pdf]`, `[iot]`, `[full]` |
+| Auto-Update-Ausführung | ❌ nur Prüfung/Download |
+| Signatur | ❌ bewusst |
 
-## Die größten echten Lücken
+## Sinnvolle Reihenfolge
 
-1. **Hardware-Verifikation**: Tuya 3.4/3.5, Matter, Becker und Jarolift sind nur gegen Fakes/Adapter getestet.
-2. **Vendor-SDKs**: Canon EDSDK, Nikon SDK, Sony Camera Remote SDK, Fuji/Olympus/Leica fehlen.
-3. **DJI**: keine native Steuerung, nur MTP/UVC.
-4. **Kamera-Livebild**: kein Preview im Kamera-Fenster.
-5. **NAPS2**: nicht installiert, daher kein echter 32-Bit-NAPS2-Test.
-6. **IPP**: Kyocera stellt keinen nutzbaren IPP-Endpunkt bereit.
-7. **Matter**: nur mit externem chip-tool.
-8. **Jarolift**: Discovery, aber keine Steuerung.
-
-## Nächste sinnvolle Reihenfolge
-
-1. Kamera-Livevorschau und UVC-Videoaufnahme
-2. GoPro-Medien-Download
-3. PDF merge/split
-4. NAPS2 installieren und real testen
-5. Matter/Thread mit echter Hardware
-6. Tuya 3.4/3.5 mit echtem Gerät
-7. echte Becker/Jarolift-Hardware
+1. Echte Hardwaretests
+2. Kamera-SDK-Adapter
+3. App-Tool-Timeouts
+4. Home-/Tuya-/Matter-Tools für LLM
+5. Druck-Finishing
+6. i18n/IME/Kalender/WebSocket, falls AMFW-Parität Ziel ist

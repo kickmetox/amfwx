@@ -16,6 +16,8 @@ from tools.ui_snapshot import digest, snapshot
 from amfwx import Window
 
 
+@unittest.skipUnless(sys.version_info[:2] == (3, 12),
+                     "Pixel-Baseline ist an Python 3.12 gebunden")
 class SnapshotTests(unittest.TestCase):
     def test_snapshot_matches_baseline(self):
         baseline = ROOT / "tests" / "baselines" / "snapshot.json"

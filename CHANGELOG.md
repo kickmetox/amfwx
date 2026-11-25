@@ -1,5 +1,17 @@
 ﻿# Changelog
 
+## 5.46.0 - 2026-11-25
+
+Reifung.
+
+### Packaging
+
+* Extras.
+* CI-Matrix.
+* Hardware-Smoke.
+* Snapshot nur 3.12.
+* 433 Tests.
+
 ## 5.45.0 - 2026-11-25
 
 Hardwarefreier Block.

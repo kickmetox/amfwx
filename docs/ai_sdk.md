@@ -154,3 +154,14 @@ python -m amfwx --llm-tools
 
 The wheel contains the SDK, LLM providers, LLM tools and native DLLs. It does
 not contain `vendor/python32` or external LLM/tool runtimes.
+
+## Optional extras
+
+```powershell
+pip install "amfwx[scanner]"
+pip install "amfwx[camera]"
+pip install "amfwx[ocr]"
+pip install "amfwx[pdf]"
+pip install "amfwx[iot]"
+pip install "amfwx[full]"
+```
