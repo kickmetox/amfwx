@@ -27,6 +27,15 @@ class CameraUiTests(unittest.TestCase):
     def test_cli(self):
         self.assertTrue(AppConfig.parse(["--camera-ui"]).camera_ui)
 
+    def test_profile_fields(self):
+        window = CameraWindow()
+        try:
+            self.assertEqual(window.profile_name.text(), "")
+            self.assertEqual(window.save_profile_button.text,
+                             "Profil speichern")
+        finally:
+            window.close()
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

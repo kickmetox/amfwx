@@ -10,13 +10,21 @@ from .advanced import ImageView
 from .camera import Webcam
 from .quick import HStack
 from .scan_transfer import default_scan_dir
-from .widgets import BoxLayout, Button, CheckBox, Label, LineEdit
+from .profiles import ProfileStore
+from .widgets import BoxLayout, Button, CheckBox, ComboBox, Label, LineEdit
 from .window import Window
 
 
 class CameraWindow(Window):
     def __init__(self):
         super().__init__("AMFWX Kamera", 820, 660)
+        self.profile = ComboBox([], 0)
+        self.profile_name = LineEdit("", placeholder="Profilname")
+        self.profile_store = ProfileStore()
+        self.save_profile_button = Button("Profil speichern",
+                                          on_click=self.save_profile)
+        self.load_profile_button = Button("Profil laden",
+                                          on_click=self.load_profile)
         self.index = LineEdit("0")
         self.url = LineEdit("", placeholder="rtsp://...")
         self.width = LineEdit("1280")
@@ -44,6 +52,8 @@ class CameraWindow(Window):
         self.root.children.clear()
         self.layout.items.clear()
         rows = [
+            HStack(Label("Profil"), self.profile, self.profile_name,
+                   self.save_profile_button, self.load_profile_button),
             self.preview,
             HStack(Label("Index"), self.index),
             HStack(Label("IP/RTSP"), self.url),
@@ -70,6 +80,66 @@ class CameraWindow(Window):
         self.invalidate()
         self._previewing = False
         self._preview_camera = None
+        self._refresh_profiles()
+
+    def _refresh_profiles(self):
+        self.profile.items = self.profile_store.names("camera")
+        if self.profile.items:
+            self.profile.current_index = 0
+
+    def _profile_values(self):
+        return {
+            "index": self.index.text(),
+            "url": self.url.text(),
+            "width": self.width.text(),
+            "height": self.height.text(),
+            "folder": self.folder.text(),
+            "frames": self.frames.text(),
+            "interval": self.interval.text(),
+            "seconds": self.seconds.text(),
+            "chroma": self.chroma.checked,
+            "brightness": self.brightness.text(),
+            "contrast": self.contrast.text(),
+            "exposure": self.exposure.text(),
+            "focus": self.focus.text(),
+        }
+
+    def save_profile(self):
+        name = (self.profile_name.text().strip() or
+                self.profile.current_text())
+        if not name:
+            self.status.text = "Kein Profilname vorhanden."
+            self.invalidate()
+            return
+        self.profile_store.save("camera", name, self._profile_values())
+        self.profile_name.set_text(name)
+        self._refresh_profiles()
+        self.status.text = f"Profil gespeichert: {name}"
+        self.invalidate()
+
+    def load_profile(self):
+        name = self.profile.current_text()
+        if not name:
+            return
+        try:
+            values = self.profile_store.load("camera", name)
+        except Exception as error:
+            self.status.text = f"Profilfehler: {error}"
+            self.invalidate()
+            return
+        for widget, key in ((self.index, "index"), (self.url, "url"),
+                            (self.width, "width"), (self.height, "height"),
+                            (self.folder, "folder"), (self.frames, "frames"),
+                            (self.interval, "interval"),
+                            (self.seconds, "seconds"),
+                            (self.brightness, "brightness"),
+                            (self.contrast, "contrast"),
+                            (self.exposure, "exposure"),
+                            (self.focus, "focus")):
+            widget.set_text(values.get(key, widget.text()))
+        self.chroma.checked = bool(values.get("chroma", self.chroma.checked))
+        self.status.text = f"Profil geladen: {name}"
+        self.invalidate()
 
     def _camera(self):
         if self.url.text().strip():

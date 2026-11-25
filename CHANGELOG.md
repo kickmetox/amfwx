@@ -1,5 +1,14 @@
 ﻿# Changelog
 
+## 5.44.0 - 2026-11-25
+
+Kamera-Profile.
+
+### Cameras
+
+* Profile speichern/laden.
+* 432 Tests.
+
 ## 5.43.0 - 2026-11-25
 
 Scanner-Profile.
